@@ -36,9 +36,7 @@ a{color:inherit;text-decoration:none}
 .btn{padding:4px 10px;border-radius:var(--r);font-size:11px;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:4px;letter-spacing:.02em}
 .bg{border:1px solid var(--border2);color:var(--muted)}.bg:hover{border-color:var(--border3);color:var(--accent)}
 .bs{background:var(--white);color:#000;font-weight:600}.bs:hover{background:#d8d8d8}
-.sdot{width:5px;height:5px;border-radius:50%;background:var(--muted2)}
-.sdot.synced{background:#34c96c}.sdot.syncing{background:#f4914a;animation:p 1s infinite}.sdot.error{background:#f44a4a}
-@keyframes p{0%,100%{opacity:1}50%{opacity:.2}}
+
 .tc{flex:1;overflow:hidden;display:none}.tc.active{display:flex}
 
 /* ══════════════════════════════════════
@@ -245,9 +243,7 @@ a{color:inherit;text-decoration:none}
 .star{font-size:17px;color:var(--muted2);cursor:pointer;background:none;border:none;padding:0;transition:color .1s}
 .star.on{color:#f5c842}
 .ma{display:flex;justify-content:flex-end;gap:7px;margin-top:16px}
-.sinfo{font-size:11.5px;color:var(--muted);line-height:1.7;margin-bottom:13px;padding:9px 11px;background:var(--s2);border-radius:var(--r);border:1px solid var(--border)}
-.sinfo a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
-.sinfo code{background:var(--s3);padding:1px 4px;border-radius:3px;font-family:var(--fm);font-size:11px}
+
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--border2);padding:8px 14px;border-radius:var(--r);font-size:11px;font-family:var(--fm);z-index:300;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 
@@ -269,8 +265,6 @@ a{color:inherit;text-decoration:none}
     <button class="ntab" onclick="switchTab('board')">BOARD</button>
   </div>
   <div class="nav-r">
-    <span class="sdot" id="syncDot"></span>
-    <button class="btn bg" onclick="openSettings()">⚙ Sync</button>
     <button class="btn bg" onclick="exportData()">↓ Export</button>
     <label class="btn bg" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
   </div>
@@ -445,18 +439,7 @@ a{color:inherit;text-decoration:none}
 </div>
 
 <!-- MODALS -->
-<div class="mo" id="settingsModal">
-  <div class="mbox">
-    <h2>Sync · GitHub Gist</h2>
-    <div class="sinfo">Free cross-device sync via a private Gist.<br>
-      1. <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> → Generate classic token · scope: <code>gist</code> only.<br>
-      2. Paste below. First save auto-creates a Gist — copy the ID to use on other devices.
-    </div>
-    <div class="fg"><label class="fl">GitHub Token</label><input class="fi-in" type="password" id="sToken" placeholder="ghp_xxxxxxxxxxxx"></div>
-    <div class="fg"><label class="fl">Gist ID <span style="color:var(--muted2);text-transform:none;font-weight:300">(auto-filled after first sync)</span></label><input class="fi-in" type="text" id="sGistId" placeholder="Leave blank to create new"></div>
-    <div class="ma"><button class="btn bg" onclick="closeM('settingsModal')">Cancel</button><button class="btn bs" onclick="saveSettings()">Save & Sync</button></div>
-  </div>
-</div>
+
 <div class="mo" id="dealModal">
   <div class="mbox">
     <h2>Add Deal</h2>
@@ -490,53 +473,21 @@ const CCSS={Strategy:'var(--cs)','Mental Models':'var(--cm)',Finance:'var(--cf)'
 const STAGES=['Pre-Seed','Seed','Series A','Series B','Growth','Public'];
 const SCOLS=['#1b2236','#1b2f1f','#2f1f1b','#221b2f','#1b272f','#2b2b1b','#202020'];
 
-let S={notes:[],deals:[],watchlist:[],board:[],settings:{token:'',gistId:''}};
-let aFolder='all',aNoteId=null,searchQ='',saveT=null,syncT=null,conv=3;
+let S={notes:[],deals:[],watchlist:[],board:[]};
+let aFolder='all',aNoteId=null,searchQ='',saveT=null,conv=3;
 
 // ══════════════════════════════════════
-// STORAGE
+// STORAGE — localStorage only, auto-save on every change
 // ══════════════════════════════════════
-function saveL(){localStorage.setItem('fp1',JSON.stringify(S));}
-function loadL(){try{const d=localStorage.getItem('fp1');if(d)S=JSON.parse(d);}catch(e){}}
-
-// ══════════════════════════════════════
-// GIST SYNC
-// ══════════════════════════════════════
-async function syncGist(){
-  const{token,gistId}=S.settings;if(!token)return;
-  setDot('syncing');
-  try{
-    const body=JSON.stringify(S);
-    const isNew=!gistId;
-    const url='https://api.github.com/gists'+(gistId?'/'+gistId:'');
-    const payload=isNew?{description:'PROJECT FLASHPOINT',public:false,files:{'fp-data.json':{content:body}}}:{files:{'fp-data.json':{content:body}}};
-    const r=await fetch(url,{method:gistId?'PATCH':'POST',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const d=await r.json();
-    if(isNew){S.settings.gistId=d.id;saveL();document.getElementById('sGistId').value=d.id;}
-    setDot('synced');toast('Synced ✓');
-  }catch(e){setDot('error');toast('Sync failed: '+e.message);}
+function saveL(){
+  try{ localStorage.setItem('fp1', JSON.stringify(S)); } catch(e){ toast('Storage full — export a backup'); }
 }
-async function loadGist(){
-  const{token,gistId}=S.settings;if(!token||!gistId)return;setDot('syncing');
-  try{
-    const r=await fetch('https://api.github.com/gists/'+gistId,{headers:{'Authorization':'token '+token}});
-    if(!r.ok)throw new Error();
-    const d=await r.json();const c=d.files['fp-data.json']?.content;
-    if(c){const rem=JSON.parse(c);S={...rem,settings:S.settings};saveL();renderAll();setDot('synced');toast('Loaded from Gist ✓');}
-  }catch(e){setDot('error');}
+function loadL(){
+  try{ const d=localStorage.getItem('fp1'); if(d) S=JSON.parse(d); } catch(e){}
 }
-function setDot(s){document.getElementById('syncDot').className='sdot '+s;}
-function schedSync(){clearTimeout(syncT);syncT=setTimeout(syncGist,5000);}
-async function saveSettings(){
-  S.settings={token:document.getElementById('sToken').value.trim(),gistId:document.getElementById('sGistId').value.trim()};
-  saveL();closeM('settingsModal');
-  if(S.settings.gistId)await loadGist();else await syncGist();
-}
-function openSettings(){document.getElementById('sToken').value=S.settings.token||'';document.getElementById('sGistId').value=S.settings.gistId||'';document.getElementById('settingsModal').classList.add('open');}
 
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='flashpoint-'+new Date().toISOString().slice(0,10)+'.json';a.click();}
-function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const i=JSON.parse(ev.target.result);S={...i,settings:S.settings};saveL();renderAll();toast('Imported ✓');}catch{toast('Invalid file');}};r.readAsText(f);}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const i=JSON.parse(ev.target.result);S=i;saveL();renderAll();toast('Imported ✓');}catch{toast('Invalid file');}};r.readAsText(f);}
 
 // ══════════════════════════════════════
 // NOTES
@@ -613,10 +564,10 @@ function saveCurrentNote(){
   document.getElementById('noteDate').textContent=fmtD(n.updated);
   document.getElementById('saveStatus').textContent='✓ saved';
   setTimeout(()=>{const el=document.getElementById('saveStatus');if(el)el.textContent='';},2000);
-  saveL();renderNoteList();updateCounts();renderCatGrid();schedSync();
+  saveL();renderNoteList();updateCounts();renderCatGrid();
 }
 
-function deleteNote(){if(!aNoteId||!confirm('Delete this note?'))return;S.notes=S.notes.filter(n=>n.id!==aNoteId);showHome();saveL();renderNoteList();updateCounts();renderCatGrid();schedSync();}
+function deleteNote(){if(!aNoteId||!confirm('Delete this note?'))return;S.notes=S.notes.filter(n=>n.id!==aNoteId);showHome();saveL();renderNoteList();updateCounts();renderCatGrid();}
 
 function updateCounts(){
   document.getElementById('fc-all').textContent=S.notes.length;
@@ -716,8 +667,8 @@ async function extractPdf(file){
 function openDealModal(){conv=3;updateStars();['dName','dSector','dNote'].forEach(id=>document.getElementById(id).value='');document.getElementById('dealModal').classList.add('open');setTimeout(()=>document.getElementById('dName').focus(),50);}
 function setConv(v){conv=v;updateStars();}
 function updateStars(){document.querySelectorAll('.star').forEach(b=>b.classList.toggle('on',+b.dataset.v<=conv));}
-function saveDeal(){const name=document.getElementById('dName').value.trim();if(!name){toast('Enter company name');return;}S.deals.push({id:uid(),name,sector:document.getElementById('dSector').value.trim(),stage:document.getElementById('dStage').value,conviction:conv,note:document.getElementById('dNote').value.trim(),date:now()});saveL();schedSync();closeM('dealModal');renderDeals();toast('Deal added ✓');}
-function deleteDeal(id){S.deals=S.deals.filter(d=>d.id!==id);saveL();schedSync();renderDeals();}
+function saveDeal(){const name=document.getElementById('dName').value.trim();if(!name){toast('Enter company name');return;}S.deals.push({id:uid(),name,sector:document.getElementById('dSector').value.trim(),stage:document.getElementById('dStage').value,conviction:conv,note:document.getElementById('dNote').value.trim(),date:now()});saveL();closeM('dealModal');renderDeals();toast('Deal added ✓');}
+function deleteDeal(id){S.deals=S.deals.filter(d=>d.id!==id);saveL();renderDeals();}
 function renderDeals(){renderPipeline();renderScreening();}
 function renderPipeline(){
   document.getElementById('dealPipeline').innerHTML=STAGES.map(stage=>{
@@ -748,8 +699,8 @@ function switchDT(tab){
 // WATCHLIST
 // ══════════════════════════════════════
 function openWatchModal(){['wName','wTicker','wNote'].forEach(id=>document.getElementById(id).value='');document.getElementById('watchModal').classList.add('open');setTimeout(()=>document.getElementById('wName').focus(),50);}
-function saveWatch(){const name=document.getElementById('wName').value.trim();if(!name){toast('Enter name');return;}S.watchlist.push({id:uid(),name,type:document.getElementById('wType').value,ticker:document.getElementById('wTicker').value.trim(),note:document.getElementById('wNote').value.trim(),date:now()});saveL();schedSync();closeM('watchModal');renderWatchlist();toast('Added ✓');}
-function deleteWatch(id){S.watchlist=S.watchlist.filter(w=>w.id!==id);saveL();schedSync();renderWatchlist();}
+function saveWatch(){const name=document.getElementById('wName').value.trim();if(!name){toast('Enter name');return;}S.watchlist.push({id:uid(),name,type:document.getElementById('wType').value,ticker:document.getElementById('wTicker').value.trim(),note:document.getElementById('wNote').value.trim(),date:now()});saveL();closeM('watchModal');renderWatchlist();toast('Added ✓');}
+function deleteWatch(id){S.watchlist=S.watchlist.filter(w=>w.id!==id);saveL();renderWatchlist();}
 function renderWatchlist(){document.getElementById('watchlistBody').innerHTML=S.watchlist.map(w=>`<tr><td style="font-weight:500">${esc(w.name)}</td><td><span class="wl-type">${w.type}</span></td><td style="font-family:var(--fm);font-size:11.5px;color:var(--muted)">${w.ticker||'—'}</td><td style="color:var(--muted);font-size:11.5px">${esc(w.note||'—')}</td><td style="font-family:var(--fm);font-size:10px;color:var(--muted)">${fmtS(w.date)}</td><td><button class="wl-del" onclick="deleteWatch('${w.id}')">✕</button></td></tr>`).join('')||'<tr><td colspan="6" style="padding:22px;text-align:center;color:var(--muted);font-size:12px">Nothing on the radar.</td></tr>';}
 
 // ══════════════════════════════════════
@@ -766,7 +717,7 @@ function addCard(type){
   const x=wrap.scrollLeft+60+Math.random()*120;
   const y=wrap.scrollTop+60+Math.random()*80;
   S.board.push({id,type,x,y,content:'',author:'',url:'',linkTitle:'',desc:'',color:SCOLS[0]});
-  saveL();renderBoard();schedSync();
+  saveL();renderBoard();
   // focus the new card after render
   setTimeout(()=>{
     const el=document.querySelector(`.bcard[data-id="${id}"]`);
@@ -774,8 +725,8 @@ function addCard(type){
   },60);
 }
 
-function updCard(id,f,v){const c=S.board.find(x=>x.id===id);if(c){c[f]=v;saveL();schedSync();}}
-function delCard(id){S.board=S.board.filter(c=>c.id!==id);saveL();schedSync();renderBoard();}
+function updCard(id,f,v){const c=S.board.find(x=>x.id===id);if(c){c[f]=v;saveL();}}
+function delCard(id){S.board=S.board.filter(c=>c.id!==id);saveL();renderBoard();}
 function setColor(id,col){updCard(id,'color',col);const el=document.querySelector(`.bcard[data-id="${id}"]`);if(el)el.style.background=col;document.querySelectorAll(`.csw[data-cid="${id}"]`).forEach(s=>s.classList.toggle('on',s.dataset.col===col));}
 
 function renderBoard(){
@@ -829,7 +780,7 @@ function startDrag(e,id){
     dragCard.el.style.left=c.x+'px';dragCard.el.style.top=c.y+'px';
   }
   function onUp(){
-    if(dragCard){dragCard.el.classList.remove('dragging');saveL();schedSync();}
+    if(dragCard){dragCard.el.classList.remove('dragging');saveL();}
     dragCard=null;
     window.removeEventListener('mousemove',onMove);window.removeEventListener('mouseup',onUp);
   }
@@ -894,7 +845,7 @@ document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.
     demo.forEach(d=>S.notes.push({id:uid(),...d,created:now(),updated:now()}));
     saveL();renderAll();
   }
-  if(S.settings.token&&S.settings.gistId)await loadGist();
+
 })();
 </script>
 </body>
