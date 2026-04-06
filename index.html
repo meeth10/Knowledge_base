@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knowledge Base</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Mono',monospace;background:#FAFAF8;overflow:hidden;height:100vh}
+.hub{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:204px;min-width:204px;background:#1C1C1E;display:flex;flex-direction:column;overflow-y:auto}
+.sb-head{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.sb-title{font-family:'Lora',Georgia,serif;font-size:14px;font-weight:500;color:#F5F5F0;display:block}
+.sb-sub{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.12em;color:rgba(255,255,255,0.3);display:block;margin-top:4px;text-transform:uppercase}
+.sb-section{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.12em;color:rgba(255,255,255,0.25);text-transform:uppercase;padding:16px 16px 6px}
+.sb-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:7px 16px;border:none;background:transparent;cursor:pointer;border-left:2px solid transparent;transition:background 0.12s;text-align:left}
+.sb-btn:hover{background:rgba(255,255,255,0.06)}
+.sb-btn.on{background:rgba(255,255,255,0.1);border-left-color:#F5F5F0}
+.sb-label{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.75);display:flex;align-items:center;gap:8px}
+.sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sb-count{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25)}
+.sb-footer{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;gap:6px}
+.sb-note{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25);line-height:1.6}
+.sb-row{display:flex;gap:6px}
+.sb-action{padding:6px 0;font-family:'DM Mono',monospace;font-size:9px;border:1px solid rgba(255,255,255,0.15);border-radius:4px;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.1s;letter-spacing:0.04em;width:100%;text-align:center}
+.sb-action:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.85)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:10px 16px;border-bottom:1px solid #E8E8E4;display:flex;gap:8px;align-items:center;background:#FAFAF8}
+.search{flex:1;height:30px;font-family:'DM Mono',monospace;font-size:11px;border:1px solid #DDD;border-radius:5px;padding:0 11px;background:white;color:#1C1C1E;outline:none;transition:border-color 0.1s}
+.search:focus{border-color:#999}
+.search::placeholder{color:#BBB}
+.tbtn{height:30px;padding:0 13px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.03em;border:1px solid #DDD;border-radius:5px;background:white;color:#333;cursor:pointer;white-space:nowrap;transition:all 0.1s}
+.tbtn:hover{background:#F0F0EE;border-color:#BBB}
+.tbtn:disabled{opacity:0.35;cursor:default}
+.tbtn.primary{background:#1C1C1E;color:white;border-color:#1C1C1E}
+.tbtn.primary:hover{background:#333}
+.cols{flex:1;display:flex;overflow:hidden}
+.list{width:240px;min-width:240px;border-right:1px solid #E8E8E4;overflow-y:auto;background:white}
+.nrow{padding:11px 14px;cursor:pointer;border-left:3px solid transparent;border-bottom:1px solid #F0F0EC;transition:background 0.1s}
+.nrow:hover{background:#F8F8F5}
+.nrow.on{border-left-color:#1C1C1E;background:#F4F4F0}
+.nrow-title{font-family:'Lora',Georgia,serif;font-size:12.5px;font-weight:500;color:#1C1C1E;line-height:1.4;margin-bottom:4px}
+.nrow-cat{display:inline-flex;align-items:center;gap:4px;font-family:'DM Mono',monospace;font-size:9px;padding:1px 7px;border-radius:10px}
+.detail{flex:1;overflow-y:auto;padding:28px 32px;background:#FAFAF8}
+.dw{max-width:580px}
+.act{display:flex;gap:7px;align-items:center;margin-bottom:20px}
+.cat-pill{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.04em;border-radius:12px;padding:4px 10px;margin-bottom:10px}
+.ntitle{font-family:'Lora',Georgia,serif;font-size:22px;font-weight:500;line-height:1.32;color:#1C1C1E;margin:8px 0 5px}
+.nsource{font-family:'DM Mono',monospace;font-size:9.5px;color:#888;letter-spacing:0.04em;margin-bottom:20px}
+.ndiv{border:none;border-top:1px solid #E8E8E4;margin-bottom:20px}
+.nbody{font-family:'Lora',Georgia,serif;font-size:14px;line-height:1.9;color:#2C2C2A;white-space:pre-wrap}
+.ndate{font-family:'DM Mono',monospace;font-size:9px;color:#BBB;margin-top:28px;letter-spacing:0.04em}
+.etitle{width:100%;font-family:'Lora',Georgia,serif;font-size:20px;font-weight:500;border:none;border-bottom:1px solid #DDD;border-radius:0;padding:3px 0 9px;background:transparent;color:#1C1C1E;outline:none;margin-bottom:10px}
+.etitle::placeholder{color:#CCC;font-style:italic}
+.esource{width:100%;font-family:'DM Mono',monospace;font-size:10.5px;border:none;border-bottom:1px solid #EEE;border-radius:0;padding:2px 0 8px;background:transparent;color:#888;outline:none;margin-bottom:16px}
+.esource::placeholder{color:#CCC}
+.ebody{width:100%;min-height:300px;font-family:'Lora',Georgia,serif;font-size:14px;line-height:1.85;border:1px solid #DDD;border-radius:7px;padding:14px 16px;background:white;color:#1C1C1E;resize:vertical;outline:none;transition:border-color 0.1s}
+.ebody:focus{border-color:#999}
+.ebody::placeholder{color:#CCC;font-style:italic}
+.ecat{height:28px;font-family:'DM Mono',monospace;font-size:10px;border:1px solid #DDD;border-radius:5px;padding:0 8px;background:white;color:#333;outline:none}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;margin-bottom:28px}
+.hcard{padding:16px;border-radius:10px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;border:1px solid rgba(0,0,0,0.06)}
+.hcard:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.08)}
+.hcard-sym{font-size:18px;margin-bottom:9px;display:block}
+.hcard-name{font-family:'Lora',Georgia,serif;font-size:13px;font-weight:500;margin-bottom:3px}
+.hcard-n{font-family:'DM Mono',monospace;font-size:9px;opacity:0.6}
+.hint{font-family:'DM Mono',monospace;font-size:10px;color:#AAA;line-height:1.7}
+.empty{padding:16px;font-family:'DM Mono',monospace;font-size:10px;color:#BBB}
+.pdf-msg{font-family:'DM Mono',monospace;font-size:10px;color:#888}
+</style>
+</head>
+<body>
+<div class="hub">
+  <div class="sidebar">
+    <div class="sb-head">
+      <span class="sb-title">Knowledge Base</span>
+      <span class="sb-sub">Personal Library</span>
+    </div>
+    <div style="padding-top:8px">
+      <button class="sb-btn" id="btn-all" onclick="showHome()">
+        <span class="sb-label">All notes</span>
+        <span class="sb-count" id="count-all">0</span>
+      </button>
+    </div>
+    <div class="sb-section" style="margin-top:8px">Categories</div>
+    <div id="cat-nav"></div>
+    <div class="sb-footer">
+      <span class="sb-note">Notes saved in browser.<br>Export to move between machines.</span>
+      <div class="sb-row">
+        <button class="sb-action" onclick="exportNotes()">↓ Export</button>
+        <label class="sb-action" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importNotes(event)"></label>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <input class="search" id="search" type="text" placeholder="Search notes, sources, content…" oninput="renderList()">
+      <span id="pdf-msg" class="pdf-msg" style="display:none"></span>
+      <span id="pdf-wrap">
+        <input type="file" id="pdf-in" accept=".pdf" style="display:none" onchange="handlePDF(event)">
+        <button class="tbtn" onclick="document.getElementById('pdf-in').click()">↑ PDF</button>
+      </span>
+      <button class="tbtn primary" onclick="openNew()">+ Note</button>
+    </div>
+    <div class="cols">
+      <div class="list" id="note-list"></div>
+      <div class="detail"><div class="dw" id="detail"></div></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+const CATS=[
+  {id:'strategy',   name:'Strategy',       sym:'♟',color:'#E8F4FD',accent:'#2E86C1',text:'#1A5276'},
+  {id:'mental',     name:'Mental Models',  sym:'◎',color:'#FEF9E7',accent:'#D4AC0D',text:'#7D6608'},
+  {id:'finance',    name:'Finance',        sym:'△',color:'#EAFAF1',accent:'#1E8449',text:'#145A32'},
+  {id:'business',   name:'Business',       sym:'□',color:'#FDF2F8',accent:'#8E44AD',text:'#6C3483'},
+  {id:'consulting', name:'Consulting',     sym:'◇',color:'#FEF5E7',accent:'#CA6F1E',text:'#784212'},
+  {id:'vc',         name:'VC & Investing', sym:'◉',color:'#FDEDEC',accent:'#CB4335',text:'#922B21'},
+  {id:'others',     name:'Others',         sym:'○',color:'#F2F3F4',accent:'#616A6B',text:'#2C3E50'},
+];
+const STARTER=[
+  {id:'s1', categoryId:'strategy',   title:'The Kernel of Good Strategy',   source:'Crux — Richard Rumelt',                  content:'Every good strategy has three elements:\n1. Diagnosis — defines the nature of the challenge\n2. Guiding policy — the approach to dealing with it\n3. Coherent actions — coordinated steps that carry out the policy\n\nMost \'strategy\' is just goal-setting with a fancy name. The kernel is what separates real strategy from fluff.'},
+  {id:'s2', categoryId:'strategy',   title:'Good Strategy vs Bad Strategy', source:'Good Strategy Bad Strategy — Rumelt',     content:'Bad strategy hallmarks:\n- Fluff: buzzwords masquerading as strategy\n- Failure to face the actual challenge\n- Mistaking goals for strategy\n\nGood strategy identifies the one or two critical factors, then concentrates resources on them.\n\nKey: diagnosis → policy → action. Not vision → goals → budget.'},
+  {id:'s3', categoryId:'strategy',   title:'Porter\'s Five Forces',         source:'Competitive Advantage — Michael Porter', content:'Industry profitability is determined by:\n1. Threat of new entrants\n2. Bargaining power of suppliers\n3. Bargaining power of buyers\n4. Threat of substitutes\n5. Rivalry among existing competitors\n\nGeneric strategies: Cost leadership · Differentiation · Focus\n\nStuck in the middle = worst position.'},
+  {id:'s4', categoryId:'finance',    title:'DCF — Discounted Cash Flow',    source:'IB / Valuation',                         content:'Core idea: a company is worth the PV of all future free cash flows\n\nFCF = EBIT(1-t) + D&A - CapEx - ΔNWC\n\nTerminal value:\n  Gordon Growth: FCF_n × (1+g) / (WACC - g)\n  Exit multiple: EBITDA × peer multiple\n\nDiscount at WACC → add cash, subtract debt → equity value\n\nKey sensitivities: WACC and terminal growth rate drive 60-80% of value.'},
+  {id:'s5', categoryId:'finance',    title:'LBO — Leveraged Buyout',        source:'IB / PE',                                content:'PE firm acquires company using ~60-70% debt, rest equity\n\nReturn drivers:\n1. EBITDA growth\n2. Multiple expansion\n3. Debt paydown\n\nIRR target: 20-25%+ over 3-5 year hold\n\n3x equity in 5 years = ~25% IRR'},
+  {id:'s6', categoryId:'finance',    title:'Comps — Trading Comparables',   source:'IB / Valuation',                         content:'Value a company relative to publicly traded peers\n\n1. Select comparable companies\n2. Spread financials (LTM + forward)\n3. Calculate multiples: EV/EBITDA, EV/Revenue, P/E\n4. Apply range to target\n\nBy sector:\n- Tech growth: EV/Revenue\n- Mature industrials: EV/EBITDA\n- Banks: P/Book, P/E'},
+  {id:'s7', categoryId:'mental',     title:'Inversion',                     source:'Art of Thinking Clearly / Munger',        content:'Instead of asking how do I succeed, ask what guarantees failure. Then avoid those things.\n\nCharlie Munger: Invert, always invert.\n\nApplication:\n- How to build a bad product? (then do opposite)\n- What would destroy this company?\n- What would make this argument wrong?\n\nMost problems are easier solved backwards.'},
+  {id:'s8', categoryId:'mental',     title:'First Principles Thinking',     source:'General / Elon Musk',                    content:'Break a problem to its fundamental truths, reason up from there.\n\nMusk battery example: market price $600/kWh. Raw materials? ~$80/kWh. So build our own.\n\nProcess:\n1. Identify your assumptions\n2. Break them to fundamentals\n3. Build up fresh\n\nHarder but creates genuine insight.'},
+  {id:'s9', categoryId:'mental',     title:'Availability Bias',             source:'Art of Thinking Clearly — Dobelli',       content:'We overweight information that comes easily to mind.\n\nRecent, vivid, emotional events feel more probable than they are.\n\nFix: use base rates, not recent gut feel.'},
+  {id:'s10',categoryId:'business',   title:'Business Model Canvas',         source:'Osterwalder — Business Model Generation', content:'9 building blocks:\n1. Customer Segments\n2. Value Propositions\n3. Channels\n4. Customer Relationships\n5. Revenue Streams\n6. Key Resources\n7. Key Activities\n8. Key Partnerships\n9. Cost Structure\n\nStart with Customer Segments + Value Props. Everything else flows from that.'},
+  {id:'s11',categoryId:'business',   title:'Business Model Types',          source:'General',                                content:'- SaaS: recurring subscription, CAC:LTV key\n- Marketplace: take rate on GMV, liquidity is the moat\n- Freemium: large free base, 2-5% paid conversion\n- Razor/blade: cheap hardware, profit on consumables\n- Platform: multi-sided, network effects compound\n\nKey question: who pays, what for, how often?'},
+  {id:'s12',categoryId:'consulting', title:'MECE Framework',                source:'McKinsey / Consulting',                  content:'Mutually Exclusive, Collectively Exhaustive\n\nEvery consulting structure must be MECE:\n- No overlap between buckets\n- Every possibility is covered\n\nIssue tree (revenue problem):\nRevenue -> Volume vs. Price\nVolume -> New vs. Existing customers\nExisting -> Frequency vs. Basket size'},
+  {id:'s13',categoryId:'consulting', title:'Profitability Framework',       source:'Consulting case interviews',             content:'Revenue - Costs = Profit\n\nRevenue = Volume x Price\nVolume = customers x purchases x units/purchase\n\nCosts = Fixed + Variable\nFixed: rent, salaries, depreciation\nVariable: COGS, commissions, logistics\n\nFirst ask: revenue problem or cost problem?'},
+  {id:'s14',categoryId:'vc',         title:'Power Law in VC',               source:'Zero to One — Peter Thiel',              content:'VC returns follow a power law, not a bell curve.\n\nOne investment returns the fund. Maybe two.\n\nEvery investment must have the potential to return the entire fund.\n\nThis means:\n- Swing for home runs not singles\n- Concentration > diversification\n- Good companies capping at 3x are bad VC investments'},
+  {id:'s15',categoryId:'vc',         title:'Key VC Metrics',                source:'VC / Startup Finance',                   content:'- ARR / MRR: revenue run rate\n- Growth rate: % MoM or YoY\n- Rule of 40: growth% + margin% > 40\n- NRR: >110% good, >130% great\n- CAC:LTV ratio: aim for >3x\n- Burn multiple: net burn / net new ARR\n- Runway: cash / monthly burn\n\nSeed: traction + team\nSeries A: PMF\nSeries B+: scale efficiency'},
+];
+
+let notes=[],activeCat=null,selectedId=null,view='home',draft=null;
+const catOf=id=>CATS.find(c=>c.id===id);
+const fmt=ts=>ts?new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+const uid=()=>'n'+Date.now()+Math.random().toString(36).slice(2,6);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function init(){
+  document.getElementById('cat-nav').innerHTML=CATS.map(c=>`
+    <button class="sb-btn" id="cat-${c.id}" onclick="selectCat('${c.id}')">
+      <span class="sb-label"><span class="sb-dot" style="background:${c.accent}"></span>${c.name}</span>
+      <span class="sb-count" id="count-${c.id}">0</span>
+    </button>`).join('');
+  const saved=localStorage.getItem('kh-notes');
+  notes=saved?JSON.parse(saved):STARTER.map(n=>({...n,createdAt:Date.now()}));
+  if(!saved) save();
+  render();
+}
+
+function save(){ localStorage.setItem('kh-notes',JSON.stringify(notes)); }
+
+function render(){
+  document.getElementById('count-all').textContent=notes.length;
+  CATS.forEach(c=>{const e=document.getElementById('count-'+c.id);if(e)e.textContent=notes.filter(n=>n.categoryId===c.id).length;});
+  document.getElementById('btn-all').className='sb-btn'+(!activeCat&&view==='home'?' on':'');
+  CATS.forEach(c=>{const e=document.getElementById('cat-'+c.id);if(e)e.className='sb-btn'+(activeCat===c.id?' on':'');});
+  renderList();
+  renderDetail();
+}
+
+function getFiltered(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  return notes.filter(n=>{
+    if(activeCat&&n.categoryId!==activeCat)return false;
+    if(q)return n.title.toLowerCase().includes(q)||n.content.toLowerCase().includes(q)||(n.source||'').toLowerCase().includes(q);
+    return true;
+  });
+}
+
+function renderList(){
+  const el=document.getElementById('note-list');
+  const list=getFiltered();
+  if(!list.length){el.innerHTML='<p class="empty">No notes found.</p>';return;}
+  el.innerHTML=list.map(n=>{
+    const c=catOf(n.categoryId);
+    return `<div class="nrow${selectedId===n.id?' on':''}" onclick="selectNote('${n.id}')">
+      <div class="nrow-title">${esc(n.title)}</div>
+      <span class="nrow-cat" style="background:${c?.color};color:${c?.text}"><span style="font-size:8px">${c?.sym}</span> ${c?.name}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderDetail(){
+  const el=document.getElementById('detail');
+  if(view==='edit'&&draft){el.innerHTML=editHTML();return;}
+  if(view==='note'&&selectedId){const n=notes.find(x=>x.id===selectedId);if(n){el.innerHTML=noteHTML(n);return;}}
+  if(!activeCat){
+    el.innerHTML=`
+      <p style="font-family:'Lora',Georgia,serif;font-size:19px;font-weight:500;color:#1C1C1E;margin-bottom:6px;line-height:1.35">Your knowledge base</p>
+      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;margin-bottom:22px">${notes.length} notes across ${CATS.length} topics</p>
+      <div class="hgrid">${CATS.map(c=>`
+        <div class="hcard" style="background:${c.color};border-color:${c.accent}22" onclick="selectCat('${c.id}')">
+          <span class="hcard-sym" style="color:${c.accent}">${c.sym}</span>
+          <div class="hcard-name" style="color:${c.text}">${c.name}</div>
+          <div class="hcard-n" style="color:${c.text}">${notes.filter(n=>n.categoryId===c.id).length} notes</div>
+        </div>`).join('')}</div>
+      <p class="hint">Select a note · write one · upload a PDF to extract text.</p>`;
+  } else {
+    const c=catOf(activeCat);
+    el.innerHTML=`
+      <div style="background:${c.color};border-radius:10px;padding:18px 20px;margin-bottom:20px;border-left:4px solid ${c.accent}">
+        <p style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;color:${c.accent};margin-bottom:6px;text-transform:uppercase">Category</p>
+        <p style="font-family:'Lora',Georgia,serif;font-size:20px;font-weight:500;color:${c.text}">${c.name}</p>
+        <p style="font-family:'DM Mono',monospace;font-size:10px;color:${c.text};opacity:0.6;margin-top:4px">${notes.filter(n=>n.categoryId===c.id).length} notes</p>
+      </div>
+      <p class="hint">Select a note on the left, or add a new one.</p>`;
+  }
+}
+
+function noteHTML(n){
+  const c=catOf(n.categoryId);
+  return `<div class="act">
+    <button class="tbtn" onclick="showHome()">← Back</button>
+    <div style="flex:1"></div>
+    <button class="tbtn" onclick="openEdit('${n.id}')">Edit</button>
+    <button class="tbtn" style="color:#C0392B" onclick="deleteNote('${n.id}')">Delete</button>
+  </div>
+  <span class="cat-pill" style="background:${c?.color};color:${c?.text}">${c?.sym} ${c?.name}</span>
+  <h1 class="ntitle">${esc(n.title)}</h1>
+  ${n.source?`<p class="nsource">↳ ${esc(n.source)}</p>`:''}
+  <hr class="ndiv">
+  <pre class="nbody">${esc(n.content)}</pre>
+  <p class="ndate">Added ${fmt(n.createdAt)}${n.updatedAt?' · Edited '+fmt(n.updatedAt):''}</p>`;
+}
+
+function editHTML(){
+  return `<div class="act">
+    <select class="ecat" onchange="draft.categoryId=this.value">
+      ${CATS.map(c=>`<option value="${c.id}"${draft.categoryId===c.id?' selected':''}>${c.sym} ${c.name}</option>`).join('')}
+    </select>
+    <div style="flex:1"></div>
+    <button class="tbtn" onclick="cancelEdit()">Cancel</button>
+    <button class="tbtn primary" onclick="saveNote()">Save</button>
+  </div>
+  <input class="etitle" placeholder="Title" value="${esc(draft.title)}" oninput="draft.title=this.value">
+  <input class="esource" placeholder="Source — book, article, lecture…" value="${esc(draft.source||'')}" oninput="draft.source=this.value">
+  <textarea class="ebody" placeholder="Your notes here…" oninput="draft.content=this.value">${esc(draft.content||'')}</textarea>`;
+}
+
+function showHome(){selectedId=null;view='home';render();}
+function selectCat(id){activeCat=(activeCat===id?null:id);view='home';selectedId=null;render();}
+function selectNote(id){selectedId=id;view='note';render();}
+function cancelEdit(){view=selectedId?'note':'home';render();}
+
+function openNew(){
+  draft={id:'new-'+uid(),categoryId:activeCat||'strategy',title:'',content:'',source:'',createdAt:Date.now()};
+  view='edit';render();
+}
+function openEdit(id){
+  const n=notes.find(x=>x.id===id);if(!n)return;
+  draft={...n};view='edit';render();
+}
+function saveNote(){
+  if(!draft?.title?.trim()){alert('Please add a title.');return;}
+  const isNew=draft.id.startsWith('new-');
+  const e={...draft,id:isNew?uid():draft.id,updatedAt:Date.now()};
+  if(isNew)notes.push(e);
+  else{const i=notes.findIndex(n=>n.id===e.id);if(i>-1)notes[i]=e;}
+  save();selectedId=e.id;view='note';render();
+}
+function deleteNote(id){
+  if(!confirm('Delete this note?'))return;
+  notes=notes.filter(n=>n.id!==id);save();selectedId=null;view='home';render();
+}
+
+function exportNotes(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(notes,null,2)],{type:'application/json'}));
+  a.download='knowledge-hub-notes.json';a.click();
+}
+function importNotes(e){
+  const file=e.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const imp=JSON.parse(ev.target.result);
+      if(!Array.isArray(imp))throw new Error();
+      notes=imp;save();render();alert('Imported '+notes.length+' notes.');
+    }catch{alert('Could not read file.');}
+  };
+  r.readAsText(file);e.target.value='';
+}
+
+async function handlePDF(e){
+  const file=e.target.files[0];if(!file)return;e.target.value='';
+  const msg=s=>{const m=document.getElementById('pdf-msg'),w=document.getElementById('pdf-wrap');if(s){m.textContent=s;m.style.display='inline';w.style.display='none';}else{m.style.display='none';w.style.display='inline';}};
+  msg('Extracting text…');
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const buf=await file.arrayBuffer();
+    const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
+    let text='';
+    for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const ct=await pg.getTextContent();text+='\n--- Page '+i+' ---\n'+ct.items.map(x=>x.str).join(' ');}
+    if(text.trim().length<20)throw new Error('no text');
+    const entry={id:uid(),categoryId:activeCat||'others',title:file.name.replace(/\.pdf$/i,''),content:text.trim(),source:'Imported PDF: '+file.name,createdAt:Date.now()};
+    notes.push(entry);save();selectedId=entry.id;view='note';msg('');render();
+  }catch{msg('No text found in this PDF');setTimeout(()=>msg(''),3000);}
+}
+
+init();
+</script>
+</body>
+</html>
