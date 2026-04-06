@@ -3,312 +3,723 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Knowledge Base</title>
+<title> Hermes · Knowledge OS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Mono',monospace;background:#FAFAF8;overflow:hidden;height:100vh}
-.hub{display:flex;height:100vh;overflow:hidden}
-.sidebar{width:204px;min-width:204px;background:#1C1C1E;display:flex;flex-direction:column;overflow-y:auto}
-.sb-head{padding:20px 16px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
-.sb-title{font-family:'Lora',Georgia,serif;font-size:14px;font-weight:500;color:#F5F5F0;display:block}
-.sb-sub{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.12em;color:rgba(255,255,255,0.3);display:block;margin-top:4px;text-transform:uppercase}
-.sb-section{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.12em;color:rgba(255,255,255,0.25);text-transform:uppercase;padding:16px 16px 6px}
-.sb-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:7px 16px;border:none;background:transparent;cursor:pointer;border-left:2px solid transparent;transition:background 0.12s;text-align:left}
-.sb-btn:hover{background:rgba(255,255,255,0.06)}
-.sb-btn.on{background:rgba(255,255,255,0.1);border-left-color:#F5F5F0}
-.sb-label{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,0.75);display:flex;align-items:center;gap:8px}
-.sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.sb-count{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25)}
-.sb-footer{margin-top:auto;padding:14px 16px;border-top:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;gap:6px}
-.sb-note{font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.25);line-height:1.6}
-.sb-row{display:flex;gap:6px}
-.sb-action{padding:6px 0;font-family:'DM Mono',monospace;font-size:9px;border:1px solid rgba(255,255,255,0.15);border-radius:4px;background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.1s;letter-spacing:0.04em;width:100%;text-align:center}
-.sb-action:hover{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.85)}
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{padding:10px 16px;border-bottom:1px solid #E8E8E4;display:flex;gap:8px;align-items:center;background:#FAFAF8}
-.search{flex:1;height:30px;font-family:'DM Mono',monospace;font-size:11px;border:1px solid #DDD;border-radius:5px;padding:0 11px;background:white;color:#1C1C1E;outline:none;transition:border-color 0.1s}
-.search:focus{border-color:#999}
-.search::placeholder{color:#BBB}
-.tbtn{height:30px;padding:0 13px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.03em;border:1px solid #DDD;border-radius:5px;background:white;color:#333;cursor:pointer;white-space:nowrap;transition:all 0.1s}
-.tbtn:hover{background:#F0F0EE;border-color:#BBB}
-.tbtn:disabled{opacity:0.35;cursor:default}
-.tbtn.primary{background:#1C1C1E;color:white;border-color:#1C1C1E}
-.tbtn.primary:hover{background:#333}
-.cols{flex:1;display:flex;overflow:hidden}
-.list{width:240px;min-width:240px;border-right:1px solid #E8E8E4;overflow-y:auto;background:white}
-.nrow{padding:11px 14px;cursor:pointer;border-left:3px solid transparent;border-bottom:1px solid #F0F0EC;transition:background 0.1s}
-.nrow:hover{background:#F8F8F5}
-.nrow.on{border-left-color:#1C1C1E;background:#F4F4F0}
-.nrow-title{font-family:'Lora',Georgia,serif;font-size:12.5px;font-weight:500;color:#1C1C1E;line-height:1.4;margin-bottom:4px}
-.nrow-cat{display:inline-flex;align-items:center;gap:4px;font-family:'DM Mono',monospace;font-size:9px;padding:1px 7px;border-radius:10px}
-.detail{flex:1;overflow-y:auto;padding:28px 32px;background:#FAFAF8}
-.dw{max-width:580px}
-.act{display:flex;gap:7px;align-items:center;margin-bottom:20px}
-.cat-pill{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:0.04em;border-radius:12px;padding:4px 10px;margin-bottom:10px}
-.ntitle{font-family:'Lora',Georgia,serif;font-size:22px;font-weight:500;line-height:1.32;color:#1C1C1E;margin:8px 0 5px}
-.nsource{font-family:'DM Mono',monospace;font-size:9.5px;color:#888;letter-spacing:0.04em;margin-bottom:20px}
-.ndiv{border:none;border-top:1px solid #E8E8E4;margin-bottom:20px}
-.nbody{font-family:'Lora',Georgia,serif;font-size:14px;line-height:1.9;color:#2C2C2A;white-space:pre-wrap}
-.ndate{font-family:'DM Mono',monospace;font-size:9px;color:#BBB;margin-top:28px;letter-spacing:0.04em}
-.etitle{width:100%;font-family:'Lora',Georgia,serif;font-size:20px;font-weight:500;border:none;border-bottom:1px solid #DDD;border-radius:0;padding:3px 0 9px;background:transparent;color:#1C1C1E;outline:none;margin-bottom:10px}
-.etitle::placeholder{color:#CCC;font-style:italic}
-.esource{width:100%;font-family:'DM Mono',monospace;font-size:10.5px;border:none;border-bottom:1px solid #EEE;border-radius:0;padding:2px 0 8px;background:transparent;color:#888;outline:none;margin-bottom:16px}
-.esource::placeholder{color:#CCC}
-.ebody{width:100%;min-height:300px;font-family:'Lora',Georgia,serif;font-size:14px;line-height:1.85;border:1px solid #DDD;border-radius:7px;padding:14px 16px;background:white;color:#1C1C1E;resize:vertical;outline:none;transition:border-color 0.1s}
-.ebody:focus{border-color:#999}
-.ebody::placeholder{color:#CCC;font-style:italic}
-.ecat{height:28px;font-family:'DM Mono',monospace;font-size:10px;border:1px solid #DDD;border-radius:5px;padding:0 8px;background:white;color:#333;outline:none}
-.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:10px;margin-bottom:28px}
-.hcard{padding:16px;border-radius:10px;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;border:1px solid rgba(0,0,0,0.06)}
-.hcard:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.08)}
-.hcard-sym{font-size:18px;margin-bottom:9px;display:block}
-.hcard-name{font-family:'Lora',Georgia,serif;font-size:13px;font-weight:500;margin-bottom:3px}
-.hcard-n{font-family:'DM Mono',monospace;font-size:9px;opacity:0.6}
-.hint{font-family:'DM Mono',monospace;font-size:10px;color:#AAA;line-height:1.7}
-.empty{padding:16px;font-family:'DM Mono',monospace;font-size:10px;color:#BBB}
-.pdf-msg{font-family:'DM Mono',monospace;font-size:10px;color:#888}
+:root{
+  --bg:#060606;--s1:#0f0f0f;--s2:#161616;--s3:#1e1e1e;
+  --border:#272727;--border2:#333;
+  --text:#e8e8e8;--muted:#666;--muted2:#3a3a3a;--accent:#c8c8c8;--white:#f5f5f5;
+  --cs:#3b82f6;--cm:#a855f7;--cf:#22c55e;--cb:#f97316;--cc:#06b6d4;--cv:#ef4444;--co:#6b7280;
+  --r:8px;--fd:'Fraunces',Georgia,serif;--fb:'DM Sans',system-ui,sans-serif;--fm:'DM Mono','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px;-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font-family:inherit;border:none;background:none;color:inherit}
+input,textarea,select{font-family:inherit;color:inherit;background:none;border:none;outline:none}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::selection{background:#ffffff22}
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* NAV */
+.nav{display:flex;align-items:center;border-bottom:1px solid var(--border);background:var(--s1);padding:0 18px;height:46px;flex-shrink:0}
+.brand{font-family:var(--fd);font-size:13px;letter-spacing:.12em;color:var(--accent);margin-right:24px;font-weight:400}
+.brand em{opacity:.3;font-style:normal}
+.ntabs{display:flex;height:100%}
+.ntab{padding:0 14px;height:100%;display:flex;align-items:center;font-size:11.5px;letter-spacing:.07em;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;font-weight:500;white-space:nowrap}
+.ntab:hover{color:var(--accent)}.ntab.active{color:var(--white);border-bottom-color:var(--white)}
+.nav-r{margin-left:auto;display:flex;align-items:center;gap:7px}
+.btn{padding:4px 11px;border-radius:var(--r);font-size:11.5px;font-weight:500;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+.bg{border:1px solid var(--border);color:var(--muted)}.bg:hover{border-color:var(--border2);color:var(--accent)}
+.bs{background:var(--white);color:#000;font-weight:600}.bs:hover{background:#ddd}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--muted2);transition:background .3s;flex-shrink:0}
+.sdot.synced{background:#22c55e}.sdot.syncing{background:#f97316;animation:pulse 1s infinite}.sdot.error{background:#ef4444}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.tc{flex:1;overflow:hidden;display:none}.tc.active{display:flex}
+
+/* ══════════════ NOTES LAYOUT ══════════════ */
+.nl{display:flex;width:100%;height:100%;overflow:hidden}
+
+/* P1: Folders */
+.fp{width:196px;min-width:150px;border-right:1px solid var(--border);background:var(--s1);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.fp-head{padding:13px 14px 8px;display:flex;align-items:center;justify-content:space-between}
+.fp-label{font-size:10px;letter-spacing:.12em;color:var(--muted);font-family:var(--fm)}
+.fp-add{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--muted);transition:all .1s}
+.fp-add:hover{background:var(--s3);color:var(--white)}
+.fi-item{display:flex;align-items:center;gap:8px;padding:7px 14px;cursor:pointer;transition:background .1s;position:relative}
+.fi-item:hover{background:var(--s2)}.fi-item.active{background:var(--s3)}
+.fi-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;border-radius:0 2px 2px 0;background:var(--fi-color,var(--muted))}
+.fi-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.fi-name{font-size:12.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fi-item.active .fi-name{color:var(--white)}
+.fi-count{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.fp-sep{height:1px;background:var(--border);margin:6px 10px}
+.fp-sec{padding:6px 14px 4px;font-size:10px;letter-spacing:.1em;color:var(--muted2);font-family:var(--fm)}
+.fp-bot{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:6px;margin-top:auto;flex-wrap:wrap}
+.fp-bot-btn{font-size:10px;font-family:var(--fm);color:var(--muted);padding:3px 8px;border:1px solid var(--border);border-radius:3px;transition:all .1s;cursor:pointer}
+.fp-bot-btn:hover{border-color:var(--border2);color:var(--accent)}
+
+/* P2: Note list */
+.np{width:264px;min-width:200px;border-right:1px solid var(--border);background:var(--bg);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.np-head{padding:9px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;flex-shrink:0}
+.np-search{flex:1;padding:6px 9px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);font-size:12px;color:var(--text)}
+.np-search::placeholder{color:var(--muted)}.np-search:focus{border-color:var(--border2)}
+.np-plus{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;color:var(--muted);flex-shrink:0;transition:all .1s}
+.np-plus:hover{background:var(--s3);color:var(--white);border-color:var(--border2)}
+.np-bar{padding:9px 12px 6px;font-size:10px;letter-spacing:.08em;color:var(--muted);font-family:var(--fm);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--border)}
+.note-list{flex:1;overflow-y:auto}
+.ni{padding:11px 13px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;position:relative}
+.ni:hover{background:var(--s1)}.ni.active{background:var(--s2)}
+.ni.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--white)}
+.ni-t{font-size:13px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ni.active .ni-t{color:var(--white)}
+.ni-p{font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:5px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.ni-m{display:flex;align-items:center;gap:6px}
+.ni-tag{font-size:10px;font-family:var(--fm);padding:1px 5px;border-radius:3px}
+.ni-date{font-size:10px;color:var(--muted2);font-family:var(--fm);margin-left:auto}
+.nl-empty{padding:28px 13px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7}
+
+/* P3: Editor */
+.ep{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:var(--s1)}
+.ep-home{flex:1;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center}
+.cg-wrap{width:100%;max-width:640px;padding:36px 40px}
+.cg-wrap h1{font-family:var(--fd);font-size:26px;font-weight:300;color:var(--white);margin-bottom:5px}
+.cg-wrap .sub{font-size:12px;font-family:var(--fm);color:var(--muted);margin-bottom:26px}
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cc{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:18px 16px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
+.cc:hover{border-color:var(--border2);background:var(--s3);transform:translateY(-1px)}
+.cc-bar{position:absolute;top:0;left:0;right:0;height:2px;border-radius:10px 10px 0 0;opacity:.5}
+.cc-icon{font-size:18px;margin-bottom:9px}.cc-name{font-size:12.5px;font-weight:500;margin-bottom:2px}.cc-count{font-size:10px;color:var(--muted);font-family:var(--fm)}
+.ep-top{display:flex;align-items:center;gap:5px;padding:9px 15px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.tb{padding:3px 8px;border-radius:4px;font-size:11px;color:var(--muted);border:1px solid transparent;transition:all .1s;font-family:var(--fm);line-height:1.4}
+.tb:hover{background:var(--s2);color:var(--accent);border-color:var(--border)}.tb-s{width:1px;height:13px;background:var(--border);margin:0 3px;flex-shrink:0}
+.ep-cat{font-size:11px;font-family:var(--fm);padding:3px 9px;border-radius:4px;border:1px solid var(--border);background:var(--s2);cursor:pointer;color:var(--muted)}
+.ep-cat:focus{border-color:var(--border2)}
+.ep-src{padding:7px 18px 0;border-bottom:1px solid var(--border);flex-shrink:0}
+.ep-src input{width:100%;font-size:11.5px;font-family:var(--fm);color:var(--muted);padding:0 0 7px}
+.ep-src input::placeholder{color:var(--muted2)}
+.ep-title-wrap{padding:15px 18px 3px;flex-shrink:0}
+.ep-title{font-family:var(--fd);font-size:24px;font-weight:300;color:var(--white);width:100%;resize:none;line-height:1.3;overflow:hidden}
+.ep-title::placeholder{color:var(--muted2)}
+.ep-tags-wrap{padding:3px 18px 9px;border-bottom:1px solid var(--border);flex-shrink:0}
+.ep-tags{font-size:11px;font-family:var(--fm);color:var(--muted);width:100%}
+.ep-tags::placeholder{color:var(--muted2)}
+.ep-body{flex:1;overflow-y:auto;padding:13px 18px}
+.ep-content{width:100%;min-height:280px;resize:none;font-size:13.5px;line-height:1.9;color:var(--text);background:transparent}
+.ep-content::placeholder{color:var(--muted2)}
+.ep-pdf{margin:10px 18px;border:1px dashed var(--border2);border-radius:var(--r);padding:11px;text-align:center;cursor:pointer;transition:all .15s;color:var(--muted);font-size:11.5px;font-family:var(--fm)}
+.ep-pdf:hover{border-color:var(--accent);color:var(--accent)}
+.ep-foot{display:flex;align-items:center;gap:8px;padding:8px 18px;border-top:1px solid var(--border);flex-shrink:0}
+.wc{font-size:10px;font-family:var(--fm);color:var(--muted)}.ss{font-size:10px;font-family:var(--fm);color:var(--muted)}
+
+/* DEAL ROOM */
+.dl{display:flex;flex-direction:column;width:100%;height:100%;overflow:hidden}
+.dl-top{display:flex;align-items:center;gap:8px;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--s1);flex-shrink:0}
+.dl-tabs{display:flex;border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.dl-tab{padding:5px 14px;font-size:11.5px;color:var(--muted);transition:all .1s}
+.dl-tab.active{background:var(--s3);color:var(--white)}
+.dl-body{flex:1;overflow:hidden;display:flex}
+.pb{display:flex;overflow-x:auto;padding:16px;height:100%;align-items:flex-start}
+.pc{min-width:205px;max-width:205px;background:var(--s1);border:1px solid var(--border);border-radius:10px;display:flex;flex-direction:column;max-height:100%;margin-right:10px;flex-shrink:0}
+.pc-h{padding:11px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.pc-s{font-size:10px;font-weight:600;letter-spacing:.1em;font-family:var(--fm)}
+.pc-n{font-size:10px;font-family:var(--fm);color:var(--muted);background:var(--s3);padding:1px 6px;border-radius:3px}
+.pc-cards{flex:1;overflow-y:auto;padding:7px}
+.dc{background:var(--s2);border:1px solid var(--border);border-radius:7px;padding:11px;margin-bottom:7px;cursor:default;transition:all .12s}
+.dc:hover{border-color:var(--border2)}
+.dc-n{font-size:12.5px;font-weight:500;margin-bottom:4px}
+.dc-s{font-size:10px;font-family:var(--fm);color:var(--muted);margin-bottom:6px}
+.dc-f{display:flex;align-items:center;justify-content:space-between}
+.cv{display:flex;gap:2px}.cvd{width:5px;height:5px;border-radius:50%;background:var(--border2)}.cvd.on{background:var(--white)}
+.dc-d{font-size:9px;font-family:var(--fm);color:var(--muted)}
+.pc-add{width:calc(100% - 14px);margin:0 7px 7px;padding:7px;border:1px dashed var(--border);border-radius:6px;font-size:11px;color:var(--muted);text-align:center;transition:all .1s}
+.pc-add:hover{border-color:var(--border2);color:var(--accent)}
+.scr-l{padding:20px;overflow-y:auto;width:100%}
+.scr-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:12px;margin-top:16px}
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:16px;transition:all .12s}
+.sc:hover{border-color:var(--border2)}
+.sc-h{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.sc-name{font-size:14px;font-weight:500}.sc-stage{font-size:10px;font-family:var(--fm);padding:2px 7px;border-radius:3px;border:1px solid var(--border);color:var(--muted)}
+.sc-sec{font-size:11px;color:var(--muted);font-family:var(--fm);margin-bottom:8px}
+.sc-note{font-size:12px;line-height:1.6;color:var(--accent);margin-bottom:10px;min-height:30px}
+.sc-foot{display:flex;align-items:center;gap:8px}
+.sc-bar{flex:1;height:2px;background:var(--s3);border-radius:2px;overflow:hidden}
+.sc-fill{height:100%;background:var(--white);border-radius:2px}
+.sc-lbl{font-size:10px;font-family:var(--fm);color:var(--muted)}
+.sc-del{font-size:10px;color:var(--muted2);padding:2px 6px;border-radius:3px}
+.sc-del:hover{color:#ef4444}
+.wl-l{padding:20px;overflow-y:auto;width:100%}
+.wl-t{width:100%;border-collapse:collapse;margin-top:14px}
+.wl-t th{font-size:10px;font-family:var(--fm);letter-spacing:.08em;color:var(--muted);font-weight:400;text-align:left;padding:7px 10px;border-bottom:1px solid var(--border)}
+.wl-t td{padding:10px;border-bottom:1px solid var(--border);font-size:12.5px}
+.wl-t tr:hover td{background:var(--s1)}
+.wl-type{font-size:10px;font-family:var(--fm);padding:2px 6px;border-radius:3px;border:1px solid var(--border);color:var(--muted)}
+.wl-del{color:var(--muted2);padding:2px 6px;border-radius:3px;font-size:11px}.wl-del:hover{color:#ef4444}
+
+/* BOARD */
+.bl{display:flex;flex-direction:column;width:100%;height:100%;overflow:hidden}
+.bl-top{display:flex;align-items:center;gap:8px;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--s1);flex-shrink:0}
+.bl-canvas{flex:1;overflow:auto;padding:18px}
+.bg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px;align-items:start}
+.bcard{border-radius:10px;padding:15px;position:relative;transition:all .12s;border:1px solid transparent}
+.bcard:hover .cdel{opacity:1}
+.cdel{position:absolute;top:8px;right:8px;font-size:11px;color:rgba(255,255,255,.22);opacity:0;transition:opacity .15s;padding:2px 5px;border-radius:3px;background:rgba(0,0,0,.3)}
+.cdel:hover{color:#ef4444}
+.sticky-c{border-color:transparent}
+.sticky-ta{font-size:13px;line-height:1.7;width:100%;background:transparent;resize:none;min-height:80px}
+.sticky-ta::placeholder{opacity:.32}
+.quote-c{background:var(--s1);border-color:var(--border);padding:20px}
+.qt{font-family:var(--fd);font-style:italic;font-size:15px;line-height:1.7;color:var(--accent);margin-bottom:8px;width:100%;background:transparent;resize:none;min-height:52px}
+.qt::placeholder{opacity:.32;font-style:italic}
+.qa{font-size:11px;font-family:var(--fm);color:var(--muted);width:100%;background:transparent}
+.qa::placeholder{opacity:.32}
+.link-c{background:var(--s2);border-color:var(--border)}
+.lu{font-size:11px;font-family:var(--fm);color:var(--muted);width:100%;background:transparent;margin-bottom:6px}
+.lu::placeholder{opacity:.32}
+.lt{font-size:13px;font-weight:500;width:100%;background:transparent;margin-bottom:4px}
+.lt::placeholder{opacity:.32}
+.ld{font-size:11.5px;color:var(--muted);line-height:1.6;width:100%;background:transparent;resize:none;min-height:36px}
+.ld::placeholder{opacity:.32}
+.lopen{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:var(--fm);color:var(--muted);margin-top:6px;border:1px solid var(--border);padding:2px 8px;border-radius:3px;transition:all .1s}
+.lopen:hover{color:var(--accent);border-color:var(--border2)}
+.cp{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+.csw{width:13px;height:13px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .1s}
+.csw:hover,.csw.on{transform:scale(1.35);border-color:rgba(255,255,255,.4)}
+
+/* MODALS */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.mo.open{display:flex}
+.mbox{background:var(--s1);border:1px solid var(--border2);border-radius:12px;padding:24px;width:450px;max-width:92vw;max-height:88vh;overflow-y:auto}
+.mbox h2{font-family:var(--fd);font-size:20px;font-weight:300;margin-bottom:16px;color:var(--white)}
+.fg{margin-bottom:13px}.fl{display:block;font-size:10px;font-family:var(--fm);color:var(--muted);letter-spacing:.07em;margin-bottom:5px}
+.fi{width:100%;padding:8px 11px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--text);transition:border .1s}
+.fi:focus{border-color:var(--border2)}.fi::placeholder{color:var(--muted2)}
+.fsel{width:100%;padding:8px 11px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--text);cursor:pointer}
+.fta{width:100%;padding:8px 11px;background:var(--s2);border:1px solid var(--border);border-radius:var(--r);font-size:13px;color:var(--text);resize:vertical;min-height:72px;line-height:1.6}
+.fta:focus{border-color:var(--border2)}
+.stars{display:flex;gap:4px;margin-top:4px}
+.star{font-size:18px;color:var(--muted2);transition:color .1s;cursor:pointer;background:none;border:none;padding:0}
+.star.on{color:#f5c842}
+.ma{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+.sinfo{font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:14px;padding:10px 12px;background:var(--s2);border-radius:var(--r);border:1px solid var(--border)}
+.sinfo a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--s3);border:1px solid var(--border2);padding:9px 16px;border-radius:var(--r);font-size:11.5px;font-family:var(--fm);z-index:200;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .18s ease}
+
+@media(max-width:768px){
+  .fp{width:100%;border-right:none;position:absolute;z-index:10;height:100%;display:none}
+  .fp.open{display:flex}.np{width:100%;min-width:0;border-right:none}
+  .ep{display:none;position:absolute;inset:0;z-index:10}.ep.open{display:flex}
+  .brand{display:none}.cg{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
-<div class="hub">
-  <div class="sidebar">
-    <div class="sb-head">
-      <span class="sb-title">Knowledge Base</span>
-      <span class="sb-sub">Personal Library</span>
-    </div>
-    <div style="padding-top:8px">
-      <button class="sb-btn" id="btn-all" onclick="showHome()">
-        <span class="sb-label">All notes</span>
-        <span class="sb-count" id="count-all">0</span>
-      </button>
-    </div>
-    <div class="sb-section" style="margin-top:8px">Categories</div>
-    <div id="cat-nav"></div>
-    <div class="sb-footer">
-      <span class="sb-note">Notes saved in browser.<br>Export to move between machines.</span>
-      <div class="sb-row">
-        <button class="sb-action" onclick="exportNotes()">↓ Export</button>
-        <label class="sb-action" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importNotes(event)"></label>
+<div class="app">
+
+<nav class="nav">
+  <div class="brand">THE <em>CAVE</em></div>
+  <div class="ntabs">
+    <button class="ntab active" onclick="switchTab('notes')">VAULT</button>
+    <button class="ntab" onclick="switchTab('deals')">DEAL ROOM</button>
+    <button class="ntab" onclick="switchTab('board')">BOARD</button>
+  </div>
+  <div class="nav-r">
+    <span class="sdot" id="syncDot"></span>
+    <button class="btn bg" onclick="openSettings()">⚙ Sync</button>
+    <button class="btn bg" onclick="exportData()">↓ Export</button>
+    <label class="btn bg" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+  </div>
+</nav>
+
+<!-- VAULT -->
+<div class="tc active" id="tab-notes">
+  <div class="nl">
+
+    <!-- Panel 1: Folders -->
+    <div class="fp" id="foldersPanel">
+      <div class="fp-head">
+        <span class="fp-label">LIBRARY</span>
+        <button class="fp-add" onclick="newNote()" title="New note (⌘N)">+</button>
+      </div>
+      <div class="fi-item active" id="fi-all" onclick="selectFolder('all')" style="--fi-color:var(--muted)">
+        <span class="fi-dot" style="background:var(--muted)"></span>
+        <span class="fi-name" style="color:var(--accent)">All notes</span>
+        <span class="fi-count" id="fc-all">0</span>
+      </div>
+      <div class="fp-sep"></div>
+      <div class="fp-sec">FOLDERS</div>
+      <div class="fi-item" id="fi-Strategy" onclick="selectFolder('Strategy')" style="--fi-color:var(--cs)">
+        <span class="fi-dot" style="background:var(--cs)"></span><span class="fi-name">Strategy</span><span class="fi-count" id="fc-Strategy">0</span>
+      </div>
+      <div class="fi-item" id="fi-MentalModels" onclick="selectFolder('Mental Models')" style="--fi-color:var(--cm)">
+        <span class="fi-dot" style="background:var(--cm)"></span><span class="fi-name">Mental Models</span><span class="fi-count" id="fc-MentalModels">0</span>
+      </div>
+      <div class="fi-item" id="fi-Finance" onclick="selectFolder('Finance')" style="--fi-color:var(--cf)">
+        <span class="fi-dot" style="background:var(--cf)"></span><span class="fi-name">Finance</span><span class="fi-count" id="fc-Finance">0</span>
+      </div>
+      <div class="fi-item" id="fi-Business" onclick="selectFolder('Business')" style="--fi-color:var(--cb)">
+        <span class="fi-dot" style="background:var(--cb)"></span><span class="fi-name">Business</span><span class="fi-count" id="fc-Business">0</span>
+      </div>
+      <div class="fi-item" id="fi-Consulting" onclick="selectFolder('Consulting')" style="--fi-color:var(--cc)">
+        <span class="fi-dot" style="background:var(--cc)"></span><span class="fi-name">Consulting</span><span class="fi-count" id="fc-Consulting">0</span>
+      </div>
+      <div class="fi-item" id="fi-VCInvesting" onclick="selectFolder('VC & Investing')" style="--fi-color:var(--cv)">
+        <span class="fi-dot" style="background:var(--cv)"></span><span class="fi-name">VC & Investing</span><span class="fi-count" id="fc-VCInvesting">0</span>
+      </div>
+      <div class="fi-item" id="fi-Others" onclick="selectFolder('Others')" style="--fi-color:var(--co)">
+        <span class="fi-dot" style="background:var(--co)"></span><span class="fi-name">Others</span><span class="fi-count" id="fc-Others">0</span>
+      </div>
+      <div class="fp-bot">
+        <button class="fp-bot-btn" onclick="exportData()">↓ Export</button>
+        <label class="fp-bot-btn" style="cursor:pointer">↑ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
       </div>
     </div>
-  </div>
-  <div class="main">
-    <div class="topbar">
-      <input class="search" id="search" type="text" placeholder="Search notes, sources, content…" oninput="renderList()">
-      <span id="pdf-msg" class="pdf-msg" style="display:none"></span>
-      <span id="pdf-wrap">
-        <input type="file" id="pdf-in" accept=".pdf" style="display:none" onchange="handlePDF(event)">
-        <button class="tbtn" onclick="document.getElementById('pdf-in').click()">↑ PDF</button>
-      </span>
-      <button class="tbtn primary" onclick="openNew()">+ Note</button>
+
+    <!-- Panel 2: Note list -->
+    <div class="np" id="notelistPanel">
+      <div class="np-head">
+        <input class="np-search" type="text" placeholder="Search…" id="searchInput" oninput="filterNotes()">
+        <button class="np-plus" onclick="newNote()" title="New note">+</button>
+      </div>
+      <div class="np-bar">
+        <span id="folderLabel">All notes</span>
+        <span id="noteCountLabel" style="color:var(--muted2)">0</span>
+      </div>
+      <div class="note-list" id="noteList"></div>
     </div>
-    <div class="cols">
-      <div class="list" id="note-list"></div>
-      <div class="detail"><div class="dw" id="detail"></div></div>
+
+    <!-- Panel 3: Editor -->
+    <div class="ep" id="editorPanel">
+      <!-- Home: category grid -->
+      <div class="ep-home" id="epHome">
+        <div class="cg-wrap">
+          <h1 id="homeTitle">Your knowledge base</h1>
+          <p class="sub" id="homeSub">0 notes · 7 folders</p>
+          <div class="cg" id="catGrid"></div>
+        </div>
+      </div>
+      <!-- Editor active -->
+      <div id="epActive" style="display:none;flex-direction:column;height:100%">
+        <div class="ep-top">
+          <select class="ep-cat" id="noteCat" onchange="scheduleNoteSave()">
+            <option>Strategy</option><option>Mental Models</option><option>Finance</option>
+            <option>Business</option><option>Consulting</option><option>VC & Investing</option><option>Others</option>
+          </select>
+          <div class="tb-s"></div>
+          <button class="tb" onclick="wrapSel('**','**')"><b>B</b></button>
+          <button class="tb" onclick="wrapSel('_','_')"><i>I</i></button>
+          <button class="tb" onclick="insertLine('## ')">H2</button>
+          <button class="tb" onclick="insertLine('### ')">H3</button>
+          <button class="tb" onclick="insertLine('- ')">List</button>
+          <button class="tb" onclick="insertLine('> ')">Quote</button>
+          <button class="tb" onclick="wrapSel('`','`')">Code</button>
+          <div class="tb-s"></div>
+          <span class="ss" id="saveStatus"></span>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button class="btn bg" style="font-size:11px;padding:3px 10px;color:#ef4444;border-color:transparent" onclick="deleteNote()">Delete</button>
+            <button class="btn bs" style="font-size:11px;padding:3px 12px" onclick="saveCurrentNote()">Save</button>
+          </div>
+        </div>
+        <div class="ep-src">
+          <input type="text" id="noteSource" placeholder="Source — book, article, lecture, person…" oninput="scheduleNoteSave()">
+        </div>
+        <div class="ep-title-wrap">
+          <textarea class="ep-title" id="noteTitle" rows="1" placeholder="Title" oninput="autoGrow(this);scheduleNoteSave()"></textarea>
+        </div>
+        <div class="ep-tags-wrap">
+          <input class="ep-tags" type="text" id="noteTags" placeholder="tags, comma-separated" oninput="scheduleNoteSave()">
+        </div>
+        <div class="ep-body">
+          <textarea class="ep-content" id="noteContent" placeholder="Write, paste from Apple Notes, or drop a PDF below…" oninput="updateWC();scheduleNoteSave()"></textarea>
+        </div>
+        <div class="ep-pdf" id="pdfZone"
+             onclick="document.getElementById('pdfInput').click()"
+             ondragover="event.preventDefault();this.style.borderColor='var(--accent)'"
+             ondragleave="this.style.borderColor=''"
+             ondrop="onPdfDrop(event)">
+          ↑ Drop PDF to extract text · click to browse
+          <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="onPdfFile(event)">
+        </div>
+        <div class="ep-foot">
+          <span class="wc" id="wordCount">0 words</span>
+          <span style="font-size:10px;font-family:var(--fm);color:var(--muted2);margin-left:8px" id="noteDate"></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DEAL ROOM -->
+<div class="tc" id="tab-deals">
+  <div class="dl">
+    <div class="dl-top">
+      <div class="dl-tabs">
+        <button class="dl-tab active" onclick="switchDT('pipeline')">Pipeline</button>
+        <button class="dl-tab" onclick="switchDT('screening')">Screening</button>
+        <button class="dl-tab" onclick="switchDT('watchlist')">Watchlist</button>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:7px">
+        <button class="btn bg" id="addDealBtn" onclick="openDealModal()">+ Add Deal</button>
+        <button class="btn bg" id="addWatchBtn" style="display:none" onclick="openWatchModal()">+ Add</button>
+      </div>
+    </div>
+    <div class="dl-body">
+      <div id="dealPipeline" class="pb"></div>
+      <div id="dealScreening" class="scr-l" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h2 style="font-family:var(--fd);font-weight:300;font-size:22px;color:var(--white)">Screening</h2>
+          <button class="btn bg" onclick="openDealModal()">+ Screen</button>
+        </div>
+        <div class="scr-g" id="screeningGrid"></div>
+      </div>
+      <div id="dealWatchlist" class="wl-l" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <h2 style="font-family:var(--fd);font-weight:300;font-size:22px;color:var(--white)">Watchlist</h2>
+          <button class="btn bg" onclick="openWatchModal()">+ Add</button>
+        </div>
+        <table class="wl-t">
+          <thead><tr><th>COMPANY</th><th>TYPE</th><th>TICKER</th><th>NOTE</th><th>ADDED</th><th></th></tr></thead>
+          <tbody id="watchlistBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- BOARD -->
+<div class="tc" id="tab-board">
+  <div class="bl">
+    <div class="bl-top">
+      <button class="btn bg" onclick="addCard('sticky')">+ Sticky</button>
+      <button class="btn bg" onclick="addCard('quote')">+ Quote</button>
+      <button class="btn bg" onclick="addCard('link')">+ Link</button>
+      <span style="margin-left:auto;font-size:11px;font-family:var(--fm);color:var(--muted)">Auto-saved · syncs to Gist</span>
+    </div>
+    <div class="bl-canvas"><div class="bg-grid" id="boardGrid"></div></div>
+  </div>
+</div>
+
+</div>
+
+<!-- MODALS -->
+<div class="mo" id="settingsModal">
+  <div class="mbox fu">
+    <h2>Sync · GitHub Gist</h2>
+    <div class="sinfo">Free cross-device sync via a private GitHub Gist.<br>
+      1. <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> → Generate classic token · scope: <code style="background:var(--s3);padding:1px 5px;border-radius:3px">gist</code> only.<br>
+      2. Paste below. First sync auto-creates a Gist.
+    </div>
+    <div class="fg"><label class="fl">GITHUB PERSONAL ACCESS TOKEN</label><input class="fi" type="password" id="sToken" placeholder="ghp_xxxxxxxxxxxx"></div>
+    <div class="fg"><label class="fl">GIST ID <span style="color:var(--muted2)">(auto-filled after first sync)</span></label><input class="fi" type="text" id="sGistId" placeholder="Leave blank to create new"></div>
+    <div class="ma">
+      <button class="btn bg" onclick="closeM('settingsModal')">Cancel</button>
+      <button class="btn bs" onclick="saveSettings()">Save & Sync</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="dealModal">
+  <div class="mbox fu">
+    <h2>Add Deal</h2>
+    <div class="fg"><label class="fl">COMPANY</label><input class="fi" type="text" id="dName" placeholder="Acme Inc."></div>
+    <div class="fg"><label class="fl">SECTOR</label><input class="fi" type="text" id="dSector" placeholder="Fintech · SaaS · DeepTech"></div>
+    <div class="fg"><label class="fl">STAGE</label>
+      <select class="fsel" id="dStage"><option>Pre-Seed</option><option>Seed</option><option>Series A</option><option>Series B</option><option>Growth</option><option>Public</option></select>
+    </div>
+    <div class="fg"><label class="fl">CONVICTION (1–5)</label>
+      <div class="stars" id="starsUI">
+        <button class="star" data-v="1" onclick="setConv(1)">★</button><button class="star" data-v="2" onclick="setConv(2)">★</button>
+        <button class="star" data-v="3" onclick="setConv(3)">★</button><button class="star" data-v="4" onclick="setConv(4)">★</button>
+        <button class="star" data-v="5" onclick="setConv(5)">★</button>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">THESIS / NOTE</label><textarea class="fta" id="dNote" placeholder="Why interesting? Key moat. Red flag."></textarea></div>
+    <div class="ma"><button class="btn bg" onclick="closeM('dealModal')">Cancel</button><button class="btn bs" onclick="saveDeal()">Add</button></div>
+  </div>
+</div>
+
+<div class="mo" id="watchModal">
+  <div class="mbox fu">
+    <h2>Add to Watchlist</h2>
+    <div class="fg"><label class="fl">COMPANY / ASSET</label><input class="fi" type="text" id="wName" placeholder="TSMC, BTC…"></div>
+    <div class="fg"><label class="fl">TYPE</label><select class="fsel" id="wType"><option>Equity</option><option>VC Target</option><option>Comp</option><option>Macro</option><option>Crypto</option></select></div>
+    <div class="fg"><label class="fl">TICKER</label><input class="fi" type="text" id="wTicker" placeholder="TSM"></div>
+    <div class="fg"><label class="fl">NOTE</label><input class="fi" type="text" id="wNote" placeholder="Why watching?"></div>
+    <div class="ma"><button class="btn bg" onclick="closeM('watchModal')">Cancel</button><button class="btn bs" onclick="saveWatch()">Add</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const CATS=[
-  {id:'strategy',   name:'Strategy',       sym:'♟',color:'#E8F4FD',accent:'#2E86C1',text:'#1A5276'},
-  {id:'mental',     name:'Mental Models',  sym:'◎',color:'#FEF9E7',accent:'#D4AC0D',text:'#7D6608'},
-  {id:'finance',    name:'Finance',        sym:'△',color:'#EAFAF1',accent:'#1E8449',text:'#145A32'},
-  {id:'business',   name:'Business',       sym:'□',color:'#FDF2F8',accent:'#8E44AD',text:'#6C3483'},
-  {id:'consulting', name:'Consulting',     sym:'◇',color:'#FEF5E7',accent:'#CA6F1E',text:'#784212'},
-  {id:'vc',         name:'VC & Investing', sym:'◉',color:'#FDEDEC',accent:'#CB4335',text:'#922B21'},
-  {id:'others',     name:'Others',         sym:'○',color:'#F2F3F4',accent:'#616A6B',text:'#2C3E50'},
-];
-const STARTER=[
-  {id:'s1', categoryId:'strategy',   title:'The Kernel of Good Strategy',   source:'Crux — Richard Rumelt',                  content:'Every good strategy has three elements:\n1. Diagnosis — defines the nature of the challenge\n2. Guiding policy — the approach to dealing with it\n3. Coherent actions — coordinated steps that carry out the policy\n\nMost \'strategy\' is just goal-setting with a fancy name. The kernel is what separates real strategy from fluff.'},
-  {id:'s2', categoryId:'strategy',   title:'Good Strategy vs Bad Strategy', source:'Good Strategy Bad Strategy — Rumelt',     content:'Bad strategy hallmarks:\n- Fluff: buzzwords masquerading as strategy\n- Failure to face the actual challenge\n- Mistaking goals for strategy\n\nGood strategy identifies the one or two critical factors, then concentrates resources on them.\n\nKey: diagnosis → policy → action. Not vision → goals → budget.'},
-  {id:'s3', categoryId:'strategy',   title:'Porter\'s Five Forces',         source:'Competitive Advantage — Michael Porter', content:'Industry profitability is determined by:\n1. Threat of new entrants\n2. Bargaining power of suppliers\n3. Bargaining power of buyers\n4. Threat of substitutes\n5. Rivalry among existing competitors\n\nGeneric strategies: Cost leadership · Differentiation · Focus\n\nStuck in the middle = worst position.'},
-  {id:'s4', categoryId:'finance',    title:'DCF — Discounted Cash Flow',    source:'IB / Valuation',                         content:'Core idea: a company is worth the PV of all future free cash flows\n\nFCF = EBIT(1-t) + D&A - CapEx - ΔNWC\n\nTerminal value:\n  Gordon Growth: FCF_n × (1+g) / (WACC - g)\n  Exit multiple: EBITDA × peer multiple\n\nDiscount at WACC → add cash, subtract debt → equity value\n\nKey sensitivities: WACC and terminal growth rate drive 60-80% of value.'},
-  {id:'s5', categoryId:'finance',    title:'LBO — Leveraged Buyout',        source:'IB / PE',                                content:'PE firm acquires company using ~60-70% debt, rest equity\n\nReturn drivers:\n1. EBITDA growth\n2. Multiple expansion\n3. Debt paydown\n\nIRR target: 20-25%+ over 3-5 year hold\n\n3x equity in 5 years = ~25% IRR'},
-  {id:'s6', categoryId:'finance',    title:'Comps — Trading Comparables',   source:'IB / Valuation',                         content:'Value a company relative to publicly traded peers\n\n1. Select comparable companies\n2. Spread financials (LTM + forward)\n3. Calculate multiples: EV/EBITDA, EV/Revenue, P/E\n4. Apply range to target\n\nBy sector:\n- Tech growth: EV/Revenue\n- Mature industrials: EV/EBITDA\n- Banks: P/Book, P/E'},
-  {id:'s7', categoryId:'mental',     title:'Inversion',                     source:'Art of Thinking Clearly / Munger',        content:'Instead of asking how do I succeed, ask what guarantees failure. Then avoid those things.\n\nCharlie Munger: Invert, always invert.\n\nApplication:\n- How to build a bad product? (then do opposite)\n- What would destroy this company?\n- What would make this argument wrong?\n\nMost problems are easier solved backwards.'},
-  {id:'s8', categoryId:'mental',     title:'First Principles Thinking',     source:'General / Elon Musk',                    content:'Break a problem to its fundamental truths, reason up from there.\n\nMusk battery example: market price $600/kWh. Raw materials? ~$80/kWh. So build our own.\n\nProcess:\n1. Identify your assumptions\n2. Break them to fundamentals\n3. Build up fresh\n\nHarder but creates genuine insight.'},
-  {id:'s9', categoryId:'mental',     title:'Availability Bias',             source:'Art of Thinking Clearly — Dobelli',       content:'We overweight information that comes easily to mind.\n\nRecent, vivid, emotional events feel more probable than they are.\n\nFix: use base rates, not recent gut feel.'},
-  {id:'s10',categoryId:'business',   title:'Business Model Canvas',         source:'Osterwalder — Business Model Generation', content:'9 building blocks:\n1. Customer Segments\n2. Value Propositions\n3. Channels\n4. Customer Relationships\n5. Revenue Streams\n6. Key Resources\n7. Key Activities\n8. Key Partnerships\n9. Cost Structure\n\nStart with Customer Segments + Value Props. Everything else flows from that.'},
-  {id:'s11',categoryId:'business',   title:'Business Model Types',          source:'General',                                content:'- SaaS: recurring subscription, CAC:LTV key\n- Marketplace: take rate on GMV, liquidity is the moat\n- Freemium: large free base, 2-5% paid conversion\n- Razor/blade: cheap hardware, profit on consumables\n- Platform: multi-sided, network effects compound\n\nKey question: who pays, what for, how often?'},
-  {id:'s12',categoryId:'consulting', title:'MECE Framework',                source:'McKinsey / Consulting',                  content:'Mutually Exclusive, Collectively Exhaustive\n\nEvery consulting structure must be MECE:\n- No overlap between buckets\n- Every possibility is covered\n\nIssue tree (revenue problem):\nRevenue -> Volume vs. Price\nVolume -> New vs. Existing customers\nExisting -> Frequency vs. Basket size'},
-  {id:'s13',categoryId:'consulting', title:'Profitability Framework',       source:'Consulting case interviews',             content:'Revenue - Costs = Profit\n\nRevenue = Volume x Price\nVolume = customers x purchases x units/purchase\n\nCosts = Fixed + Variable\nFixed: rent, salaries, depreciation\nVariable: COGS, commissions, logistics\n\nFirst ask: revenue problem or cost problem?'},
-  {id:'s14',categoryId:'vc',         title:'Power Law in VC',               source:'Zero to One — Peter Thiel',              content:'VC returns follow a power law, not a bell curve.\n\nOne investment returns the fund. Maybe two.\n\nEvery investment must have the potential to return the entire fund.\n\nThis means:\n- Swing for home runs not singles\n- Concentration > diversification\n- Good companies capping at 3x are bad VC investments'},
-  {id:'s15',categoryId:'vc',         title:'Key VC Metrics',                source:'VC / Startup Finance',                   content:'- ARR / MRR: revenue run rate\n- Growth rate: % MoM or YoY\n- Rule of 40: growth% + margin% > 40\n- NRR: >110% good, >130% great\n- CAC:LTV ratio: aim for >3x\n- Burn multiple: net burn / net new ARR\n- Runway: cash / monthly burn\n\nSeed: traction + team\nSeries A: PMF\nSeries B+: scale efficiency'},
-];
+const CATS=['Strategy','Mental Models','Finance','Business','Consulting','VC & Investing','Others'];
+const CAT_ICONS={Strategy:'▲','Mental Models':'◎',Finance:'△',Business:'□',Consulting:'◇','VC & Investing':'●',Others:'○'};
+const CAT_CSS={Strategy:'var(--cs)','Mental Models':'var(--cm)',Finance:'var(--cf)',Business:'var(--cb)',Consulting:'var(--cc)','VC & Investing':'var(--cv)',Others:'var(--co)'};
+const STAGES=['Pre-Seed','Seed','Series A','Series B','Growth','Public'];
+const SCOLS=['#1a2035','#1a3020','#30201a','#251a30','#1a2830','#2e2e1a','#252525'];
 
-let notes=[],activeCat=null,selectedId=null,view='home',draft=null;
-const catOf=id=>CATS.find(c=>c.id===id);
-const fmt=ts=>ts?new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
-const uid=()=>'n'+Date.now()+Math.random().toString(36).slice(2,6);
-const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+let S={notes:[],deals:[],watchlist:[],board:[],settings:{token:'',gistId:''}};
+let activeFolder='all',activeNoteId=null,searchQ='',saveT=null,syncT=null,conv=3;
 
-function init(){
-  document.getElementById('cat-nav').innerHTML=CATS.map(c=>`
-    <button class="sb-btn" id="cat-${c.id}" onclick="selectCat('${c.id}')">
-      <span class="sb-label"><span class="sb-dot" style="background:${c.accent}"></span>${c.name}</span>
-      <span class="sb-count" id="count-${c.id}">0</span>
-    </button>`).join('');
-  const saved=localStorage.getItem('kh-notes');
-  notes=saved?JSON.parse(saved):STARTER.map(n=>({...n,createdAt:Date.now()}));
-  if(!saved) save();
-  render();
+function saveL(){localStorage.setItem('cave3',JSON.stringify(S));}
+function loadL(){try{const d=localStorage.getItem('cave3');if(d)S=JSON.parse(d);}catch(e){}}
+
+async function syncGist(){
+  const{token,gistId}=S.settings;if(!token)return;
+  dot('syncing');
+  try{
+    const body=JSON.stringify(S);
+    const isNew=!gistId;
+    const url='https://api.github.com/gists'+(gistId?'/'+gistId:'');
+    const method=gistId?'PATCH':'POST';
+    const payload=isNew?{description:'THE CAVE',public:false,files:{'cave-data.json':{content:body}}}:{files:{'cave-data.json':{content:body}}};
+    const r=await fetch(url,{method,headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(isNew){S.settings.gistId=d.id;saveL();document.getElementById('sGistId').value=d.id;}
+    dot('synced');toast('Synced ✓');
+  }catch(e){dot('error');toast('Sync failed');}
+}
+async function loadGist(){
+  const{token,gistId}=S.settings;if(!token||!gistId)return;dot('syncing');
+  try{
+    const r=await fetch('https://api.github.com/gists/'+gistId,{headers:{'Authorization':'token '+token}});
+    if(!r.ok)throw new Error();
+    const d=await r.json();const c=d.files['cave-data.json']?.content;
+    if(c){const rem=JSON.parse(c);S={...rem,settings:S.settings};saveL();renderAll();dot('synced');toast('Loaded ✓');}
+  }catch(e){dot('error');}
+}
+function dot(s){document.getElementById('syncDot').className='sdot '+s;}
+function schedSync(){clearTimeout(syncT);syncT=setTimeout(syncGist,5000);}
+
+async function saveSettings(){
+  S.settings={token:document.getElementById('sToken').value.trim(),gistId:document.getElementById('sGistId').value.trim()};
+  saveL();closeM('settingsModal');
+  if(S.settings.gistId)await loadGist();else await syncGist();
+}
+function openSettings(){
+  document.getElementById('sToken').value=S.settings.token||'';
+  document.getElementById('sGistId').value=S.settings.gistId||'';
+  document.getElementById('settingsModal').classList.add('open');
 }
 
-function save(){ localStorage.setItem('kh-notes',JSON.stringify(notes)); }
+function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));a.download='cave-'+new Date().toISOString().slice(0,10)+'.json';a.click();}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const i=JSON.parse(ev.target.result);S={...i,settings:S.settings};saveL();renderAll();toast('Imported ✓');}catch{toast('Invalid file');}};r.readAsText(f);}
 
-function render(){
-  document.getElementById('count-all').textContent=notes.length;
-  CATS.forEach(c=>{const e=document.getElementById('count-'+c.id);if(e)e.textContent=notes.filter(n=>n.categoryId===c.id).length;});
-  document.getElementById('btn-all').className='sb-btn'+(!activeCat&&view==='home'?' on':'');
-  CATS.forEach(c=>{const e=document.getElementById('cat-'+c.id);if(e)e.className='sb-btn'+(activeCat===c.id?' on':'');});
-  renderList();
-  renderDetail();
+// NOTES
+function newNote(){
+  const n={id:uid(),title:'',category:activeFolder!=='all'?activeFolder:'Others',source:'',tags:'',content:'',created:now(),updated:now()};
+  S.notes.unshift(n);saveL();openEditor(n.id);renderNoteList();updateCounts();renderCatGrid();
+  setTimeout(()=>document.getElementById('noteTitle').focus(),50);
 }
+
+function openEditor(id){
+  activeNoteId=id;const n=S.notes.find(x=>x.id===id);if(!n)return showHome();
+  document.getElementById('epHome').style.display='none';
+  const ea=document.getElementById('epActive');ea.style.display='flex';
+  document.getElementById('noteTitle').value=n.title;
+  document.getElementById('noteCat').value=n.category;
+  document.getElementById('noteSource').value=n.source||'';
+  document.getElementById('noteTags').value=n.tags||'';
+  document.getElementById('noteContent').value=n.content;
+  document.getElementById('noteDate').textContent=fmtD(n.updated);
+  autoGrow(document.getElementById('noteTitle'));updateWC();hlActive(id);
+}
+
+function showHome(){activeNoteId=null;document.getElementById('epHome').style.display='flex';document.getElementById('epActive').style.display='none';hlActive(null);}
+
+function selectFolder(cat){
+  activeFolder=cat;
+  document.querySelectorAll('.fi-item').forEach(el=>el.classList.remove('active'));
+  const key=cat==='all'?'all':cat.replace(/[^a-zA-Z]/g,'');
+  const el=document.getElementById('fi-'+key);if(el)el.classList.add('active');
+  document.getElementById('folderLabel').textContent=cat==='all'?'All notes':cat;
+  renderNoteList();showHome();
+}
+
+function filterNotes(){searchQ=document.getElementById('searchInput').value.toLowerCase();renderNoteList();}
 
 function getFiltered(){
-  const q=(document.getElementById('search').value||'').toLowerCase();
-  return notes.filter(n=>{
-    if(activeCat&&n.categoryId!==activeCat)return false;
-    if(q)return n.title.toLowerCase().includes(q)||n.content.toLowerCase().includes(q)||(n.source||'').toLowerCase().includes(q);
-    return true;
+  return S.notes.filter(n=>{
+    const cm=activeFolder==='all'||n.category===activeFolder;
+    const tm=!searchQ||[n.title,n.content,n.tags,n.source].join(' ').toLowerCase().includes(searchQ);
+    return cm&&tm;
   });
 }
 
-function renderList(){
-  const el=document.getElementById('note-list');
-  const list=getFiltered();
-  if(!list.length){el.innerHTML='<p class="empty">No notes found.</p>';return;}
-  el.innerHTML=list.map(n=>{
-    const c=catOf(n.categoryId);
-    return `<div class="nrow${selectedId===n.id?' on':''}" onclick="selectNote('${n.id}')">
-      <div class="nrow-title">${esc(n.title)}</div>
-      <span class="nrow-cat" style="background:${c?.color};color:${c?.text}"><span style="font-size:8px">${c?.sym}</span> ${c?.name}</span>
+function renderNoteList(){
+  const list=document.getElementById('noteList');const notes=getFiltered();
+  document.getElementById('noteCountLabel').textContent=notes.length;
+  if(!notes.length){list.innerHTML='<div class="nl-empty">No notes here.<br><button style="margin-top:8px;font-size:11.5px;padding:5px 12px;border:1px solid var(--border);border-radius:var(--r);color:var(--muted);background:none;cursor:pointer" onclick="newNote()">+ New note</button></div>';return;}
+  list.innerHTML=notes.map(n=>`
+    <div class="ni" data-id="${n.id}" onclick="openEditor('${n.id}')">
+      <div class="ni-t">${esc(n.title||'Untitled')}</div>
+      <div class="ni-p">${esc(n.content.slice(0,90))}</div>
+      <div class="ni-m">
+        <span class="ni-tag" style="color:${CAT_CSS[n.category]||'var(--muted)'};background:${CAT_CSS[n.category]||'var(--muted)'}1a">${n.category}</span>
+        <span class="ni-date">${fmtS(n.updated)}</span>
+      </div>
+    </div>`).join('');
+  hlActive(activeNoteId);
+}
+
+function hlActive(id){document.querySelectorAll('.ni').forEach(el=>el.classList.toggle('active',el.dataset.id===id));}
+
+function scheduleNoteSave(){document.getElementById('saveStatus').textContent='editing…';clearTimeout(saveT);saveT=setTimeout(saveCurrentNote,1400);}
+
+function saveCurrentNote(){
+  if(!activeNoteId)return;const n=S.notes.find(x=>x.id===activeNoteId);if(!n)return;
+  n.title=document.getElementById('noteTitle').value;n.category=document.getElementById('noteCat').value;
+  n.source=document.getElementById('noteSource').value;n.tags=document.getElementById('noteTags').value;
+  n.content=document.getElementById('noteContent').value;n.updated=now();
+  document.getElementById('noteDate').textContent=fmtD(n.updated);
+  document.getElementById('saveStatus').textContent='✓ saved';
+  setTimeout(()=>{const el=document.getElementById('saveStatus');if(el)el.textContent='';},2000);
+  saveL();renderNoteList();updateCounts();renderCatGrid();schedSync();
+}
+
+function deleteNote(){if(!activeNoteId||!confirm('Delete this note?'))return;S.notes=S.notes.filter(n=>n.id!==activeNoteId);showHome();saveL();renderNoteList();updateCounts();renderCatGrid();schedSync();}
+
+function updateCounts(){
+  document.getElementById('fc-all').textContent=S.notes.length;
+  CATS.forEach(cat=>{const k=cat.replace(/[^a-zA-Z]/g,'');const el=document.getElementById('fc-'+k);if(el)el.textContent=S.notes.filter(n=>n.category===cat).length;});
+}
+
+function renderCatGrid(){
+  const t=S.notes.length;
+  document.getElementById('homeSub').textContent=`${t} note${t!==1?'s':''}  ·  ${CATS.length} folders`;
+  document.getElementById('catGrid').innerHTML=CATS.map(cat=>{
+    const cnt=S.notes.filter(n=>n.category===cat).length;const col=CAT_CSS[cat];
+    return`<div class="cc" onclick="selectFolder('${cat}')">
+      <div class="cc-bar" style="background:${col}"></div>
+      <div class="cc-icon" style="color:${col}">${CAT_ICONS[cat]}</div>
+      <div class="cc-name" style="color:${col}">${cat}</div>
+      <div class="cc-count">${cnt} note${cnt!==1?'s':''}</div>
     </div>`;
   }).join('');
 }
 
-function renderDetail(){
-  const el=document.getElementById('detail');
-  if(view==='edit'&&draft){el.innerHTML=editHTML();return;}
-  if(view==='note'&&selectedId){const n=notes.find(x=>x.id===selectedId);if(n){el.innerHTML=noteHTML(n);return;}}
-  if(!activeCat){
-    el.innerHTML=`
-      <p style="font-family:'Lora',Georgia,serif;font-size:19px;font-weight:500;color:#1C1C1E;margin-bottom:6px;line-height:1.35">Your knowledge base</p>
-      <p style="font-family:'DM Mono',monospace;font-size:10px;color:#AAA;margin-bottom:22px">${notes.length} notes across ${CATS.length} topics</p>
-      <div class="hgrid">${CATS.map(c=>`
-        <div class="hcard" style="background:${c.color};border-color:${c.accent}22" onclick="selectCat('${c.id}')">
-          <span class="hcard-sym" style="color:${c.accent}">${c.sym}</span>
-          <div class="hcard-name" style="color:${c.text}">${c.name}</div>
-          <div class="hcard-n" style="color:${c.text}">${notes.filter(n=>n.categoryId===c.id).length} notes</div>
-        </div>`).join('')}</div>
-      <p class="hint">Select a note · write one · upload a PDF to extract text.</p>`;
-  } else {
-    const c=catOf(activeCat);
-    el.innerHTML=`
-      <div style="background:${c.color};border-radius:10px;padding:18px 20px;margin-bottom:20px;border-left:4px solid ${c.accent}">
-        <p style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;color:${c.accent};margin-bottom:6px;text-transform:uppercase">Category</p>
-        <p style="font-family:'Lora',Georgia,serif;font-size:20px;font-weight:500;color:${c.text}">${c.name}</p>
-        <p style="font-family:'DM Mono',monospace;font-size:10px;color:${c.text};opacity:0.6;margin-top:4px">${notes.filter(n=>n.categoryId===c.id).length} notes</p>
-      </div>
-      <p class="hint">Select a note on the left, or add a new one.</p>`;
-  }
-}
+function wrapSel(b,a){const ta=document.getElementById('noteContent');const s=ta.selectionStart,e=ta.selectionEnd,sel=ta.value.slice(s,e);ta.value=ta.value.slice(0,s)+b+sel+a+ta.value.slice(e);ta.setSelectionRange(s+b.length,e+b.length);ta.focus();scheduleNoteSave();}
+function insertLine(p){const ta=document.getElementById('noteContent');const s=ta.selectionStart,ls=ta.value.lastIndexOf('\n',s-1)+1;ta.value=ta.value.slice(0,ls)+p+ta.value.slice(ls);ta.setSelectionRange(ls+p.length,ls+p.length);ta.focus();scheduleNoteSave();}
+function autoGrow(el){el.style.height='auto';el.style.height=el.scrollHeight+'px';}
+function updateWC(){const v=document.getElementById('noteContent').value;document.getElementById('wordCount').textContent=(v.trim()?v.trim().split(/\s+/).length:0)+' words';}
 
-function noteHTML(n){
-  const c=catOf(n.categoryId);
-  return `<div class="act">
-    <button class="tbtn" onclick="showHome()">← Back</button>
-    <div style="flex:1"></div>
-    <button class="tbtn" onclick="openEdit('${n.id}')">Edit</button>
-    <button class="tbtn" style="color:#C0392B" onclick="deleteNote('${n.id}')">Delete</button>
-  </div>
-  <span class="cat-pill" style="background:${c?.color};color:${c?.text}">${c?.sym} ${c?.name}</span>
-  <h1 class="ntitle">${esc(n.title)}</h1>
-  ${n.source?`<p class="nsource">↳ ${esc(n.source)}</p>`:''}
-  <hr class="ndiv">
-  <pre class="nbody">${esc(n.content)}</pre>
-  <p class="ndate">Added ${fmt(n.createdAt)}${n.updatedAt?' · Edited '+fmt(n.updatedAt):''}</p>`;
-}
-
-function editHTML(){
-  return `<div class="act">
-    <select class="ecat" onchange="draft.categoryId=this.value">
-      ${CATS.map(c=>`<option value="${c.id}"${draft.categoryId===c.id?' selected':''}>${c.sym} ${c.name}</option>`).join('')}
-    </select>
-    <div style="flex:1"></div>
-    <button class="tbtn" onclick="cancelEdit()">Cancel</button>
-    <button class="tbtn primary" onclick="saveNote()">Save</button>
-  </div>
-  <input class="etitle" placeholder="Title" value="${esc(draft.title)}" oninput="draft.title=this.value">
-  <input class="esource" placeholder="Source — book, article, lecture…" value="${esc(draft.source||'')}" oninput="draft.source=this.value">
-  <textarea class="ebody" placeholder="Your notes here…" oninput="draft.content=this.value">${esc(draft.content||'')}</textarea>`;
-}
-
-function showHome(){selectedId=null;view='home';render();}
-function selectCat(id){activeCat=(activeCat===id?null:id);view='home';selectedId=null;render();}
-function selectNote(id){selectedId=id;view='note';render();}
-function cancelEdit(){view=selectedId?'note':'home';render();}
-
-function openNew(){
-  draft={id:'new-'+uid(),categoryId:activeCat||'strategy',title:'',content:'',source:'',createdAt:Date.now()};
-  view='edit';render();
-}
-function openEdit(id){
-  const n=notes.find(x=>x.id===id);if(!n)return;
-  draft={...n};view='edit';render();
-}
-function saveNote(){
-  if(!draft?.title?.trim()){alert('Please add a title.');return;}
-  const isNew=draft.id.startsWith('new-');
-  const e={...draft,id:isNew?uid():draft.id,updatedAt:Date.now()};
-  if(isNew)notes.push(e);
-  else{const i=notes.findIndex(n=>n.id===e.id);if(i>-1)notes[i]=e;}
-  save();selectedId=e.id;view='note';render();
-}
-function deleteNote(id){
-  if(!confirm('Delete this note?'))return;
-  notes=notes.filter(n=>n.id!==id);save();selectedId=null;view='home';render();
-}
-
-function exportNotes(){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([JSON.stringify(notes,null,2)],{type:'application/json'}));
-  a.download='knowledge-hub-notes.json';a.click();
-}
-function importNotes(e){
-  const file=e.target.files[0];if(!file)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    try{
-      const imp=JSON.parse(ev.target.result);
-      if(!Array.isArray(imp))throw new Error();
-      notes=imp;save();render();alert('Imported '+notes.length+' notes.');
-    }catch{alert('Could not read file.');}
-  };
-  r.readAsText(file);e.target.value='';
-}
-
-async function handlePDF(e){
-  const file=e.target.files[0];if(!file)return;e.target.value='';
-  const msg=s=>{const m=document.getElementById('pdf-msg'),w=document.getElementById('pdf-wrap');if(s){m.textContent=s;m.style.display='inline';w.style.display='none';}else{m.style.display='none';w.style.display='inline';}};
-  msg('Extracting text…');
+// PDF
+if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+function onPdfDrop(e){e.preventDefault();document.getElementById('pdfZone').style.borderColor='';const f=e.dataTransfer.files[0];if(f&&f.type==='application/pdf')extractPdf(f);}
+function onPdfFile(e){const f=e.target.files[0];if(f)extractPdf(f);}
+async function extractPdf(file){
+  if(typeof pdfjsLib==='undefined'){toast('PDF.js unavailable');return;}
+  const z=document.getElementById('pdfZone');z.textContent='Extracting…';
   try{
-    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const buf=await file.arrayBuffer();
-    const pdf=await pdfjsLib.getDocument({data:new Uint8Array(buf)}).promise;
-    let text='';
-    for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const ct=await pg.getTextContent();text+='\n--- Page '+i+' ---\n'+ct.items.map(x=>x.str).join(' ');}
-    if(text.trim().length<20)throw new Error('no text');
-    const entry={id:uid(),categoryId:activeCat||'others',title:file.name.replace(/\.pdf$/i,''),content:text.trim(),source:'Imported PDF: '+file.name,createdAt:Date.now()};
-    notes.push(entry);save();selectedId=entry.id;view='note';msg('');render();
-  }catch{msg('No text found in this PDF');setTimeout(()=>msg(''),3000);}
+    const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+    let text=`\n\n— ${file.name} · ${pdf.numPages} pages —\n\n`;
+    for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const tc=await pg.getTextContent();text+=tc.items.map(s=>s.str).join(' ')+'\n';}
+    const ta=document.getElementById('noteContent');ta.value+=text;updateWC();scheduleNoteSave();
+    z.textContent=`✓ ${pdf.numPages} pages extracted · drop another or click`;
+    z.onclick=()=>document.getElementById('pdfInput').click();
+    toast(`Extracted ${pdf.numPages} pages`);
+  }catch(e){z.textContent='↑ Drop PDF to extract text · click to browse';toast('PDF failed');}
 }
 
-init();
+// DEALS
+function openDealModal(){conv=3;updateStars();['dName','dSector','dNote'].forEach(id=>document.getElementById(id).value='');document.getElementById('dealModal').classList.add('open');setTimeout(()=>document.getElementById('dName').focus(),50);}
+function setConv(v){conv=v;updateStars();}
+function updateStars(){document.querySelectorAll('.star').forEach(b=>b.classList.toggle('on',+b.dataset.v<=conv));}
+function saveDeal(){const name=document.getElementById('dName').value.trim();if(!name){toast('Enter company name');return;}S.deals.push({id:uid(),name,sector:document.getElementById('dSector').value.trim(),stage:document.getElementById('dStage').value,conviction:conv,note:document.getElementById('dNote').value.trim(),date:now()});saveL();schedSync();closeM('dealModal');renderDeals();toast('Deal added ✓');}
+function deleteDeal(id){S.deals=S.deals.filter(d=>d.id!==id);saveL();schedSync();renderDeals();}
+function renderDeals(){renderPipeline();renderScreening();}
+function renderPipeline(){
+  document.getElementById('dealPipeline').innerHTML=STAGES.map(stage=>{
+    const cards=S.deals.filter(d=>d.stage===stage);
+    return`<div class="pc"><div class="pc-h"><span class="pc-s">${stage.toUpperCase()}</span><span class="pc-n">${cards.length}</span></div>
+    <div class="pc-cards">${cards.map(d=>`<div class="dc"><div class="dc-n">${esc(d.name)}</div><div class="dc-s">${esc(d.sector||'—')}</div><div class="dc-f"><div class="cv">${[1,2,3,4,5].map(i=>`<div class="cvd${i<=d.conviction?' on':''}"></div>`).join('')}</div><div class="dc-d">${fmtS(d.date)}</div></div></div>`).join('')}</div>
+    <button class="pc-add" onclick="openDealModal()">+</button></div>`;
+  }).join('');
+}
+function renderScreening(){
+  document.getElementById('screeningGrid').innerHTML=S.deals.length?S.deals.map(d=>`
+    <div class="sc"><div class="sc-h"><div class="sc-name">${esc(d.name)}</div><div class="sc-stage">${d.stage}</div></div>
+    <div class="sc-sec">${esc(d.sector||'—')}</div>
+    <div class="sc-note">${esc(d.note)||'<span style="color:var(--muted2)">No thesis yet.</span>'}</div>
+    <div class="sc-foot"><div class="sc-bar"><div class="sc-fill" style="width:${d.conviction*20}%"></div></div><div class="sc-lbl">${d.conviction}/5</div><button class="sc-del" onclick="deleteDeal('${d.id}')">✕</button></div>
+    </div>`).join(''):'<div style="padding:40px;color:var(--muted);font-size:12px;text-align:center">Nothing screened yet.</div>';
+}
+function switchDT(tab){
+  document.querySelectorAll('.dl-tab').forEach((el,i)=>el.classList.toggle('active',['pipeline','screening','watchlist'][i]===tab));
+  document.getElementById('dealPipeline').style.display=tab==='pipeline'?'flex':'none';
+  document.getElementById('dealScreening').style.display=tab==='screening'?'block':'none';
+  document.getElementById('dealWatchlist').style.display=tab==='watchlist'?'block':'none';
+  document.getElementById('addDealBtn').style.display=tab!=='watchlist'?'':'none';
+  document.getElementById('addWatchBtn').style.display=tab==='watchlist'?'':'none';
+}
+
+// WATCHLIST
+function openWatchModal(){['wName','wTicker','wNote'].forEach(id=>document.getElementById(id).value='');document.getElementById('watchModal').classList.add('open');setTimeout(()=>document.getElementById('wName').focus(),50);}
+function saveWatch(){const name=document.getElementById('wName').value.trim();if(!name){toast('Enter name');return;}S.watchlist.push({id:uid(),name,type:document.getElementById('wType').value,ticker:document.getElementById('wTicker').value.trim(),note:document.getElementById('wNote').value.trim(),date:now()});saveL();schedSync();closeM('watchModal');renderWatchlist();toast('Added ✓');}
+function deleteWatch(id){S.watchlist=S.watchlist.filter(w=>w.id!==id);saveL();schedSync();renderWatchlist();}
+function renderWatchlist(){document.getElementById('watchlistBody').innerHTML=S.watchlist.map(w=>`<tr><td style="font-weight:500">${esc(w.name)}</td><td><span class="wl-type">${w.type}</span></td><td style="font-family:var(--fm);font-size:12px;color:var(--muted)">${w.ticker||'—'}</td><td style="color:var(--muted);font-size:12px">${esc(w.note||'—')}</td><td style="font-family:var(--fm);font-size:10px;color:var(--muted)">${fmtS(w.date)}</td><td><button class="wl-del" onclick="deleteWatch('${w.id}')">✕</button></td></tr>`).join('')||'<tr><td colspan="6" style="padding:24px;text-align:center;color:var(--muted);font-size:12px">Nothing on the radar yet.</td></tr>';}
+
+// BOARD
+function addCard(type){S.board.unshift({id:uid(),type,content:'',author:'',url:'',title:'',desc:'',color:SCOLS[0]});saveL();renderBoard();schedSync();}
+function updCard(id,f,v){const c=S.board.find(x=>x.id===id);if(c){c[f]=v;saveL();schedSync();}}
+function delCard(id){S.board=S.board.filter(c=>c.id!==id);saveL();schedSync();renderBoard();}
+function setColor(id,col){updCard(id,'color',col);const el=document.querySelector(`.bcard[data-id="${id}"]`);if(el)el.style.background=col;document.querySelectorAll(`.csw[data-cid="${id}"]`).forEach(s=>s.classList.toggle('on',s.dataset.col===col));}
+function renderBoard(){
+  const g=document.getElementById('boardGrid');
+  if(!S.board.length){g.innerHTML='<div style="grid-column:1/-1;padding:60px;text-align:center;color:var(--muted);font-size:12px">Board is empty · add stickies, quotes, links above</div>';return;}
+  g.innerHTML=S.board.map(c=>{
+    if(c.type==='sticky')return`<div class="bcard sticky-c" data-id="${c.id}" style="background:${c.color}"><button class="cdel" onclick="delCard('${c.id}')">✕</button><textarea class="sticky-ta" placeholder="Write anything…" oninput="updCard('${c.id}','content',this.value)">${esc(c.content)}</textarea><div class="cp">${SCOLS.map(col=>`<div class="csw${c.color===col?' on':''}" data-cid="${c.id}" data-col="${col}" style="background:${col}" onclick="setColor('${c.id}','${col}')"></div>`).join('')}</div></div>`;
+    if(c.type==='quote')return`<div class="bcard quote-c" data-id="${c.id}"><button class="cdel" onclick="delCard('${c.id}')">✕</button><div style="font-size:30px;font-family:var(--fd);opacity:.1;line-height:1;margin-bottom:2px">"</div><textarea class="qt" placeholder="The quote…" oninput="updCard('${c.id}','content',this.value)">${esc(c.content)}</textarea><input class="qa" type="text" placeholder="— Author, Source" value="${esc(c.author)}" oninput="updCard('${c.id}','author',this.value)"></div>`;
+    if(c.type==='link')return`<div class="bcard link-c" data-id="${c.id}"><button class="cdel" onclick="delCard('${c.id}')">✕</button><input class="lu" type="text" placeholder="https://…" value="${esc(c.url)}" oninput="updCard('${c.id}','url',this.value)"><input class="lt" type="text" placeholder="Title" value="${esc(c.title)}" oninput="updCard('${c.id}','title',this.value)"><textarea class="ld" placeholder="Note or description…" oninput="updCard('${c.id}','desc',this.value)">${esc(c.desc)}</textarea>${c.url?`<a class="lopen" href="${c.url}" target="_blank" rel="noopener">Open ↗</a>`:''}</div>`;
+    return'';
+  }).join('');
+}
+
+// UTILS
+function esc(s=''){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+function now(){return new Date().toISOString();}
+function fmtD(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function fmtS(iso){if(!iso)return'';const d=new Date(iso),n=new Date(),df=Math.floor((n-d)/86400000);if(df===0)return'Today';if(df===1)return'Yesterday';if(df<7)return df+'d ago';return d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+function switchTab(tab){
+  document.querySelectorAll('.tc').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.ntab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  const idx=['notes','deals','board'].indexOf(tab);
+  document.querySelectorAll('.ntab')[idx].classList.add('active');
+}
+function renderAll(){renderNoteList();updateCounts();renderCatGrid();renderDeals();renderWatchlist();renderBoard();}
+
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='n'&&document.getElementById('tab-notes').classList.contains('active')){e.preventDefault();newNote();}
+  if((e.metaKey||e.ctrlKey)&&e.key==='s'){e.preventDefault();saveCurrentNote();}
+  if(e.key==='Escape'){document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open'));}
+});
+document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+(async function init(){
+  loadL();renderAll();
+  if(!S.notes.length){
+    const demo=[
+      {title:"Porter's Five Forces",category:"Strategy",source:"Michael E. Porter · HBR 1979",tags:"frameworks, strategy",content:"Analyze competitive forces in any industry:\n\n1. **Threat of new entrants** — barriers, capital, brand\n2. **Supplier power** — concentration, switching costs\n3. **Buyer power** — price sensitivity, alternatives\n4. **Threat of substitutes** — relative value\n5. **Rivalry** — concentration, exit barriers\n\nHigh forces = lower industry profit. Use to pick segments and build moats."},
+      {title:"First Principles Thinking",category:"Mental Models",source:"Aristotle → Elon Musk",tags:"reasoning, problem-solving",content:"Break problems to fundamental truths. Rebuild from ground up.\n\nMusk on batteries: market = $600/kWh. Fundamentals = cobalt, nickel, lithium → $80/kWh buying components directly.\n\nSteps:\n1. Identify assumptions\n2. Decompose to axioms\n3. Reconstruct fresh"},
+      {title:"DCF — Discounted Cash Flow",category:"Finance",source:"Damodaran · Investment Valuation",tags:"valuation, modeling",content:"Value = Σ FCFt/(1+WACC)^t + TV/(1+WACC)^n\n\n**Key inputs**\n- FCF projections (5–10 years)\n- WACC = Ke·E/V + Kd(1-t)·D/V  \n- Terminal growth (2–3%, never > GDP)\n\n**Non-negotiable**: sensitivity table on WACC × g. DCF is a range, not a number."},
+    ];
+    demo.forEach(d=>S.notes.push({id:uid(),...d,created:now(),updated:now()}));
+    saveL();renderAll();
+  }
+  if(S.settings.token&&S.settings.gistId)await loadGist();
+})();
 </script>
 </body>
 </html>
