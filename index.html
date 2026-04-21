@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOLIO — Knowledge OS</title>
+<title>FOLIO — Knowledge OS v2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -21,29 +21,19 @@ a{color:inherit;text-decoration:none}
 ::selection{background:rgba(200,168,74,.22)}
 
 :root{
-  /* Backgrounds */
   --bg:#060503;--s1:#0C0906;--s2:#12100B;--s3:#181411;--s4:#1F1B15;--s5:#28231B;
-  /* Borders */
   --b1:#141109;--b2:#1E1B13;--b3:#302A1E;--b4:#4A4030;--b5:#6B5C44;
-  /* Text */
   --text:#E8DECA;--text2:#C5B89E;--muted:#8A7C68;--dim:#564D3F;--faint:#332D25;
   --white:#F5EDDB;
-  /* Gold spectrum */
   --gold:#C8A84A;--gold2:#DDB84C;--gold3:#EEC86A;--gold-t:rgba(200,168,74,.09);--gold-tl:rgba(200,168,74,.16);
-  /* Orange */
   --or:#C45818;--or2:#D8702C;--or-t:rgba(196,88,24,.1);
-  /* Category colours */
   --cs:#6B9FE4;--cm:#A87EE8;--cf:#5BC98A;--cb:#E8A05A;--cc:#5AC8D4;--cv:#E87272;--co:#8A8A7A;
-  /* Registry type colours */
   --te:#5A8FD4;--tv:#C8A84A;--ts:#D97030;--tp:#9870D0;--tn:#4AB8C4;--toth:#6B7280;
-  /* Typography */
   --fd:'Playfair Display','Times New Roman',Georgia,serif;
   --fe:'EB Garamond','Times New Roman',Georgia,serif;
   --fb:'DM Sans',system-ui,sans-serif;
   --fm:'DM Mono','Courier New',monospace;
-  /* Radii */
   --r:5px;--r2:8px;--r3:12px;
-  /* Shadows */
   --sh:0 4px 24px rgba(0,0,0,.6);--sh2:0 12px 48px rgba(0,0,0,.8);--sh3:0 2px 8px rgba(0,0,0,.4);
 }
 
@@ -63,18 +53,30 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
   content:'';position:absolute;inset:0;pointer-events:none;
   background:repeating-linear-gradient(90deg,rgba(200,168,74,.012) 0,rgba(200,168,74,.012) 1px,transparent 1px,transparent 32px);
 }
+.nav::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(200,168,74,.18),transparent);
+  pointer-events:none;
+}
 .logo{display:flex;align-items:baseline;gap:8px;margin-right:32px;flex-shrink:0;user-select:none;cursor:default}
 .logo-mark{font-family:var(--fd);font-size:14px;font-weight:500;letter-spacing:.22em;color:var(--gold2);position:relative}
+.logo-v{font-family:var(--fm);font-size:7px;letter-spacing:.08em;color:var(--dim);background:var(--gold-t);border:1px solid var(--b3);padding:1px 4px;border-radius:3px;position:relative;top:-1px}
 .logo-sep{width:1px;height:11px;background:var(--b4);flex-shrink:0}
 .logo-sub{font-family:var(--fm);font-size:7.5px;letter-spacing:.24em;color:var(--dim);text-transform:uppercase}
 .nav-tabs{display:flex;height:100%;gap:2px}
 .ntab{
-  padding:0 15px;height:100%;display:flex;align-items:center;
+  padding:0 15px;height:100%;display:flex;align-items:center;gap:5px;
   font-family:var(--fm);font-size:9.5px;letter-spacing:.18em;color:var(--dim);
   border-bottom:2px solid transparent;transition:color .15s,border-color .15s;
-  text-transform:uppercase;
+  text-transform:uppercase;position:relative;
 }
 .ntab:hover{color:var(--text2)}.ntab.on{color:var(--gold);border-bottom-color:var(--gold)}
+.ntab-new{
+  font-family:var(--fm);font-size:7px;letter-spacing:.06em;color:#080600;
+  background:var(--gold);padding:1px 4px;border-radius:2px;font-weight:700;
+  animation:newBadgePulse 2.5s ease-in-out 3;
+}
+@keyframes newBadgePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.95)}}
 .nav-r{margin-left:auto;display:flex;align-items:center;gap:7px}
 .sync-pill{
   display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:9px;letter-spacing:.04em;
@@ -101,7 +103,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 ═══════════════════════════════════════ */
 .vault{display:flex;width:100%;height:100%;overflow:hidden}
 
-/* Panel 1 — Library */
 .vlib{
   width:190px;min-width:150px;flex-shrink:0;
   background:var(--s1);border-right:1px solid var(--b1);
@@ -133,7 +134,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 }
 .vlib-new:hover{border-color:var(--gold);background:var(--gold-tl)}
 
-/* Panel 2 — Note list */
 .vnl{
   width:256px;min-width:200px;flex-shrink:0;
   background:var(--bg);border-right:1px solid var(--b1);
@@ -163,16 +163,43 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .ni-date{font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-left:auto}
 .note-empty{padding:28px 13px;text-align:center;color:var(--dim);font-family:var(--fe);font-style:italic;font-size:13px;line-height:1.9}
 
-/* Panel 3 — Editor */
 .ve{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;background:var(--s1)}
 
-/* Home view */
-.ve-home{flex:1;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;background:var(--bg);padding:40px 44px 60px}
-.home-inner{width:100%;max-width:520px}
-.home-title{font-family:var(--fd);font-size:28px;font-weight:400;font-style:italic;color:var(--white);margin-bottom:3px}
+/* ─── VAULT HOME ─── */
+.ve-home{flex:1;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;background:var(--bg);padding:32px 40px 60px}
+.home-inner{width:100%;max-width:540px}
+
+/* North Star */
+.north-star{
+  background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);
+  padding:14px 18px;margin-bottom:22px;position:relative;overflow:hidden;
+  cursor:pointer;transition:border-color .15s;
+}
+.north-star:hover{border-color:var(--b3)}
+.north-star::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--gold),var(--or),var(--gold));
+}
+.ns-label{font-family:var(--fm);font-size:8px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.ns-label::before{content:'★';font-size:9px}
+.ns-text{font-family:var(--fd);font-size:17px;font-weight:400;font-style:italic;color:var(--white);line-height:1.4;width:100%;resize:none;display:block;min-height:26px;background:transparent}
+.ns-text::placeholder{color:var(--b5);font-style:italic}
+.ns-hint{font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:4px}
+
+/* Home stats bar */
+.home-statsbar{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px}
+.hstat{
+  background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);
+  padding:11px 13px;text-align:center;transition:border-color .12s;cursor:default;
+}
+.hstat:hover{border-color:var(--b3)}
+.hstat-n{font-family:var(--fd);font-size:22px;font-weight:500;color:var(--white);line-height:1}
+.hstat-l{font-family:var(--fm);font-size:8.5px;letter-spacing:.06em;color:var(--dim);margin-top:3px}
+
+.home-title{font-family:var(--fd);font-size:22px;font-weight:400;font-style:italic;color:var(--white);margin-bottom:4px}
 .home-title em{color:var(--gold);font-style:italic}
-.home-sub{font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;color:var(--muted);margin-bottom:26px}
-.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.home-sub{font-family:var(--fm);font-size:9.5px;letter-spacing:.08em;color:var(--muted);margin-bottom:14px}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
 .cc{
   background:var(--s2);border:1px solid var(--b2);border-radius:var(--r2);
   padding:14px 13px;cursor:pointer;transition:all .16s;position:relative;overflow:hidden;
@@ -183,11 +210,21 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .cc-name{font-size:11px;font-weight:500;margin-bottom:1px}
 .cc-n{font-size:9.5px;font-family:var(--fm);color:var(--muted)}
 
-/* Active editor */
+/* Quick actions row on home */
+.home-quick{display:flex;gap:7px;margin-top:0}
+.hq-btn{
+  flex:1;padding:9px 12px;border:1px solid var(--b2);border-radius:var(--r2);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-family:var(--fm);font-size:9.5px;letter-spacing:.06em;color:var(--muted);
+  transition:all .13s;text-transform:uppercase;
+}
+.hq-btn:hover{border-color:var(--b4);color:var(--text);background:var(--s2)}
+.hq-btn.gold{border-color:var(--b3);color:var(--gold);background:var(--gold-t)}
+.hq-btn.gold:hover{border-color:var(--gold);background:var(--gold-tl)}
+
 .ve-ed{display:none;flex-direction:column;height:100%}
 .ve-ed.on{display:flex}
 
-/* Toolbar */
 .ve-tb{
   display:flex;align-items:center;gap:2px;padding:6px 13px;
   border-bottom:1px solid var(--b1);flex-shrink:0;flex-wrap:nowrap;overflow:hidden;
@@ -215,17 +252,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .save-st{font-family:var(--fm);font-size:9px;color:var(--dim);padding:0 5px}
 .tb-r{margin-left:auto;display:flex;gap:4px;flex-shrink:0}
 
-/* Source bar */
 .ve-src{padding:6px 19px 0;border-bottom:1px solid var(--b1);flex-shrink:0}
 .ve-src input{width:100%;font-family:var(--fm);font-size:10px;color:var(--muted);padding-bottom:6px}
 .ve-src input::placeholder{color:var(--dim)}
 
-/* Title */
 .ve-title-wrap{padding:14px 19px 4px;flex-shrink:0}
 .ve-title{font-family:var(--fd);font-size:22px;font-weight:500;color:var(--white);width:100%;resize:none;overflow:hidden;line-height:1.35;display:block}
 .ve-title::placeholder{color:var(--b5)}
 
-/* Tags row */
 .ve-tags{
   padding:4px 19px 8px;border-bottom:1px solid var(--b1);
   flex-shrink:0;display:flex;align-items:center;gap:5px;flex-wrap:wrap;min-height:31px;
@@ -236,7 +270,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .tag-inp{font-family:var(--fm);font-size:10px;color:var(--muted);min-width:90px}
 .tag-inp::placeholder{color:var(--dim)}
 
-/* Rich editor body */
 .ve-body{flex:1;overflow-y:auto;padding:14px 19px;background:var(--s1)}
 .rich{
   min-height:280px;outline:none;caret-color:var(--gold);
@@ -262,10 +295,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .rich hr{border:none;border-top:1px solid var(--b3);margin:16px 0}
 .rich p{margin:2px 0}
 
-/* Editor footer */
 .ve-foot{display:flex;align-items:center;gap:7px;padding:5px 19px;border-top:1px solid var(--b1);flex-shrink:0;font-family:var(--fm);font-size:9px;color:var(--dim)}
 
-/* Category colours */
 .cat-Strategy{color:var(--cs);background:rgba(107,159,228,.1)}
 .cat-MentalModels{color:var(--cm);background:rgba(168,126,232,.1)}
 .cat-Finance{color:var(--cf);background:rgba(91,201,138,.1)}
@@ -292,7 +323,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .canvas-wrap.panning{cursor:grabbing}
 .canvas{position:absolute;top:0;left:0;width:6000px;height:5000px;transform-origin:0 0}
 
-/* Board cards */
 .bcard{position:absolute;cursor:move;user-select:none;border-radius:var(--r2);transition:box-shadow .15s}
 .bcard:hover{z-index:50}.bcard.dragging{z-index:200;box-shadow:var(--sh2);opacity:.95}
 .bcard-x{
@@ -303,7 +333,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .bcard:hover .bcard-x{opacity:1}
 .bcard-x:hover{background:rgba(232,114,114,.15);color:var(--cv);border-color:var(--cv)}
 
-/* Sticky */
 .bc-sticky{padding:13px 13px 10px;min-width:180px;max-width:250px;border:1px solid rgba(0,0,0,.08);box-shadow:2px 4px 16px rgba(0,0,0,.45)}
 .st-ta{font-family:var(--fb);font-size:13px;line-height:1.7;width:100%;background:transparent;resize:none;min-height:76px;color:#1A1208}
 .st-ta::placeholder{opacity:.3}
@@ -311,7 +340,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .st-dot{width:12px;height:12px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s}
 .st-dot:hover,.st-dot.on{transform:scale(1.35);border-color:rgba(0,0,0,.18)}
 
-/* Quote card */
 .bc-quote{background:var(--s2);border:1px solid var(--b3);padding:16px;min-width:210px;max-width:290px;box-shadow:var(--sh)}
 .bc-quote::before{content:'\201C';font-family:var(--fd);font-size:44px;line-height:.65;color:var(--gold);opacity:.38;display:block;margin-bottom:5px}
 .qt-text{font-family:var(--fd);font-style:italic;font-size:13.5px;line-height:1.75;color:var(--text2);width:100%;background:transparent;resize:none;min-height:54px;border-left:2px solid var(--gold);padding-left:12px}
@@ -319,7 +347,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .qt-auth{font-family:var(--fm);font-size:9.5px;color:var(--muted);width:100%;background:transparent;margin-top:8px}
 .qt-auth::placeholder{opacity:.25}
 
-/* Link card */
 .bc-link{background:var(--s2);border:1px solid var(--b2);border-top:2px solid var(--or);padding:13px;min-width:195px;max-width:265px;box-shadow:var(--sh)}
 .lk-url{font-family:var(--fm);font-size:9px;color:var(--muted);width:100%;background:transparent;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lk-url::placeholder{opacity:.3}
@@ -349,9 +376,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .reg-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:55vh;color:var(--dim);gap:10px;font-family:var(--fe);font-style:italic;font-size:14px}
 .reg-empty::before{content:'◈';font-size:28px;color:var(--b3);font-style:normal}
 
-/* Company card */
 .rc{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);padding:16px;transition:all .14s;position:relative;overflow:hidden}
-.rc:hover{border-color:var(--b3);box-shadow:var(--sh3)}
+.rc:hover{border-color:var(--b3);box-shadow:var(--sh3);transform:translateY(-1px)}
 .rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .rc-hd{display:flex;align-items:flex-start;gap:7px;margin-bottom:8px}
 .rc-name{font-family:var(--fd);font-size:15px;font-weight:500;color:var(--white);flex:1;line-height:1.25}
@@ -373,7 +399,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .rc-edit:hover{border-color:var(--gold);color:var(--gold)}
 .rc-metrics{font-family:var(--fm);font-size:9.5px;color:var(--muted);margin-bottom:8px;line-height:1.6}
 
-/* Type styles */
 .t-eq{color:var(--te);border-color:var(--te);background:rgba(90,143,212,.09)}
 .t-vc{color:var(--tv);border-color:var(--tv);background:rgba(200,168,74,.09)}
 .t-st{color:var(--ts);border-color:var(--ts);background:rgba(217,112,48,.09)}
@@ -383,12 +408,122 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .rc.t-eq::before{background:var(--te)}.rc.t-vc::before{background:var(--tv)}.rc.t-st::before{background:var(--ts)}
 .rc.t-pe::before{background:var(--tp)}.rc.t-cn::before{background:var(--tn)}.rc.t-ot::before{background:var(--toth)}
 
-/* Status styles */
 .s-watch{background:rgba(90,143,212,.1);color:var(--te)}
 .s-active{background:rgba(200,168,74,.1);color:var(--gold)}
 .s-conv{background:rgba(91,201,138,.12);color:#5BC98A}
 .s-inv{background:rgba(91,201,138,.18);color:#5BC98A}
 .s-pass{background:rgba(107,114,128,.1);color:var(--muted)}
+
+/* ═══════════════════════════════════════
+   PLAYBOOK — STRATEGY & CONSULTING LOG
+═══════════════════════════════════════ */
+.playbook{display:flex;flex-direction:column;width:100%;height:100%;overflow:hidden}
+
+.pb-banner{
+  padding:10px 18px 9px;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0;
+  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;
+}
+.pb-banner::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(200,168,74,.008) 0,rgba(200,168,74,.008) 1px,transparent 1px,transparent 48px);
+}
+.pb-banner-text{flex:1}
+.pb-banner-title{font-family:var(--fd);font-size:13px;font-weight:500;color:var(--white);letter-spacing:.01em}
+.pb-banner-title em{color:var(--gold);font-style:italic}
+.pb-banner-sub{font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-top:1px;letter-spacing:.04em}
+.pb-banner-count{font-family:var(--fd);font-size:28px;font-weight:500;color:var(--gold);opacity:.18;line-height:1;flex-shrink:0;user-select:none}
+
+.pb-top{
+  display:flex;align-items:center;gap:7px;padding:9px 16px;
+  border-bottom:1px solid var(--b1);background:var(--bg);flex-shrink:0;flex-wrap:wrap;
+}
+.pb-search{
+  padding:5px 11px;background:var(--s2);border:1px solid var(--b1);
+  border-radius:var(--r);font-size:12px;color:var(--text);width:200px;transition:border .12s;
+}
+.pb-search::placeholder{color:var(--dim)}.pb-search:focus{border-color:var(--b3)}
+.pb-filters{display:flex;gap:4px;flex-wrap:wrap}
+.pf{padding:4px 11px;border-radius:20px;font-family:var(--fm);font-size:9px;letter-spacing:.06em;border:1px solid var(--b2);color:var(--dim);transition:all .12s}
+.pf:hover{border-color:var(--b3);color:var(--text2)}.pf.on{background:var(--gold-t);border-color:var(--gold);color:var(--gold)}
+.pb-summary{font-family:var(--fm);font-size:9px;color:var(--dim)}
+
+.pb-body{flex:1;overflow-y:auto;padding:16px}
+.pb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
+.pb-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:55vh;color:var(--dim);gap:12px;
+}
+.pb-empty-icon{font-size:32px;color:var(--b3)}
+.pb-empty-title{font-family:var(--fd);font-size:16px;font-weight:400;font-style:italic;color:var(--text2)}
+.pb-empty-sub{font-family:var(--fe);font-style:italic;font-size:13px;color:var(--dim);text-align:center;max-width:320px;line-height:1.8}
+.pb-empty-cta{
+  padding:7px 18px;border:1px solid var(--b3);border-radius:var(--r2);
+  font-family:var(--fm);font-size:10px;letter-spacing:.06em;color:var(--gold);
+  background:var(--gold-t);transition:all .12s;margin-top:4px;
+}
+.pb-empty-cta:hover{border-color:var(--gold);background:var(--gold-tl)}
+
+/* Playbook card */
+.pc{
+  background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);
+  padding:16px;transition:all .15s;position:relative;overflow:hidden;
+}
+.pc:hover{border-color:var(--b3);box-shadow:var(--sh3);transform:translateY(-1px)}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pc-header{display:flex;align-items:center;gap:5px;margin-bottom:8px;flex-wrap:wrap}
+.pc-domain{
+  font-family:var(--fm);font-size:8px;padding:2px 7px;border-radius:3px;
+  border:1px solid;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0;
+}
+.pc-type{
+  font-family:var(--fm);font-size:8px;padding:2px 6px;border-radius:3px;
+  background:var(--s3);border:1px solid var(--b2);color:var(--dim);letter-spacing:.06em;flex-shrink:0;
+}
+.pc-stars{display:flex;gap:2px;margin-left:auto}
+.pc-star{font-size:10px;color:var(--b3)}.pc-star.on{color:var(--gold)}
+.pc-name{font-family:var(--fd);font-size:15.5px;font-weight:500;color:var(--white);line-height:1.3;margin-bottom:3px}
+.pc-source{font-family:var(--fm);font-size:9px;color:var(--dim);margin-bottom:9px;letter-spacing:.02em}
+.pc-insight{
+  font-family:var(--fe);font-style:italic;font-size:13px;color:var(--text2);
+  line-height:1.7;margin-bottom:9px;border-left:2px solid var(--b3);padding-left:10px;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.pc-when{
+  font-family:var(--fm);font-size:9.5px;color:var(--muted);background:var(--s2);
+  padding:5px 9px;border-radius:var(--r);margin-bottom:9px;line-height:1.55;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.pc-when-lbl{color:var(--dim);margin-right:3px}
+.pc-outcome{
+  font-family:var(--fm);font-size:9.5px;color:var(--muted);background:var(--s2);
+  border-left:2px solid var(--cf);padding:5px 9px;border-radius:0 var(--r) var(--r) 0;
+  margin-bottom:9px;line-height:1.55;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.pc-pills{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:9px}
+.pc-pill{font-family:var(--fm);font-size:8.5px;background:var(--s3);border:1px solid var(--b2);border-radius:3px;padding:2px 6px;color:var(--muted)}
+.pc-foot{display:flex;align-items:center;gap:6px}
+.pc-date{font-family:var(--fm);font-size:8.5px;color:var(--dim);margin-left:auto}
+.pc-edit{font-size:9px;font-family:var(--fm);color:var(--dim);padding:2px 8px;border:1px solid var(--b2);border-radius:3px;transition:all .1s}
+.pc-edit:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Domain color classes */
+.dom-Strategy .pc-domain{color:var(--cs);border-color:var(--cs);background:rgba(107,159,228,.09)}
+.dom-Strategy.pc::before,.dom-Strategy{--dc:var(--cs)}
+.dom-Consulting .pc-domain{color:var(--cc);border-color:var(--cc);background:rgba(90,200,212,.09)}
+.dom-Consulting.pc::before,.dom-Consulting{--dc:var(--cc)}
+.dom-VC .pc-domain{color:var(--gold);border-color:var(--gold);background:rgba(200,168,74,.09)}
+.dom-VC.pc::before,.dom-VC{--dc:var(--gold)}
+.dom-Operations .pc-domain{color:var(--or2);border-color:var(--or2);background:rgba(196,88,24,.09)}
+.dom-Operations.pc::before,.dom-Operations{--dc:var(--or2)}
+.dom-General .pc-domain{color:var(--co);border-color:var(--co);background:rgba(138,138,122,.09)}
+.dom-General.pc::before,.dom-General{--dc:var(--co)}
+
+.pc.dom-Strategy::before{background:var(--cs)}
+.pc.dom-Consulting::before{background:var(--cc)}
+.pc.dom-VC::before{background:var(--gold)}
+.pc.dom-Operations::before{background:var(--or2)}
+.pc.dom-General::before{background:var(--co)}
 
 /* ═══════════════════════════════════════
    MODALS
@@ -408,6 +543,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .fsel option{background:var(--s2)}
 .fta{width:100%;padding:7px 10px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);font-size:13px;color:var(--text);resize:vertical;min-height:70px;line-height:1.65}
 .fta:focus{border-color:var(--b4)}.fta::placeholder{color:var(--dim)}
+.fta.featured{border-color:var(--b3);background:var(--s2)}
+.fta.featured:focus{border-color:var(--gold)}
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
 .stars-ui{display:flex;gap:3px}
@@ -422,7 +559,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .gh-ok{background:rgba(91,201,138,.09);color:#5BC98A;border:1px solid rgba(91,201,138,.25)}
 .gh-err{background:rgba(232,114,114,.09);color:var(--cv);border:1px solid rgba(232,114,114,.25)}
 
-/* Button styles */
+/* Field accent line */
+.field-accent{border-top:1px solid var(--b2);margin:14px 0 14px;position:relative}
+.field-accent-lbl{position:absolute;top:-8px;left:0;font-family:var(--fm);font-size:8px;letter-spacing:.16em;color:var(--gold);background:var(--s1);padding:0 6px;text-transform:uppercase}
+
 .btn-g{padding:4px 10px;border-radius:var(--r);font-size:10.5px;border:1px solid var(--b2);color:var(--muted);transition:all .12s}
 .btn-g:hover{border-color:var(--b3);color:var(--text)}
 .btn-d{padding:4px 10px;border-radius:var(--r);font-size:10.5px;border:1px solid transparent;color:var(--dim);transition:all .12s}
@@ -444,6 +584,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
   pointer-events:none;white-space:nowrap;box-shadow:var(--sh);color:var(--text2);
 }
 .toast.on{opacity:1}
+
+/* Keyboard shortcut hint */
+.kbd-hint{
+  display:inline-flex;align-items:center;gap:2px;font-family:var(--fm);font-size:8px;
+  color:var(--dim);border:1px solid var(--b2);border-radius:3px;padding:1px 4px;background:var(--s2);
+}
 </style>
 </head>
 <body>
@@ -453,6 +599,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 <nav class="nav">
   <div class="logo">
     <span class="logo-mark">FOLIO</span>
+    <span class="logo-v">v2</span>
     <div class="logo-sep"></div>
     <span class="logo-sub">Knowledge OS</span>
   </div>
@@ -460,6 +607,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <button class="ntab on"  data-tab="vault"    onclick="switchTab('vault')"   >Vault</button>
     <button class="ntab"     data-tab="board"    onclick="switchTab('board')"   >Board</button>
     <button class="ntab"     data-tab="registry" onclick="switchTab('registry')">Registry</button>
+    <button class="ntab"     data-tab="playbook" onclick="switchTab('playbook')">Playbook <span class="ntab-new">NEW</span></button>
   </div>
   <div class="nav-r">
     <div class="sync-pill">
@@ -474,7 +622,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 <div class="tc on" id="tab-vault">
 <div class="vault">
 
-  <!-- Library sidebar -->
   <div class="vlib">
     <div class="vlib-hd">
       <span class="vlib-label">Library</span>
@@ -499,7 +646,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     </div>
   </div>
 
-  <!-- Note list -->
   <div class="vnl">
     <div class="vnl-hd">
       <input class="vnl-search" type="text" placeholder="Search…" id="noteSearch" oninput="filterNotes()">
@@ -512,20 +658,41 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <div class="note-list" id="noteList"></div>
   </div>
 
-  <!-- Editor -->
   <div class="ve" id="vaultEditor">
     <!-- Home -->
     <div class="ve-home" id="veHome">
       <div class="home-inner">
+
+        <!-- North Star -->
+        <div class="north-star" id="northStarCard">
+          <div class="ns-label">North Star</div>
+          <textarea class="ns-text" id="northStarText" rows="1" placeholder="Define your north star — your ultimate goal…" oninput="autoGrow(this);saveNorthStar()"></textarea>
+          <div class="ns-hint" id="northStarHint">Click to edit · your long-term mission</div>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="home-statsbar">
+          <div class="hstat"><div class="hstat-n" id="hsStat0">0</div><div class="hstat-l">Notes</div></div>
+          <div class="hstat"><div class="hstat-n" id="hsStat1">0</div><div class="hstat-l">Strategies</div></div>
+          <div class="hstat"><div class="hstat-n" id="hsStat2">0</div><div class="hstat-l">Companies</div></div>
+          <div class="hstat"><div class="hstat-n" id="hsStat3">0</div><div class="hstat-l">Board Cards</div></div>
+        </div>
+
         <h1 class="home-title">Your <em>knowledge</em> base</h1>
         <p class="home-sub" id="homeSub">0 notes · 7 categories</p>
         <div class="cat-grid" id="catGrid"></div>
+
+        <!-- Quick actions -->
+        <div class="home-quick">
+          <button class="hq-btn gold" onclick="newNote()">+ New Note</button>
+          <button class="hq-btn" onclick="switchTab('playbook');openAddPb()">+ Log Strategy</button>
+          <button class="hq-btn" onclick="switchTab('registry');openAddCo()">+ Add Company</button>
+        </div>
+
       </div>
     </div>
 
-    <!-- Active editor -->
     <div class="ve-ed" id="veActive">
-      <!-- Toolbar -->
       <div class="ve-tb">
         <select class="ve-cat" id="noteCat" onchange="schedSave()">
           <option>Strategy</option><option>Mental Models</option><option>Finance</option>
@@ -557,19 +724,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
           <button class="btn-gold" style="font-size:10px;padding:3px 10px" onclick="saveNote()">Save</button>
         </div>
       </div>
-      <!-- Source -->
       <div class="ve-src">
         <input type="text" id="noteSrc" placeholder="Source — book, paper, person, lecture, URL…" oninput="schedSave()">
       </div>
-      <!-- Title -->
       <div class="ve-title-wrap">
         <textarea class="ve-title" id="noteTitle" rows="1" placeholder="Title" oninput="autoGrow(this);schedSave()"></textarea>
       </div>
-      <!-- Tags -->
       <div class="ve-tags" id="tagsRow">
         <input class="tag-inp" type="text" id="tagInp" placeholder="+ add tag, press Enter">
       </div>
-      <!-- Rich body -->
       <div class="ve-body">
         <div class="rich sz-m" id="richEd" contenteditable="true"
              data-ph="Begin writing. The page awaits."
@@ -624,6 +787,40 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 </div>
 </div>
 
+<!-- ══════ PLAYBOOK ══════ -->
+<div class="tc" id="tab-playbook">
+<div class="playbook">
+
+  <!-- Banner -->
+  <div class="pb-banner">
+    <div class="pb-banner-text">
+      <div class="pb-banner-title">Strategy &amp; Consulting <em>Playbook</em></div>
+      <div class="pb-banner-sub">Log every framework, case study, tactic, and principle you encounter. Your arsenal, compounding daily.</div>
+    </div>
+    <div class="pb-banner-count" id="pbBannerCount">0</div>
+  </div>
+
+  <!-- Search + filters -->
+  <div class="pb-top">
+    <input class="pb-search" type="text" placeholder="Search playbook…" id="pbSearch" oninput="filterPb()">
+    <div class="pb-filters">
+      <button class="pf on" onclick="setPbFilter(this,'all')">All</button>
+      <button class="pf"    onclick="setPbFilter(this,'Strategy')">Strategy</button>
+      <button class="pf"    onclick="setPbFilter(this,'Consulting')">Consulting</button>
+      <button class="pf"    onclick="setPbFilter(this,'VC')">VC</button>
+      <button class="pf"    onclick="setPbFilter(this,'Operations')">Operations</button>
+      <button class="pf"    onclick="setPbFilter(this,'General')">General</button>
+    </div>
+    <span class="pb-summary" id="pbSummary"></span>
+    <button class="btn-gold" style="margin-left:auto;font-size:10px;padding:5px 12px" onclick="openAddPb()">+ Log Strategy</button>
+  </div>
+
+  <div class="pb-body">
+    <div class="pb-grid" id="pbGrid"></div>
+  </div>
+</div>
+</div>
+
 </div><!-- .app -->
 
 <!-- ══════ MODAL: SETTINGS ══════ -->
@@ -631,20 +828,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 <div class="modal" style="width:460px">
   <h2>Settings <em>&amp;</em> Sync</h2>
   <p class="modal-sub">Sync your data to a GitHub repo — works from any device.</p>
-
   <div class="settings-lbl">GitHub Sync (via API — no CLI needed)</div>
   <div class="fg">
     <label>Personal Access Token</label>
     <input class="fi-in" type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxx">
-    <div class="gh-hint">
-      github.com → Settings → Developer Settings → Personal Access Tokens (classic)<br>
-      Generate new token → select <b style="color:var(--text2)">repo</b> scope → paste here. Takes 2 min.
-    </div>
+    <div class="gh-hint">github.com → Settings → Developer Settings → Personal Access Tokens (classic)<br>Generate new token → select <b style="color:var(--text2)">repo</b> scope → paste here.</div>
   </div>
   <div class="fg">
     <label>Repository (owner/repo)</label>
     <input class="fi-in" type="text" id="ghRepo" placeholder="meeth10/folio-data">
-    <div class="gh-hint">Create a new <b style="color:var(--text2)">private</b> repo called folio-data in your account. The app reads/writes one JSON file via API.</div>
+    <div class="gh-hint">Create a new <b style="color:var(--text2)">private</b> repo called folio-data in your account.</div>
   </div>
   <div class="fg">
     <label>Data file path in repo</label>
@@ -655,14 +848,12 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <button class="btn-mgo" onclick="saveGHSettings()">Save &amp; Sync Now</button>
   </div>
   <div id="ghMsg"></div>
-
   <div class="vsep"></div>
   <div class="settings-lbl">Data Management</div>
   <div style="display:flex;gap:7px;flex-wrap:wrap">
     <button class="btn-mg" onclick="exportData()">↓ Export JSON</button>
     <label class="btn-mg" style="cursor:pointer;display:inline-flex;align-items:center">↑ Import JSON<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
   </div>
-
   <div class="modal-acts">
     <button class="btn-mg" onclick="closeModal('settingsModal')">Close</button>
   </div>
@@ -674,9 +865,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 <div class="modal">
   <h2 id="coModalTitle">Add <em>Company</em></h2>
   <input type="hidden" id="coEditId">
-
   <div class="f2">
-    <div class="fg"><label>Company Name *</label><input class="fi-in" type="text" id="coName" placeholder="e.g. Zepto, HDFC Bank, Andreessen…"></div>
+    <div class="fg"><label>Company Name *</label><input class="fi-in" type="text" id="coName" placeholder="e.g. Zepto, HDFC Bank…"></div>
     <div class="fg"><label>Type *</label>
       <select class="fsel" id="coType" onchange="toggleCoFields()">
         <option>Equity</option><option>VC Target</option><option>Startup</option>
@@ -685,7 +875,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     </div>
   </div>
   <div class="f3">
-    <div class="fg"><label>Sector / Industry</label><input class="fi-in" type="text" id="coSector" placeholder="Fintech, SaaS, D2C…"></div>
+    <div class="fg"><label>Sector / Industry</label><input class="fi-in" type="text" id="coSector" placeholder="Fintech, SaaS…"></div>
     <div class="fg"><label>Stage</label>
       <select class="fsel" id="coStage">
         <option value="">N/A</option><option>Pre-Seed</option><option>Seed</option>
@@ -700,7 +890,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
       </select>
     </div>
   </div>
-  <div class="fg"><label>Conviction Rating (1–5 stars)</label>
+  <div class="fg"><label>Conviction Rating</label>
     <div class="stars-ui" id="starsUI">
       <button class="star-b on" onclick="setStar(1)">★</button>
       <button class="star-b on" onclick="setStar(2)">★</button>
@@ -709,34 +899,28 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
       <button class="star-b"    onclick="setStar(5)">★</button>
     </div>
   </div>
-
-  <!-- Equity / PE fields -->
   <div id="eqFields">
     <div class="f2">
       <div class="fg"><label>Ticker / Exchange</label><input class="fi-in" type="text" id="coTicker" placeholder="HDFCBANK · NSE"></div>
-      <div class="fg"><label>Target Price (₹ / $)</label><input class="fi-in" type="text" id="coTarget" placeholder="2,200"></div>
+      <div class="fg"><label>Target Price</label><input class="fi-in" type="text" id="coTarget" placeholder="2,200"></div>
     </div>
     <div class="f2">
       <div class="fg"><label>Current Price</label><input class="fi-in" type="text" id="coCurr" placeholder="1,900"></div>
       <div class="fg"><label>Upside / Downside</label><input class="fi-in" type="text" id="coUpside" placeholder="+15.8%"></div>
     </div>
   </div>
-
-  <!-- Startup / VC fields -->
   <div id="stFields" style="display:none">
-    <div class="fg"><label>Key Metrics (ARR · GMV · NRR · Burn · Runway)</label><input class="fi-in" type="text" id="coMetrics" placeholder="ARR $3.2M · NRR 118% · Burn $180K/mo · Runway 14mo"></div>
-    <div class="fg"><label>Valuation &amp; Round</label><input class="fi-in" type="text" id="coValuation" placeholder="$18M pre-money Series A led by Sequoia"></div>
+    <div class="fg"><label>Key Metrics</label><input class="fi-in" type="text" id="coMetrics" placeholder="ARR $3.2M · NRR 118% · Burn $180K/mo"></div>
+    <div class="fg"><label>Valuation &amp; Round</label><input class="fi-in" type="text" id="coValuation" placeholder="$18M pre-money Series A"></div>
   </div>
-
-  <div class="fg"><label>Investment Thesis — Why This Company?</label>
-    <textarea class="fta" id="coThesis" placeholder="What is the core bet? What is the moat? Why now, why this team? What needs to be true?" rows="4"></textarea>
+  <div class="fg"><label>Investment Thesis</label>
+    <textarea class="fta" id="coThesis" placeholder="What is the core bet? What is the moat? Why now?" rows="4"></textarea>
   </div>
   <div class="f2">
-    <div class="fg"><label>Risks &amp; Red Flags</label><textarea class="fta" id="coRisk" placeholder="Key risks, regulatory, competition, execution…" rows="3"></textarea></div>
-    <div class="fg"><label>Tags (comma separated)</label><input class="fi-in" type="text" id="coTags" placeholder="india-macro, fintech, b2b, moat…"><br><br>
-    <label>Links / Sources</label><textarea class="fta" id="coNotes" placeholder="Pitch deck link, articles, people to speak to…" rows="2" style="min-height:50px"></textarea></div>
+    <div class="fg"><label>Risks &amp; Red Flags</label><textarea class="fta" id="coRisk" placeholder="Key risks, regulatory, competition…" rows="3"></textarea></div>
+    <div class="fg"><label>Tags (comma separated)</label><input class="fi-in" type="text" id="coTags" placeholder="india-macro, fintech, moat…"><br><br>
+    <label>Links / Sources</label><textarea class="fta" id="coNotes" placeholder="Pitch deck, articles, contacts…" rows="2" style="min-height:50px"></textarea></div>
   </div>
-
   <div class="modal-acts">
     <div class="modal-acts-l"><button class="btn-mdel" id="coDelBtn" onclick="deleteCo()" style="display:none">Delete</button></div>
     <button class="btn-mg" onclick="closeModal('coModal')">Cancel</button>
@@ -745,10 +929,77 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 </div>
 </div>
 
+<!-- ══════ MODAL: ADD / EDIT PLAYBOOK ENTRY ══════ -->
+<div class="overlay" id="pbModal">
+<div class="modal" style="width:560px">
+  <h2 id="pbModalTitle">Log a <em>Strategy</em></h2>
+  <p class="modal-sub">Every framework you master is a weapon you carry for life. Document it thoroughly.</p>
+  <input type="hidden" id="pbEditId">
+
+  <div class="f2">
+    <div class="fg"><label>Strategy / Framework Name *</label><input class="fi-in" type="text" id="pbName" placeholder="e.g. Playing to Win Cascade, MECE, Power Law…"></div>
+    <div class="fg"><label>Domain *</label>
+      <select class="fsel" id="pbDomain">
+        <option>Strategy</option><option>Consulting</option><option>VC</option>
+        <option>Operations</option><option>General</option>
+      </select>
+    </div>
+  </div>
+  <div class="f2">
+    <div class="fg"><label>Type</label>
+      <select class="fsel" id="pbType">
+        <option>Framework</option><option>Mental Model</option><option>Case Study</option>
+        <option>Tactic</option><option>Principle</option><option>Heuristic</option><option>Process</option>
+      </select>
+    </div>
+    <div class="fg"><label>Source</label><input class="fi-in" type="text" id="pbSource" placeholder="Book, person, project, lecture…"></div>
+  </div>
+
+  <div class="fg"><label>Context — Where / when did you encounter or apply this?</label>
+    <textarea class="fta" id="pbContext" placeholder="e.g. Applied at EY during a market entry analysis for a BFSI client. First read in Roger Martin's 'Playing to Win'." rows="2" style="min-height:54px"></textarea>
+  </div>
+
+  <div class="field-accent"><span class="field-accent-lbl">Core Content</span></div>
+
+  <div class="fg">
+    <label>★ Core Insight — The central idea in your own words</label>
+    <textarea class="fta featured" id="pbInsight" placeholder="Distil the strategy to its sharpest form. What is the bet? What is the mechanism? What makes it work?" rows="4"></textarea>
+  </div>
+  <div class="fg"><label>When to Use — Conditions &amp; triggers for applying this</label>
+    <textarea class="fta" id="pbWhen" placeholder="e.g. Use when entering a new market, evaluating M&A targets, or stress-testing a business model..." rows="2" style="min-height:54px"></textarea>
+  </div>
+  <div class="fg"><label>Evidence / Outcome — Results, examples, or proof it works</label>
+    <textarea class="fta" id="pbOutcome" placeholder="e.g. Amazon's 'work backwards from the customer' is a live example. Southwest Airlines used this to define its competitive position..." rows="2" style="min-height:54px"></textarea>
+  </div>
+
+  <div class="field-accent" style="margin-top:16px"><span class="field-accent-lbl">Classification</span></div>
+
+  <div class="f2">
+    <div class="fg"><label>Tags (comma separated)</label><input class="fi-in" type="text" id="pbTags" placeholder="market-entry, moat, b2b, india…"></div>
+    <div class="fg"><label>Usefulness Rating (1–5)</label>
+      <div class="stars-ui" id="pbStarsUI">
+        <button class="star-b on" onclick="setPbStar(1)">★</button>
+        <button class="star-b on" onclick="setPbStar(2)">★</button>
+        <button class="star-b on" onclick="setPbStar(3)">★</button>
+        <button class="star-b"    onclick="setPbStar(4)">★</button>
+        <button class="star-b"    onclick="setPbStar(5)">★</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-acts">
+    <div class="modal-acts-l"><button class="btn-mdel" id="pbDelBtn" onclick="deletePb()" style="display:none">Delete</button></div>
+    <button class="btn-mg" onclick="closeModal('pbModal')">Cancel</button>
+    <button class="btn-mgo" onclick="savePb()">Save to Playbook</button>
+  </div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 'use strict';
+
 /* ════════════════════════════════════════
    CONSTANTS
 ════════════════════════════════════════ */
@@ -765,16 +1016,19 @@ const CAT_KEY = c => c.replace(/[^a-zA-Z]/g,'');
 const STICKY_COLORS = ['#F5EAC8','#E2EFD8','#D8E8F4','#F0DDE8','#E8E2F4','#F4F0DC','#DDF0EC'];
 const TYPE_CLS = {'Equity':'t-eq','VC Target':'t-vc','Startup':'t-st','PE Comp':'t-pe','Consulting Comp':'t-cn','Other':'t-ot'};
 const STATUS_CLS = {'Watching':'s-watch','Active Research':'s-active','Strong Conviction':'s-conv','Invested':'s-inv','Passed':'s-pass'};
+const PB_DOMAINS = ['Strategy','Consulting','VC','Operations','General'];
 
 /* ════════════════════════════════════════
    STATE
 ════════════════════════════════════════ */
-let STATE = { notes: [], board: [], registry: [] };
+let STATE = { notes: [], board: [], registry: [], playbook: [], northStar: '' };
 let GH = { token: '', repo: '', path: 'folio-data.json', sha: null };
 let UI = {
   tab: 'vault', folder: 'all', noteId: null, searchQ: '',
   fontSize: 'M', regType: 'all', regQ: '',
-  convRating: 3, saveTimer: null, ghTimer: null
+  pbFilter: 'all', pbQ: '',
+  convRating: 3, pbRating: 3,
+  saveTimer: null, ghTimer: null
 };
 
 /* ════════════════════════════════════════
@@ -815,6 +1069,8 @@ function switchTab(tab) {
   $('tab-' + tab).classList.add('on');
   if (tab === 'board') { renderBoard(); centerCanvas(); }
   if (tab === 'registry') renderRegistry();
+  if (tab === 'playbook') renderPlaybook();
+  if (tab === 'vault') updateHomeStats();
 }
 
 function centerCanvas() {
@@ -858,7 +1114,6 @@ async function ghPut(content, sha) {
       body: JSON.stringify(body)
     });
     if (r.status === 409) {
-      // SHA conflict — fetch fresh and retry once
       const fresh = await ghGet();
       if (fresh) { GH.sha = fresh.sha; return ghPut(content, fresh.sha); }
       return false;
@@ -882,22 +1137,18 @@ async function testGH() {
       headers: { 'Authorization': 'Bearer ' + tok }
     });
     if (r.ok) {
-      msg.className = 'gh-msg gh-ok';
-      msg.textContent = '✓ Connected to ' + repo + ' — ready to sync';
+      msg.className = 'gh-msg gh-ok'; msg.textContent = '✓ Connected to ' + repo + ' — ready to sync';
       setSyncStatus('ok','Connected');
     } else {
-      msg.className = 'gh-msg gh-err';
-      msg.textContent = '✗ Error ' + r.status + ' — check token scope and repo name';
+      msg.className = 'gh-msg gh-err'; msg.textContent = '✗ Error ' + r.status + ' — check token scope and repo name';
       setSyncStatus('err','Error');
     }
   } catch(e) { msg.className = 'gh-msg gh-err'; msg.textContent = 'Network error — check connection'; setSyncStatus('err','Error'); }
 }
 
 function openSettings() {
-  $('ghToken').value = GH.token;
-  $('ghRepo').value = GH.repo;
-  $('ghPath').value = GH.path || 'folio-data.json';
-  $('ghMsg').innerHTML = '';
+  $('ghToken').value = GH.token; $('ghRepo').value = GH.repo;
+  $('ghPath').value = GH.path || 'folio-data.json'; $('ghMsg').innerHTML = '';
   $('settingsModal').classList.add('on');
 }
 
@@ -912,19 +1163,18 @@ async function saveGHSettings() {
     if (remote && remote.content) {
       try {
         const parsed = JSON.parse(remote.content);
-        STATE = Object.assign({ notes:[], board:[], registry:[] }, parsed);
+        STATE = Object.assign({ notes:[], board:[], registry:[], playbook:[], northStar:'' }, parsed);
+        STATE.playbook = STATE.playbook || [];
+        STATE.northStar = STATE.northStar || '';
         GH.sha = remote.sha;
         lsSave(); renderAll();
         setSyncStatus('ok','Synced'); toast('✓ Loaded from GitHub');
       } catch(e) { setSyncStatus('err','Parse error'); }
     } else if (remote && remote.sha === null) {
-      // File doesn't exist yet — create it
       const ok = await ghPut(JSON.stringify(STATE));
       setSyncStatus(ok?'ok':'err', ok?'Synced':'Error');
       if (ok) toast('✓ Created data file on GitHub');
-    } else {
-      setSyncStatus('err','Offline');
-    }
+    } else { setSyncStatus('err','Offline'); }
   }
   closeModal('settingsModal');
 }
@@ -934,10 +1184,7 @@ function schedGHSave() {
   UI.ghTimer = setTimeout(async () => {
     if (!GH.token || !GH.repo) return;
     setSyncStatus('busy','Saving…');
-    if (!GH.sha) {
-      const r = await ghGet();
-      if (r) GH.sha = r.sha;
-    }
+    if (!GH.sha) { const r = await ghGet(); if (r) GH.sha = r.sha; }
     const ok = await ghPut(JSON.stringify(STATE), GH.sha);
     setSyncStatus(ok?'ok':'err', ok?'Synced':'Sync failed');
   }, 5000);
@@ -968,7 +1215,10 @@ function importData(e) {
   const r = new FileReader();
   r.onload = ev => {
     try {
-      STATE = JSON.parse(ev.target.result);
+      const parsed = JSON.parse(ev.target.result);
+      STATE = Object.assign({ notes:[], board:[], registry:[], playbook:[], northStar:'' }, parsed);
+      STATE.playbook = STATE.playbook || [];
+      STATE.northStar = STATE.northStar || '';
       saveAll(); renderAll(); toast('✓ Imported successfully');
     } catch { toast('Invalid file — check JSON format'); }
   };
@@ -976,24 +1226,44 @@ function importData(e) {
 }
 
 /* ════════════════════════════════════════
+   NORTH STAR
+════════════════════════════════════════ */
+function saveNorthStar() {
+  STATE.northStar = $('northStarText').value;
+  saveAll();
+}
+function loadNorthStar() {
+  const el = $('northStarText');
+  if (!el) return;
+  el.value = STATE.northStar || '';
+  autoGrow(el);
+  $('northStarHint').textContent = STATE.northStar ? 'Click to edit · your long-term mission' : 'Click to set your north star';
+}
+
+/* ════════════════════════════════════════
+   VAULT HOME STATS
+════════════════════════════════════════ */
+function updateHomeStats() {
+  const s0 = $('hsStat0'), s1 = $('hsStat1'), s2 = $('hsStat2'), s3 = $('hsStat3');
+  if (s0) s0.textContent = STATE.notes.length;
+  if (s1) s1.textContent = (STATE.playbook||[]).length;
+  if (s2) s2.textContent = STATE.registry.length;
+  if (s3) s3.textContent = STATE.board.length;
+}
+
+/* ════════════════════════════════════════
    VAULT — NOTES
 ════════════════════════════════════════ */
 function newNote() {
   const n = {
-    id: uid(),
-    title: '',
+    id: uid(), title: '',
     category: UI.folder !== 'all' ? UI.folder : 'Others',
-    source: '',
-    tags: [],
-    html: '',
-    fontSize: 'M',
-    created: now(),
-    updated: now()
+    source: '', tags: [], html: '', fontSize: 'M',
+    created: now(), updated: now()
   };
   STATE.notes.unshift(n);
-  saveAll();
-  openNote(n.id);
-  renderNoteList(); updateCounts(); renderCatGrid();
+  saveAll(); openNote(n.id);
+  renderNoteList(); updateCounts(); renderCatGrid(); updateHomeStats();
   setTimeout(() => $('noteTitle')?.focus(), 60);
 }
 
@@ -1012,14 +1282,14 @@ function openNote(id) {
   setFS(UI.fontSize, false);
   renderTagRow(n.tags || []);
   autoGrow($('noteTitle'));
-  updateWC();
-  highlightNote(id);
+  updateWC(); highlightNote(id);
 }
 
 function showHome() {
   UI.noteId = null;
   $('veHome').style.display = '';
   $('veActive').classList.remove('on');
+  loadNorthStar(); updateHomeStats();
   highlightNote(null);
 }
 
@@ -1039,7 +1309,7 @@ function filterNotes() {
 function getFiltered() {
   return STATE.notes.filter(n => {
     const catOk = UI.folder === 'all' || n.category === UI.folder;
-    const txt = (n.title + ' ' + (n.html || '').replace(/<[^>]+>/g,' ') + ' ' + (n.tags||[]).join(' ') + ' ' + (n.source||'')).toLowerCase();
+    const txt = (n.title + ' ' + (n.html||'').replace(/<[^>]+>/g,' ') + ' ' + (n.tags||[]).join(' ') + ' ' + (n.source||'')).toLowerCase();
     return catOk && (!UI.searchQ || txt.includes(UI.searchQ));
   });
 }
@@ -1050,8 +1320,7 @@ function renderNoteList() {
   const notes = getFiltered();
   $('noteCount').textContent = notes.length;
   if (!notes.length) {
-    list.innerHTML = '<div class="note-empty">No notes here yet.<br>Begin with something new.</div>';
-    return;
+    list.innerHTML = '<div class="note-empty">No notes here yet.<br>Begin with something new.</div>'; return;
   }
   list.innerHTML = notes.map(n => {
     const preview = (n.html||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,80);
@@ -1072,7 +1341,6 @@ function highlightNote(id) {
 }
 
 function onEditorInput() { schedSave(); updateTB(); }
-
 function schedSave() {
   $('saveSt').textContent = 'editing…';
   clearTimeout(UI.saveTimer);
@@ -1091,14 +1359,14 @@ function saveNote() {
   n.updated = now();
   $('noteDate').textContent = fmtDate(n.updated);
   $('saveSt').textContent = '✓ saved';
-  setTimeout(() => { const e = $('saveSt'); if(e) e.textContent = ''; }, 2200);
-  saveAll(); renderNoteList(); updateCounts(); renderCatGrid();
+  setTimeout(() => { const e = $('saveSt'); if(e) e.textContent=''; }, 2200);
+  saveAll(); renderNoteList(); updateCounts(); renderCatGrid(); updateHomeStats();
 }
 
 function deleteNote() {
   if (!UI.noteId || !confirm('Delete this note permanently?')) return;
   STATE.notes = STATE.notes.filter(n => n.id !== UI.noteId);
-  showHome(); saveAll(); renderNoteList(); updateCounts(); renderCatGrid();
+  showHome(); saveAll(); renderNoteList(); updateCounts(); renderCatGrid(); updateHomeStats();
   toast('Note deleted');
 }
 
@@ -1129,7 +1397,6 @@ function renderCatGrid() {
 function renderTagRow(tags) {
   const row = $('tagsRow'), inp = $('tagInp');
   if (!row || !inp) return;
-  // Remove inp temporarily
   if (inp.parentNode) inp.parentNode.removeChild(inp);
   row.innerHTML = '';
   tags.forEach((t, i) => {
@@ -1151,66 +1418,45 @@ function tagKey(e) {
     if (!n) return;
     if (!n.tags) n.tags = [];
     if (!n.tags.includes(v)) n.tags.push(v);
-    renderTagRow(n.tags);
-    schedSave();
+    renderTagRow(n.tags); schedSave();
   }
 }
 
 function rmTag(i) {
   const n = STATE.notes.find(x => x.id === UI.noteId);
   if (!n) return;
-  n.tags.splice(i, 1);
-  renderTagRow(n.tags);
-  schedSave();
+  n.tags.splice(i,1);
+  renderTagRow(n.tags); schedSave();
 }
 
-/* Rich text formatting */
-function fmt(cmd) {
-  $('richEd').focus();
-  document.execCommand(cmd, false, null);
-  updateTB(); schedSave();
-}
-
-function fmtBlock(tag) {
-  $('richEd').focus();
-  document.execCommand('formatBlock', false, tag);
-  updateTB(); schedSave();
-}
-
+/* Rich text */
+function fmt(cmd) { $('richEd').focus(); document.execCommand(cmd,false,null); updateTB(); schedSave(); }
+function fmtBlock(tag) { $('richEd').focus(); document.execCommand('formatBlock',false,tag); updateTB(); schedSave(); }
 function insertCode() {
   $('richEd').focus();
   const sel = window.getSelection();
   if (sel && sel.rangeCount && sel.toString()) {
     const r = sel.getRangeAt(0);
     const c = document.createElement('code');
-    c.textContent = sel.toString();
-    r.deleteContents();
-    r.insertNode(c);
-  } else {
-    document.execCommand('insertHTML', false, '<code>code here</code>');
-  }
+    c.textContent = sel.toString(); r.deleteContents(); r.insertNode(c);
+  } else { document.execCommand('insertHTML',false,'<code>code here</code>'); }
   schedSave();
 }
 
 function updateTB() {
   [['bold','tbB'],['italic','tbI'],['underline','tbU'],['strikeThrough','tbS']].forEach(([cmd,id]) => {
-    const b = $(id);
-    if (b) b.classList.toggle('on', document.queryCommandState(cmd));
+    const b = $(id); if (b) b.classList.toggle('on', document.queryCommandState(cmd));
   });
   updateWC();
 }
-
 function updateWC() {
   const t = $('richEd')?.innerText || '';
   const w = t.trim() ? t.trim().split(/\s+/).length : 0;
-  const e = $('wc');
-  if (e) e.textContent = w + ' word' + (w !== 1 ? 's' : '');
+  const e = $('wc'); if (e) e.textContent = w + ' word' + (w !== 1 ? 's' : '');
 }
-
 function setFS(sz, doSave=true) {
   UI.fontSize = sz;
-  const ed = $('richEd');
-  if (!ed) return;
+  const ed = $('richEd'); if (!ed) return;
   ['sz-s','sz-m','sz-l','sz-xl'].forEach(c => ed.classList.remove(c));
   ed.classList.add('sz-' + sz.toLowerCase());
   document.querySelectorAll('.fsz').forEach(b => b.classList.toggle('on', b.textContent === sz));
@@ -1219,12 +1465,12 @@ function setFS(sz, doSave=true) {
 
 /* Keyboard shortcuts */
 document.addEventListener('keydown', e => {
-  if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); saveNote(); }
-  if ((e.metaKey || e.ctrlKey) && e.key === 'n' && UI.tab === 'vault') { e.preventDefault(); newNote(); }
-  if (e.key === 'Escape') document.querySelectorAll('.overlay.on').forEach(m => m.classList.remove('on'));
+  if ((e.metaKey||e.ctrlKey) && e.key==='s') { e.preventDefault(); saveNote(); }
+  if ((e.metaKey||e.ctrlKey) && e.key==='n' && UI.tab==='vault') { e.preventDefault(); newNote(); }
+  if ((e.metaKey||e.ctrlKey) && e.key==='p' && UI.tab==='playbook') { e.preventDefault(); openAddPb(); }
+  if (e.key==='Escape') document.querySelectorAll('.overlay.on').forEach(m=>m.classList.remove('on'));
 });
 
-// Wire tag input after DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   const tagInp = $('tagInp');
   if (tagInp) tagInp.addEventListener('keydown', tagKey);
@@ -1233,10 +1479,10 @@ document.addEventListener('DOMContentLoaded', () => {
 const richEd = $('richEd');
 if (richEd) {
   richEd.addEventListener('keydown', e => {
-    if (e.metaKey || e.ctrlKey) {
-      if (e.key === 'b') { e.preventDefault(); fmt('bold'); }
-      if (e.key === 'i') { e.preventDefault(); fmt('italic'); }
-      if (e.key === 'u') { e.preventDefault(); fmt('underline'); }
+    if (e.metaKey||e.ctrlKey) {
+      if (e.key==='b') { e.preventDefault(); fmt('bold'); }
+      if (e.key==='i') { e.preventDefault(); fmt('italic'); }
+      if (e.key==='u') { e.preventDefault(); fmt('underline'); }
     }
   });
 }
@@ -1244,21 +1490,17 @@ if (richEd) {
 /* ════════════════════════════════════════
    BOARD
 ════════════════════════════════════════ */
-let _dragCard = null, _dOff = { x:0, y:0 };
-let _panning = false, _pStart = { x:0, y:0 }, _pScroll = { x:0, y:0 };
+let _dragCard=null,_dOff={x:0,y:0};
+let _panning=false,_pStart={x:0,y:0},_pScroll={x:0,y:0};
 
 function addCard(type) {
   const w = $('canvasWrap');
   const id = uid();
-  const x = (w.scrollLeft + 80 + Math.random() * 350) | 0;
-  const y = (w.scrollTop + 60 + Math.random() * 220) | 0;
-  const card = {
-    id, type, x, y,
-    content: '', author: '', url: '', linkTitle: '', desc: '',
-    color: type === 'sticky' ? STICKY_COLORS[0] : null
-  };
+  const x = (w.scrollLeft + 80 + Math.random()*350)|0;
+  const y = (w.scrollTop + 60 + Math.random()*220)|0;
+  const card = { id, type, x, y, content:'', author:'', url:'', linkTitle:'', desc:'', color:type==='sticky'?STICKY_COLORS[0]:null };
   STATE.board.push(card);
-  saveAll(); renderBoard();
+  saveAll(); renderBoard(); updateHomeStats();
   setTimeout(() => {
     const el = document.querySelector(`.bcard[data-id="${id}"]`);
     if (el) { const ta = el.querySelector('textarea,input'); if (ta) ta.focus(); }
@@ -1266,175 +1508,152 @@ function addCard(type) {
 }
 
 function updCard(id, field, val) {
-  const c = STATE.board.find(x => x.id === id);
-  if (c) { c[field] = val; saveAll(); }
+  const c = STATE.board.find(x => x.id===id);
+  if (c) { c[field]=val; saveAll(); }
 }
-
-function delCard(id) {
-  STATE.board = STATE.board.filter(c => c.id !== id);
-  saveAll(); renderBoard();
-}
-
+function delCard(id) { STATE.board=STATE.board.filter(c=>c.id!==id); saveAll(); renderBoard(); updateHomeStats(); }
 function clearBoard() {
   if (!confirm('Clear all cards from the board?')) return;
-  STATE.board = []; saveAll(); renderBoard();
+  STATE.board=[]; saveAll(); renderBoard(); updateHomeStats();
 }
 
 function renderBoard() {
-  const cv = $('boardCanvas');
-  if (!cv) return;
-  cv.innerHTML = '';
+  const cv = $('boardCanvas'); if (!cv) return;
+  cv.innerHTML='';
   STATE.board.forEach(c => {
-    if (c.type === 'sticky') mkSticky(c);
-    else if (c.type === 'quote') mkQuote(c);
-    else if (c.type === 'link') mkLink(c);
+    if (c.type==='sticky') mkSticky(c);
+    else if (c.type==='quote') mkQuote(c);
+    else if (c.type==='link') mkLink(c);
   });
 }
 
 function mkBase(cls, c) {
   const d = document.createElement('div');
-  d.className = 'bcard ' + cls;
-  d.dataset.id = c.id;
-  d.style.cssText = `left:${c.x}px;top:${c.y}px`;
-  d.addEventListener('mousedown', e => startDrag(e, c.id));
+  d.className='bcard '+cls; d.dataset.id=c.id;
+  d.style.cssText=`left:${c.x}px;top:${c.y}px`;
+  d.addEventListener('mousedown', e=>startDrag(e,c.id));
   const x = document.createElement('button');
-  x.className = 'bcard-x'; x.textContent = '✕';
-  x.addEventListener('mousedown', e => e.stopPropagation());
-  x.addEventListener('click', () => delCard(c.id));
-  d.appendChild(x);
-  return d;
+  x.className='bcard-x'; x.textContent='✕';
+  x.addEventListener('mousedown',e=>e.stopPropagation());
+  x.addEventListener('click',()=>delCard(c.id));
+  d.appendChild(x); return d;
 }
 
 function mkSticky(c) {
-  const d = mkBase('bc-sticky', c);
-  d.style.background = c.color || STICKY_COLORS[0];
-  const ta = document.createElement('textarea');
-  ta.className = 'st-ta'; ta.placeholder = 'Write here…'; ta.value = c.content || '';
-  ta.addEventListener('mousedown', e => e.stopPropagation());
-  ta.addEventListener('input', e => updCard(c.id, 'content', e.target.value));
+  const d=mkBase('bc-sticky',c); d.style.background=c.color||STICKY_COLORS[0];
+  const ta=document.createElement('textarea');
+  ta.className='st-ta'; ta.placeholder='Write here…'; ta.value=c.content||'';
+  ta.addEventListener('mousedown',e=>e.stopPropagation());
+  ta.addEventListener('input',e=>updCard(c.id,'content',e.target.value));
   d.appendChild(ta);
-  const dots = document.createElement('div'); dots.className = 'st-dots';
-  STICKY_COLORS.forEach(col => {
-    const dot = document.createElement('div');
-    dot.className = 'st-dot' + (c.color === col ? ' on' : '');
-    dot.style.background = col;
-    dot.addEventListener('mousedown', e => e.stopPropagation());
-    dot.addEventListener('click', () => { updCard(c.id,'color',col); renderBoard(); });
+  const dots=document.createElement('div'); dots.className='st-dots';
+  STICKY_COLORS.forEach(col=>{
+    const dot=document.createElement('div');
+    dot.className='st-dot'+(c.color===col?' on':''); dot.style.background=col;
+    dot.addEventListener('mousedown',e=>e.stopPropagation());
+    dot.addEventListener('click',()=>{updCard(c.id,'color',col);renderBoard();});
     dots.appendChild(dot);
   });
-  d.appendChild(dots);
-  $('boardCanvas').appendChild(d);
+  d.appendChild(dots); $('boardCanvas').appendChild(d);
 }
 
 function mkQuote(c) {
-  const d = mkBase('bc-quote', c);
-  const ta = document.createElement('textarea');
-  ta.className = 'qt-text'; ta.placeholder = 'The quote…'; ta.value = c.content || '';
-  ta.addEventListener('mousedown', e => e.stopPropagation());
-  ta.addEventListener('input', e => updCard(c.id, 'content', e.target.value));
-  const auth = document.createElement('input');
-  auth.className = 'qt-auth'; auth.type = 'text'; auth.placeholder = '— Author, Source'; auth.value = c.author || '';
-  auth.addEventListener('mousedown', e => e.stopPropagation());
-  auth.addEventListener('input', e => updCard(c.id, 'author', e.target.value));
-  d.appendChild(ta); d.appendChild(auth);
-  $('boardCanvas').appendChild(d);
+  const d=mkBase('bc-quote',c);
+  const ta=document.createElement('textarea');
+  ta.className='qt-text'; ta.placeholder='The quote…'; ta.value=c.content||'';
+  ta.addEventListener('mousedown',e=>e.stopPropagation());
+  ta.addEventListener('input',e=>updCard(c.id,'content',e.target.value));
+  const auth=document.createElement('input');
+  auth.className='qt-auth'; auth.type='text'; auth.placeholder='— Author, Source'; auth.value=c.author||'';
+  auth.addEventListener('mousedown',e=>e.stopPropagation());
+  auth.addEventListener('input',e=>updCard(c.id,'author',e.target.value));
+  d.appendChild(ta); d.appendChild(auth); $('boardCanvas').appendChild(d);
 }
 
 function mkLink(c) {
-  const d = mkBase('bc-link', c);
-  const url = document.createElement('input');
-  url.className = 'lk-url'; url.type = 'text'; url.placeholder = 'https://…'; url.value = c.url || '';
-  url.addEventListener('mousedown', e => e.stopPropagation());
-  url.addEventListener('input', e => { updCard(c.id,'url',e.target.value); refreshOpenBtn(d,e.target.value); });
-  const title = document.createElement('input');
-  title.className = 'lk-title'; title.type = 'text'; title.placeholder = 'Title'; title.value = c.linkTitle || '';
-  title.addEventListener('mousedown', e => e.stopPropagation());
-  title.addEventListener('input', e => updCard(c.id,'linkTitle',e.target.value));
-  const desc = document.createElement('textarea');
-  desc.className = 'lk-desc'; desc.placeholder = 'Note or description…'; desc.value = c.desc || '';
-  desc.addEventListener('mousedown', e => e.stopPropagation());
-  desc.addEventListener('input', e => updCard(c.id,'desc',e.target.value));
+  const d=mkBase('bc-link',c);
+  const url=document.createElement('input');
+  url.className='lk-url'; url.type='text'; url.placeholder='https://…'; url.value=c.url||'';
+  url.addEventListener('mousedown',e=>e.stopPropagation());
+  url.addEventListener('input',e=>{updCard(c.id,'url',e.target.value);refreshOpenBtn(d,e.target.value);});
+  const title=document.createElement('input');
+  title.className='lk-title'; title.type='text'; title.placeholder='Title'; title.value=c.linkTitle||'';
+  title.addEventListener('mousedown',e=>e.stopPropagation());
+  title.addEventListener('input',e=>updCard(c.id,'linkTitle',e.target.value));
+  const desc=document.createElement('textarea');
+  desc.className='lk-desc'; desc.placeholder='Note or description…'; desc.value=c.desc||'';
+  desc.addEventListener('mousedown',e=>e.stopPropagation());
+  desc.addEventListener('input',e=>updCard(c.id,'desc',e.target.value));
   d.appendChild(url); d.appendChild(title); d.appendChild(desc);
   if (c.url) {
-    const a = document.createElement('a');
-    a.className = 'lk-open'; a.href = c.url; a.target = '_blank'; a.rel = 'noopener';
-    a.textContent = 'Open ↗'; a.dataset.role = 'open';
-    a.addEventListener('mousedown', e => e.stopPropagation());
+    const a=document.createElement('a');
+    a.className='lk-open'; a.href=c.url; a.target='_blank'; a.rel='noopener';
+    a.textContent='Open ↗'; a.dataset.role='open';
+    a.addEventListener('mousedown',e=>e.stopPropagation());
     d.appendChild(a);
   }
   $('boardCanvas').appendChild(d);
 }
 
-function refreshOpenBtn(card, url) {
-  let existing = card.querySelector('[data-role="open"]');
+function refreshOpenBtn(card,url) {
+  let existing=card.querySelector('[data-role="open"]');
   if (url) {
     if (!existing) {
-      const a = document.createElement('a');
-      a.className = 'lk-open'; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = 'Open ↗'; a.dataset.role = 'open';
-      a.addEventListener('mousedown', e => e.stopPropagation());
-      card.appendChild(a);
-      existing = a;
+      const a=document.createElement('a');
+      a.className='lk-open'; a.target='_blank'; a.rel='noopener';
+      a.textContent='Open ↗'; a.dataset.role='open';
+      a.addEventListener('mousedown',e=>e.stopPropagation());
+      card.appendChild(a); existing=a;
     }
-    existing.href = url;
-  } else if (existing) {
-    existing.remove();
-  }
+    existing.href=url;
+  } else if (existing) { existing.remove(); }
 }
 
-/* Drag cards */
-function startDrag(e, id) {
-  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT' || e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
-  e.preventDefault();
-  _dragCard = id;
-  const el = document.querySelector(`.bcard[data-id="${id}"]`);
-  if (!el) return;
-  const w = $('canvasWrap');
-  const r = el.getBoundingClientRect(), wr = w.getBoundingClientRect();
-  _dOff.x = e.clientX - r.left;
-  _dOff.y = e.clientY - r.top;
+function startDrag(e,id) {
+  if (e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT'||e.target.tagName==='A'||e.target.tagName==='BUTTON') return;
+  e.preventDefault(); _dragCard=id;
+  const el=document.querySelector(`.bcard[data-id="${id}"]`); if (!el) return;
+  const w=$('canvasWrap');
+  const r=el.getBoundingClientRect();
+  _dOff.x=e.clientX-r.left; _dOff.y=e.clientY-r.top;
   el.classList.add('dragging');
 }
 
 document.addEventListener('mousemove', e => {
   if (_dragCard) {
-    const el = document.querySelector(`.bcard[data-id="${_dragCard}"]`);
-    const w = $('canvasWrap');
-    if (!el || !w) return;
-    const wr = w.getBoundingClientRect();
-    const x = (e.clientX - wr.left + w.scrollLeft - _dOff.x) | 0;
-    const y = (e.clientY - wr.top + w.scrollTop - _dOff.y) | 0;
-    el.style.left = Math.max(0,x) + 'px';
-    el.style.top = Math.max(0,y) + 'px';
+    const el=document.querySelector(`.bcard[data-id="${_dragCard}"]`);
+    const w=$('canvasWrap'); if (!el||!w) return;
+    const wr=w.getBoundingClientRect();
+    const x=(e.clientX-wr.left+w.scrollLeft-_dOff.x)|0;
+    const y=(e.clientY-wr.top+w.scrollTop-_dOff.y)|0;
+    el.style.left=Math.max(0,x)+'px'; el.style.top=Math.max(0,y)+'px';
   } else if (_panning) {
-    const w = $('canvasWrap');
-    if (!w) return;
-    w.scrollLeft = _pScroll.x - (e.clientX - _pStart.x);
-    w.scrollTop = _pScroll.y - (e.clientY - _pStart.y);
+    const w=$('canvasWrap'); if (!w) return;
+    w.scrollLeft=_pScroll.x-(e.clientX-_pStart.x);
+    w.scrollTop=_pScroll.y-(e.clientY-_pStart.y);
   }
 });
 
 document.addEventListener('mouseup', e => {
   if (_dragCard) {
-    const el = document.querySelector(`.bcard[data-id="${_dragCard}"]`);
+    const el=document.querySelector(`.bcard[data-id="${_dragCard}"]`);
     if (el) {
       el.classList.remove('dragging');
-      const c = STATE.board.find(x => x.id === _dragCard);
-      if (c) { c.x = parseInt(el.style.left)||0; c.y = parseInt(el.style.top)||0; saveAll(); }
+      const c=STATE.board.find(x=>x.id===_dragCard);
+      if (c) { c.x=parseInt(el.style.left)||0; c.y=parseInt(el.style.top)||0; saveAll(); }
     }
-    _dragCard = null;
+    _dragCard=null;
   }
-  if (_panning) { _panning = false; $('canvasWrap').classList.remove('panning'); }
+  if (_panning) { _panning=false; $('canvasWrap').classList.remove('panning'); }
 });
 
-/* Canvas panning */
-const canvasWrap = $('canvasWrap');
+const canvasWrap=$('canvasWrap');
 if (canvasWrap) {
   canvasWrap.addEventListener('mousedown', e => {
-    if (e.target === canvasWrap || e.target === $('boardCanvas')) {
-      _panning = true;
-      _pStart = { x: e.clientX, y: e.clientY };
-      _pScroll = { x: canvasWrap.scrollLeft, y: canvasWrap.scrollTop };
+    if (e.target===canvasWrap||e.target===$('boardCanvas')) {
+      _panning=true;
+      _pStart={x:e.clientX,y:e.clientY};
+      _pScroll={x:canvasWrap.scrollLeft,y:canvasWrap.scrollTop};
       canvasWrap.classList.add('panning');
     }
   });
@@ -1443,169 +1662,238 @@ if (canvasWrap) {
 /* ════════════════════════════════════════
    REGISTRY — COMPANIES
 ════════════════════════════════════════ */
-let _convRating = 3;
+let _convRating=3;
 
 function openAddCo() {
-  $('coEditId').value = '';
-  $('coModalTitle').innerHTML = 'Add <em>Company</em>';
-  $('coName').value = '';
-  $('coType').value = 'Equity';
-  $('coSector').value = '';
-  $('coStage').value = '';
-  $('coStatus').value = 'Watching';
-  $('coTicker').value = '';
-  $('coTarget').value = '';
-  $('coCurr').value = '';
-  $('coUpside').value = '';
-  $('coMetrics').value = '';
-  $('coValuation').value = '';
-  $('coThesis').value = '';
-  $('coRisk').value = '';
-  $('coTags').value = '';
-  $('coNotes').value = '';
-  $('coDelBtn').style.display = 'none';
-  _convRating = 3; setStar(3, false);
-  toggleCoFields();
+  $('coEditId').value=''; $('coModalTitle').innerHTML='Add <em>Company</em>';
+  $('coName').value=''; $('coType').value='Equity'; $('coSector').value='';
+  $('coStage').value=''; $('coStatus').value='Watching';
+  $('coTicker').value=''; $('coTarget').value=''; $('coCurr').value=''; $('coUpside').value='';
+  $('coMetrics').value=''; $('coValuation').value=''; $('coThesis').value='';
+  $('coRisk').value=''; $('coTags').value=''; $('coNotes').value='';
+  $('coDelBtn').style.display='none';
+  _convRating=3; setStar(3,false); toggleCoFields();
   $('coModal').classList.add('on');
-  setTimeout(() => $('coName').focus(), 60);
+  setTimeout(()=>$('coName').focus(),60);
 }
 
 function openEditCo(id) {
-  const co = STATE.registry.find(c => c.id === id);
-  if (!co) return;
-  $('coEditId').value = id;
-  $('coModalTitle').innerHTML = 'Edit <em>Company</em>';
-  $('coName').value = co.name || '';
-  $('coType').value = co.type || 'Equity';
-  $('coSector').value = co.sector || '';
-  $('coStage').value = co.stage || '';
-  $('coStatus').value = co.status || 'Watching';
-  $('coTicker').value = co.ticker || '';
-  $('coTarget').value = co.target || '';
-  $('coCurr').value = co.curr || '';
-  $('coUpside').value = co.upside || '';
-  $('coMetrics').value = co.metrics || '';
-  $('coValuation').value = co.valuation || '';
-  $('coThesis').value = co.thesis || '';
-  $('coRisk').value = co.risk || '';
-  $('coTags').value = (co.tags||[]).join(', ');
-  $('coNotes').value = co.notes || '';
-  $('coDelBtn').style.display = 'inline-flex';
-  _convRating = co.rating || 3; setStar(_convRating, false);
-  toggleCoFields();
+  const co=STATE.registry.find(c=>c.id===id); if (!co) return;
+  $('coEditId').value=id; $('coModalTitle').innerHTML='Edit <em>Company</em>';
+  $('coName').value=co.name||''; $('coType').value=co.type||'Equity';
+  $('coSector').value=co.sector||''; $('coStage').value=co.stage||'';
+  $('coStatus').value=co.status||'Watching'; $('coTicker').value=co.ticker||'';
+  $('coTarget').value=co.target||''; $('coCurr').value=co.curr||'';
+  $('coUpside').value=co.upside||''; $('coMetrics').value=co.metrics||'';
+  $('coValuation').value=co.valuation||''; $('coThesis').value=co.thesis||'';
+  $('coRisk').value=co.risk||''; $('coTags').value=(co.tags||[]).join(', '); $('coNotes').value=co.notes||'';
+  $('coDelBtn').style.display='inline-flex';
+  _convRating=co.rating||3; setStar(_convRating,false); toggleCoFields();
   $('coModal').classList.add('on');
 }
 
 function toggleCoFields() {
-  const t = $('coType').value;
-  const isStartup = t === 'Startup' || t === 'VC Target';
-  $('eqFields').style.display = isStartup ? 'none' : '';
-  $('stFields').style.display = isStartup ? '' : 'none';
+  const t=$('coType').value;
+  const isStartup=t==='Startup'||t==='VC Target';
+  $('eqFields').style.display=isStartup?'none':'';
+  $('stFields').style.display=isStartup?'':'none';
 }
 
-function setStar(n, save=true) {
-  _convRating = n;
-  document.querySelectorAll('#starsUI .star-b').forEach((b, i) => {
-    b.classList.toggle('on', i < n);
-  });
+function setStar(n,save=true) {
+  _convRating=n;
+  document.querySelectorAll('#starsUI .star-b').forEach((b,i)=>b.classList.toggle('on',i<n));
 }
 
 function saveCo() {
-  const name = $('coName').value.trim();
+  const name=$('coName').value.trim();
   if (!name) { toast('Company name is required'); $('coName').focus(); return; }
-  const editId = $('coEditId').value;
+  const editId=$('coEditId').value;
   const co = {
-    id: editId || uid(),
-    name,
-    type: $('coType').value,
-    sector: $('coSector').value.trim(),
-    stage: $('coStage').value,
-    status: $('coStatus').value,
-    rating: _convRating,
-    ticker: $('coTicker').value.trim(),
-    target: $('coTarget').value.trim(),
-    curr: $('coCurr').value.trim(),
-    upside: $('coUpside').value.trim(),
-    metrics: $('coMetrics').value.trim(),
-    valuation: $('coValuation').value.trim(),
-    thesis: $('coThesis').value.trim(),
-    risk: $('coRisk').value.trim(),
-    tags: $('coTags').value.split(',').map(t=>t.trim()).filter(Boolean),
-    notes: $('coNotes').value.trim(),
-    created: editId ? (STATE.registry.find(c=>c.id===editId)?.created || now()) : now(),
-    updated: now()
+    id:editId||uid(), name, type:$('coType').value, sector:$('coSector').value.trim(),
+    stage:$('coStage').value, status:$('coStatus').value, rating:_convRating,
+    ticker:$('coTicker').value.trim(), target:$('coTarget').value.trim(),
+    curr:$('coCurr').value.trim(), upside:$('coUpside').value.trim(),
+    metrics:$('coMetrics').value.trim(), valuation:$('coValuation').value.trim(),
+    thesis:$('coThesis').value.trim(), risk:$('coRisk').value.trim(),
+    tags:$('coTags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    notes:$('coNotes').value.trim(),
+    created:editId?(STATE.registry.find(c=>c.id===editId)?.created||now()):now(),
+    updated:now()
   };
-  if (editId) {
-    const i = STATE.registry.findIndex(c => c.id === editId);
-    if (i >= 0) STATE.registry[i] = co;
-  } else {
-    STATE.registry.unshift(co);
-  }
-  saveAll(); renderRegistry(); closeModal('coModal');
-  toast('✓ ' + name + ' saved');
+  if (editId) { const i=STATE.registry.findIndex(c=>c.id===editId); if(i>=0) STATE.registry[i]=co; }
+  else STATE.registry.unshift(co);
+  saveAll(); renderRegistry(); updateHomeStats(); closeModal('coModal');
+  toast('✓ '+name+' saved');
 }
 
 function deleteCo() {
-  const id = $('coEditId').value;
-  if (!id || !confirm('Remove this company from the registry?')) return;
-  STATE.registry = STATE.registry.filter(c => c.id !== id);
-  saveAll(); renderRegistry(); closeModal('coModal');
+  const id=$('coEditId').value;
+  if (!id||!confirm('Remove this company from the registry?')) return;
+  STATE.registry=STATE.registry.filter(c=>c.id!==id);
+  saveAll(); renderRegistry(); updateHomeStats(); closeModal('coModal');
   toast('Company removed');
 }
 
-function setRegFilter(btn, type) {
-  document.querySelectorAll('.rf').forEach(b => b.classList.remove('on'));
-  btn.classList.add('on');
-  UI.regType = type;
-  renderRegistry();
+function setRegFilter(btn,type) {
+  document.querySelectorAll('.rf').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); UI.regType=type; renderRegistry();
 }
-
 function filterReg() {
-  UI.regQ = ($('regSearch')?.value || '').toLowerCase().trim();
-  renderRegistry();
+  UI.regQ=($('regSearch')?.value||'').toLowerCase().trim(); renderRegistry();
 }
 
 function renderRegistry() {
-  const grid = $('regGrid');
-  if (!grid) return;
-  let list = STATE.registry;
-  if (UI.regType !== 'all') list = list.filter(c => c.type === UI.regType);
-  if (UI.regQ) {
-    list = list.filter(c => (c.name+' '+c.sector+' '+(c.tags||[]).join(' ')+' '+(c.thesis||'')).toLowerCase().includes(UI.regQ));
-  }
-  $('regSummary').textContent = list.length + ' compan' + (list.length !== 1 ? 'ies' : 'y');
+  const grid=$('regGrid'); if (!grid) return;
+  let list=STATE.registry;
+  if (UI.regType!=='all') list=list.filter(c=>c.type===UI.regType);
+  if (UI.regQ) list=list.filter(c=>(c.name+' '+c.sector+' '+(c.tags||[]).join(' ')+' '+(c.thesis||'')).toLowerCase().includes(UI.regQ));
+  $('regSummary').textContent=list.length+' compan'+(list.length!==1?'ies':'y');
   if (!list.length) {
-    grid.innerHTML = '<div class="reg-empty">No companies match this filter.<br>Add one with the button above.</div>';
-    return;
+    grid.innerHTML='<div class="reg-empty">No companies match this filter.<br>Add one with the button above.</div>'; return;
   }
-  grid.innerHTML = list.map(co => {
-    const tcls = TYPE_CLS[co.type] || 't-ot';
-    const scls = STATUS_CLS[co.status] || '';
-    const stars = Array.from({length:5},(_,i) => `<span class="rc-star${i<(co.rating||0)?' on':''}">★</span>`).join('');
-    const tags = (co.tags||[]).slice(0,4).map(t=>`<span class="rc-pill">${esc(t)}</span>`).join('');
-    const priceInfo = co.ticker ? `<span class="rc-price">${esc(co.ticker)}${co.curr?' · ₹'+esc(co.curr):''}${co.target?' → '+esc(co.target):''}${co.upside?' ('+esc(co.upside)+')':''}</span>` :
-      (co.valuation ? `<span class="rc-price">${esc(co.valuation)}</span>` : '');
-    const metrics = co.metrics ? `<div class="rc-metrics">${esc(co.metrics)}</div>` : '';
-    const risk = co.risk ? `<div class="rc-risk">⚑ ${esc(co.risk)}</div>` : '';
+  grid.innerHTML=list.map(co=>{
+    const tcls=TYPE_CLS[co.type]||'t-ot';
+    const scls=STATUS_CLS[co.status]||'';
+    const stars=Array.from({length:5},(_,i)=>`<span class="rc-star${i<(co.rating||0)?' on':''}">★</span>`).join('');
+    const tags=(co.tags||[]).slice(0,4).map(t=>`<span class="rc-pill">${esc(t)}</span>`).join('');
+    const priceInfo=co.ticker?`<span class="rc-price">${esc(co.ticker)}${co.curr?' · ₹'+esc(co.curr):''}${co.target?' → '+esc(co.target):''}${co.upside?' ('+esc(co.upside)+')':''}</span>`:
+      (co.valuation?`<span class="rc-price">${esc(co.valuation)}</span>`:'');
     return `<div class="rc ${tcls}">
-      <div class="rc-hd">
-        <div class="rc-name">${esc(co.name)}</div>
-        <span class="rc-type ${tcls}">${esc(co.type)}</span>
-      </div>
+      <div class="rc-hd"><div class="rc-name">${esc(co.name)}</div><span class="rc-type ${tcls}">${esc(co.type)}</span></div>
       <div class="rc-meta">
-        ${co.sector ? `<span class="rc-sector">${esc(co.sector)}</span>` : ''}
-        ${co.stage ? `<span class="rc-stage">${esc(co.stage)}</span>` : ''}
-        ${co.status ? `<span class="rc-status ${scls}">${esc(co.status)}</span>` : ''}
+        ${co.sector?`<span class="rc-sector">${esc(co.sector)}</span>`:''}
+        ${co.stage?`<span class="rc-stage">${esc(co.stage)}</span>`:''}
+        ${co.status?`<span class="rc-status ${scls}">${esc(co.status)}</span>`:''}
         <div class="rc-stars">${stars}</div>
       </div>
-      ${co.thesis ? `<div class="rc-thesis">${esc(co.thesis)}</div>` : ''}
-      ${metrics}
-      ${risk}
-      ${tags ? `<div class="rc-pills">${tags}</div>` : ''}
-      <div class="rc-foot">
-        ${priceInfo}
-        <span class="rc-date">${fmtAgo(co.updated)}</span>
-        <button class="rc-edit" onclick="openEditCo('${co.id}')">Edit</button>
+      ${co.thesis?`<div class="rc-thesis">${esc(co.thesis)}</div>`:''}
+      ${co.metrics?`<div class="rc-metrics">${esc(co.metrics)}</div>`:''}
+      ${co.risk?`<div class="rc-risk">⚑ ${esc(co.risk)}</div>`:''}
+      ${tags?`<div class="rc-pills">${tags}</div>`:''}
+      <div class="rc-foot">${priceInfo}<span class="rc-date">${fmtAgo(co.updated)}</span><button class="rc-edit" onclick="openEditCo('${co.id}')">Edit</button></div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════
+   PLAYBOOK — STRATEGY LOG
+════════════════════════════════════════ */
+let _pbRating = 3;
+
+function openAddPb() {
+  $('pbEditId').value = '';
+  $('pbModalTitle').innerHTML = 'Log a <em>Strategy</em>';
+  $('pbName').value=''; $('pbDomain').value='Strategy'; $('pbType').value='Framework';
+  $('pbSource').value=''; $('pbContext').value=''; $('pbInsight').value='';
+  $('pbWhen').value=''; $('pbOutcome').value=''; $('pbTags').value='';
+  $('pbDelBtn').style.display='none';
+  _pbRating=3; setPbStar(3,false);
+  $('pbModal').classList.add('on');
+  setTimeout(()=>$('pbName').focus(),60);
+}
+
+function openEditPb(id) {
+  const pb=(STATE.playbook||[]).find(p=>p.id===id); if (!pb) return;
+  $('pbEditId').value=id;
+  $('pbModalTitle').innerHTML='Edit <em>Strategy</em>';
+  $('pbName').value=pb.name||''; $('pbDomain').value=pb.domain||'Strategy';
+  $('pbType').value=pb.type||'Framework'; $('pbSource').value=pb.source||'';
+  $('pbContext').value=pb.context||''; $('pbInsight').value=pb.insight||'';
+  $('pbWhen').value=pb.when||''; $('pbOutcome').value=pb.outcome||'';
+  $('pbTags').value=(pb.tags||[]).join(', ');
+  $('pbDelBtn').style.display='inline-flex';
+  _pbRating=pb.rating||3; setPbStar(_pbRating,false);
+  $('pbModal').classList.add('on');
+}
+
+function setPbStar(n, save=true) {
+  _pbRating=n;
+  document.querySelectorAll('#pbStarsUI .star-b').forEach((b,i)=>b.classList.toggle('on',i<n));
+}
+
+function savePb() {
+  const name=$('pbName').value.trim();
+  if (!name) { toast('Strategy name is required'); $('pbName').focus(); return; }
+  const editId=$('pbEditId').value;
+  const pb = {
+    id:editId||uid(), name, domain:$('pbDomain').value, type:$('pbType').value,
+    source:$('pbSource').value.trim(), context:$('pbContext').value.trim(),
+    insight:$('pbInsight').value.trim(), when:$('pbWhen').value.trim(),
+    outcome:$('pbOutcome').value.trim(),
+    tags:$('pbTags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    rating:_pbRating,
+    created:editId?((STATE.playbook||[]).find(p=>p.id===editId)?.created||now()):now(),
+    updated:now()
+  };
+  if (!STATE.playbook) STATE.playbook=[];
+  if (editId) { const i=STATE.playbook.findIndex(p=>p.id===editId); if(i>=0) STATE.playbook[i]=pb; }
+  else STATE.playbook.unshift(pb);
+  saveAll(); renderPlaybook(); updateHomeStats(); closeModal('pbModal');
+  toast('✓ "'+name+'" logged to playbook');
+}
+
+function deletePb() {
+  const id=$('pbEditId').value;
+  if (!id||!confirm('Remove this strategy from your playbook?')) return;
+  STATE.playbook=STATE.playbook.filter(p=>p.id!==id);
+  saveAll(); renderPlaybook(); updateHomeStats(); closeModal('pbModal');
+  toast('Strategy removed');
+}
+
+function setPbFilter(btn,filter) {
+  document.querySelectorAll('.pf').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); UI.pbFilter=filter; renderPlaybook();
+}
+function filterPb() {
+  UI.pbQ=($('pbSearch')?.value||'').toLowerCase().trim(); renderPlaybook();
+}
+
+function getDomainClass(domain) {
+  const map={'Strategy':'dom-Strategy','Consulting':'dom-Consulting','VC':'dom-VC','Operations':'dom-Operations','General':'dom-General'};
+  return map[domain]||'dom-General';
+}
+
+function renderPlaybook() {
+  const grid=$('pbGrid'); if (!grid) return;
+  if (!STATE.playbook) STATE.playbook=[];
+  let list=[...STATE.playbook];
+  if (UI.pbFilter!=='all') list=list.filter(p=>p.domain===UI.pbFilter);
+  if (UI.pbQ) list=list.filter(p=>(p.name+' '+p.insight+' '+(p.tags||[]).join(' ')+' '+(p.source||'')+' '+(p.context||'')).toLowerCase().includes(UI.pbQ));
+
+  const total=STATE.playbook.length;
+  $('pbSummary').textContent=list.length+' entr'+(list.length!==1?'ies':'y');
+  $('pbBannerCount').textContent=total;
+
+  if (!list.length) {
+    const isSearch=UI.pbQ||UI.pbFilter!=='all';
+    grid.innerHTML=`<div class="pb-empty" style="grid-column:1/-1">
+      <div class="pb-empty-icon">◈</div>
+      <div class="pb-empty-title">${isSearch?'No strategies match this filter':'Your playbook is empty'}</div>
+      <div class="pb-empty-sub">${isSearch?'Try a different filter or search term':'Every master strategist keeps a log. Every framework you document is a weapon you carry for life into every deal, every boardroom, every decision.'}</div>
+      ${!isSearch?`<button class="pb-empty-cta" onclick="openAddPb()">+ Log Your First Strategy</button>`:''}
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML=list.map(pb=>{
+    const dcls=getDomainClass(pb.domain);
+    const stars=Array.from({length:5},(_,i)=>`<span class="pc-star${i<(pb.rating||0)?' on':''}">★</span>`).join('');
+    const tags=(pb.tags||[]).slice(0,5).map(t=>`<span class="pc-pill">${esc(t)}</span>`).join('');
+    return `<div class="pc ${dcls}">
+      <div class="pc-header">
+        <span class="pc-domain">${esc(pb.domain)}</span>
+        <span class="pc-type">${esc(pb.type)}</span>
+        <div class="pc-stars">${stars}</div>
+      </div>
+      <div class="pc-name">${esc(pb.name)}</div>
+      ${pb.source?`<div class="pc-source">via ${esc(pb.source)}</div>`:''}
+      ${pb.insight?`<div class="pc-insight">${esc(pb.insight)}</div>`:''}
+      ${pb.when?`<div class="pc-when"><span class="pc-when-lbl">↳ When:</span>${esc(pb.when)}</div>`:''}
+      ${pb.outcome?`<div class="pc-outcome">✓ ${esc(pb.outcome)}</div>`:''}
+      ${tags?`<div class="pc-pills">${tags}</div>`:''}
+      <div class="pc-foot">
+        <span class="pc-date">${fmtAgo(pb.updated)}</span>
+        <button class="pc-edit" onclick="openEditPb('${pb.id}')">Edit</button>
       </div>
     </div>`;
   }).join('');
@@ -1614,110 +1902,172 @@ function renderRegistry() {
 /* ════════════════════════════════════════
    OVERLAY CLICK-OUTSIDE
 ════════════════════════════════════════ */
-document.querySelectorAll('.overlay').forEach(ov => {
-  ov.addEventListener('click', e => { if (e.target === ov) ov.classList.remove('on'); });
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click',e=>{ if(e.target===ov) ov.classList.remove('on'); });
 });
 
 /* ════════════════════════════════════════
    RENDER ALL
 ════════════════════════════════════════ */
 function renderAll() {
-  renderNoteList(); updateCounts(); renderCatGrid();
-  if (UI.tab === 'board') renderBoard();
-  if (UI.tab === 'registry') renderRegistry();
+  renderNoteList(); updateCounts(); renderCatGrid(); updateHomeStats();
+  loadNorthStar();
+  if (UI.tab==='board') renderBoard();
+  if (UI.tab==='registry') renderRegistry();
+  if (UI.tab==='playbook') renderPlaybook();
 }
 
 /* ════════════════════════════════════════
    INIT
 ════════════════════════════════════════ */
 (async function init() {
-  // Load local storage
   lsLoad();
+  // Ensure new fields exist on old data (backward compat)
+  STATE.playbook = STATE.playbook || [];
+  STATE.northStar = STATE.northStar || '';
+  STATE.board = STATE.board || [];
+  STATE.registry = STATE.registry || [];
+  STATE.notes = STATE.notes || [];
 
-  // Load GitHub config
   try {
-    const ghRaw = localStorage.getItem('folio_gh');
+    const ghRaw=localStorage.getItem('folio_gh');
     if (ghRaw) {
-      const cfg = JSON.parse(ghRaw);
-      GH.token = cfg.token || '';
-      GH.repo  = cfg.repo  || '';
-      GH.path  = cfg.path  || 'folio-data.json';
+      const cfg=JSON.parse(ghRaw);
+      GH.token=cfg.token||''; GH.repo=cfg.repo||''; GH.path=cfg.path||'folio-data.json';
     }
   } catch(e) {}
 
-  // Attempt GitHub sync
   if (GH.token && GH.repo) {
     setSyncStatus('busy','Syncing…');
-    const remote = await ghGet();
+    const remote=await ghGet();
     if (remote && remote.content) {
       try {
-        const parsed = JSON.parse(remote.content);
-        STATE = Object.assign({ notes:[], board:[], registry:[] }, parsed);
-        GH.sha = remote.sha;
-        lsSave();
+        const parsed=JSON.parse(remote.content);
+        STATE=Object.assign({notes:[],board:[],registry:[],playbook:[],northStar:''},parsed);
+        STATE.playbook=STATE.playbook||[];
+        STATE.northStar=STATE.northStar||'';
+        GH.sha=remote.sha; lsSave();
         setSyncStatus('ok','Synced');
       } catch(e) { setSyncStatus('err','Parse error'); }
     } else if (remote) {
-      GH.sha = remote.sha;
-      setSyncStatus('ok','Connected');
-    } else {
-      setSyncStatus('err','Offline');
-    }
-  } else {
-    setSyncStatus('','Local');
-  }
+      GH.sha=remote.sha; setSyncStatus('ok','Connected');
+    } else { setSyncStatus('err','Offline'); }
+  } else { setSyncStatus('','Local'); }
 
-  // Seed demo data if empty
-  if (!STATE.notes.length && !STATE.registry.length) {
+  if (!STATE.notes.length && !STATE.registry.length && !STATE.playbook.length) {
     seedDemo();
   }
 
   renderAll();
 })();
 
+/* ════════════════════════════════════════
+   SEED DEMO DATA
+════════════════════════════════════════ */
 function seedDemo() {
+  STATE.northStar = 'Build the judgment to allocate capital at the frontier — strategy, investing, and technology converging.';
+
   STATE.notes = [
     {
-      id: uid(), title: "Porter's Five Forces", category: "Strategy",
-      source: "Michael Porter — Competitive Strategy, 1980",
-      tags: ['frameworks','strategy','competitive-analysis'],
-      html: `<h2>Porter's Five Forces</h2><p>A framework for analyzing the competitive forces that shape an industry and determine its profitability.</p><h3>The Five Forces</h3><ul><li><b>Threat of new entrants</b> — How easy is it to enter the industry?</li><li><b>Bargaining power of suppliers</b> — How much leverage do input providers have?</li><li><b>Bargaining power of buyers</b> — Can customers push prices down?</li><li><b>Threat of substitutes</b> — Are there alternatives to this product/service?</li><li><b>Rivalry among competitors</b> — How intense is competition within the industry?</li></ul><h3>When to apply</h3><p>Use before entering a new market, evaluating an acquisition target, or stress-testing an investment thesis.</p><blockquote>The strength of the five forces determines the average profitability of an industry.</blockquote>`,
-      fontSize: 'M', created: now(), updated: now()
+      id:uid(), title:"Porter's Five Forces", category:"Strategy",
+      source:"Michael Porter — Competitive Strategy, 1980",
+      tags:['frameworks','strategy','competitive-analysis'],
+      html:`<h2>Porter's Five Forces</h2><p>A framework for analyzing competitive forces that shape an industry and determine its profitability.</p><h3>The Five Forces</h3><ul><li><b>Threat of new entrants</b> — How easy is it to enter the industry?</li><li><b>Bargaining power of suppliers</b> — How much leverage do input providers have?</li><li><b>Bargaining power of buyers</b> — Can customers push prices down?</li><li><b>Threat of substitutes</b> — Are there alternatives to this product/service?</li><li><b>Rivalry among competitors</b> — How intense is competition within the industry?</li></ul><h3>When to apply</h3><p>Use before entering a new market, evaluating an acquisition target, or stress-testing an investment thesis.</p><blockquote>The strength of the five forces determines the average profitability of an industry.</blockquote>`,
+      fontSize:'M',created:now(),updated:now()
     },
     {
-      id: uid(), title: "First Principles Thinking", category: "Mental Models",
-      source: "Elon Musk interviews · Aristotle's Metaphysics",
-      tags: ['reasoning','problem-solving','musk'],
-      html: `<h2>First Principles Reasoning</h2><p>Break a problem down to its most fundamental truths — the axioms that can't be reduced further — then reason back up to a novel solution.</p><h3>The Process</h3><ol><li>State the problem clearly</li><li>Identify every assumption you're making</li><li>Strip down to what is <b>physically or logically true</b></li><li>Rebuild from scratch — don't copy existing solutions</li></ol><h3>Classic Example — Battery Costs</h3><p>The market price for batteries was ~$600/kWh. First principles: what are the raw materials? Carbon, nickel, aluminium, steel. At commodity prices: ~$80/kWh. Conclusion: <em>the price can be dramatically reduced</em>.</p>`,
-      fontSize: 'M', created: now(), updated: now()
+      id:uid(), title:"First Principles Thinking", category:"Mental Models",
+      source:"Elon Musk interviews · Aristotle's Metaphysics",
+      tags:['reasoning','problem-solving'],
+      html:`<h2>First Principles Reasoning</h2><p>Break a problem down to its most fundamental truths, then reason back up to a novel solution.</p><h3>The Process</h3><ol><li>State the problem clearly</li><li>Identify every assumption you're making</li><li>Strip down to what is <b>physically or logically true</b></li><li>Rebuild from scratch — don't copy existing solutions</li></ol><blockquote>The battery example: commodity raw materials cost ~$80/kWh. Market price was $600/kWh. The gap is cost of assembly and margin, both compressible.</blockquote>`,
+      fontSize:'M',created:now(),updated:now()
     },
     {
-      id: uid(), title: "DCF Model — Key Assumptions", category: "Finance",
-      source: "Damodaran — Investment Valuation",
-      tags: ['valuation','dcf','investing'],
-      html: `<h2>DCF — Discounted Cash Flow</h2><p>A DCF model is only as reliable as its assumptions. Three levers dominate the output.</p><h3>1. WACC</h3><p>Weighted Average Cost of Capital — blends cost of equity and cost of debt weighted by capital structure. <code>WACC = E/(E+D) × Ke + D/(E+D) × Kd × (1-t)</code></p><h3>2. Terminal Growth Rate</h3><p>Never exceed long-run nominal GDP growth (typically 2–4%). The terminal value often represents 60–80% of total firm value, so this assumption is critical.</p><h3>3. Sensitivity Analysis</h3><p>Always run a 2D table across WACC and g scenarios. A robust investment should remain attractive across a range of assumptions.</p>`,
-      fontSize: 'M', created: now(), updated: now()
+      id:uid(), title:"DCF Model — Key Assumptions", category:"Finance",
+      source:"Damodaran — Investment Valuation",
+      tags:['valuation','dcf','investing'],
+      html:`<h2>DCF — Discounted Cash Flow</h2><p>A DCF is only as reliable as its assumptions. Three levers dominate the output.</p><h3>1. WACC</h3><p><code>WACC = E/(E+D) × Ke + D/(E+D) × Kd × (1-t)</code></p><h3>2. Terminal Growth Rate</h3><p>Never exceed long-run nominal GDP growth (2–4%). Terminal value often represents 60–80% of total firm value.</p><h3>3. Sensitivity Analysis</h3><p>Always run a 2D table across WACC and g scenarios. A robust investment remains attractive across a range of assumptions.</p>`,
+      fontSize:'M',created:now(),updated:now()
     }
   ];
+
   STATE.registry = [
     {
-      id: uid(), name: 'HDFC Bank', type: 'Equity', sector: 'Banking / BFSI',
-      stage: 'Public', status: 'Active Research', rating: 4,
-      ticker: 'HDFCBANK', curr: '1,680', target: '1,980', upside: '+17.8%',
-      thesis: 'Best-in-class Indian retail bank with unmatched deposit franchise, conservative underwriting history, and structural tailwinds from India\'s financialization. Merger with HDFC Ltd creates a fully integrated financial institution with massive cross-sell potential.',
-      risk: 'CD ratio elevated post-merger; NIM compression near-term; execution risk on branch integration',
-      tags: ['india','banking','large-cap','moat'], metrics:'', valuation:'',
-      notes: '', created: now(), updated: now()
+      id:uid(), name:'HDFC Bank', type:'Equity', sector:'Banking / BFSI',
+      stage:'Public', status:'Active Research', rating:4,
+      ticker:'HDFCBANK', curr:'1,680', target:'1,980', upside:'+17.8%',
+      thesis:"Best-in-class Indian retail bank with unmatched deposit franchise and conservative underwriting. Merger with HDFC Ltd creates a fully integrated financial institution with massive cross-sell potential.",
+      risk:'CD ratio elevated post-merger; NIM compression near-term; branch integration execution risk',
+      tags:['india','banking','large-cap','moat'], metrics:'', valuation:'',
+      notes:'', created:now(), updated:now()
     },
     {
-      id: uid(), name: 'Zepto', type: 'Startup', sector: 'Quick Commerce / Logistics',
-      stage: 'Series G', status: 'Watching', rating: 3,
-      metrics: 'GMV ~$1.2B annualised · 99% OTIF in 10 min · 350+ dark stores · ~$800M raised',
-      valuation: '$3.6B Series G (Nexus, StepStone)',
-      thesis: 'Category-defining quick commerce play in India. Dense dark store network creates a defensible moat in top 10 cities. Profitability improving rapidly. Co-founders (19 yrs old at founding) exceptional.',
-      risk: 'Unit economics remain fragile; Blinkit + Swiggy Instamart with deeper pockets; regulatory risk on FDI',
-      tags: ['q-commerce','india','d2c','venture'], ticker:'', target:'', curr:'', upside:'',
-      notes: 'Speak to: Aadit Palicha (co-founder)', created: now(), updated: now()
+      id:uid(), name:'Zepto', type:'Startup', sector:'Quick Commerce',
+      stage:'Series G', status:'Watching', rating:3,
+      metrics:'GMV ~$1.2B annualised · 350+ dark stores · ~$800M raised',
+      valuation:'$3.6B Series G (Nexus, StepStone)',
+      thesis:"Category-defining quick commerce play in India. Dense dark store network creates a defensible moat in top 10 cities. Co-founders exceptional execution velocity.",
+      risk:'Blinkit + Swiggy Instamart with deeper pockets; unit economics remain fragile',
+      tags:['q-commerce','india','venture'], ticker:'', target:'', curr:'', upside:'',
+      notes:'', created:now(), updated:now()
+    }
+  ];
+
+  STATE.playbook = [
+    {
+      id:uid(), name:"Playing to Win — Roger Martin's Strategy Cascade",
+      domain:'Strategy', type:'Framework',
+      source:"Roger Martin — Playing to Win (2013)",
+      context:"Applied during semiconductor value chain analysis. Core structure for evaluating why firms in different nodes win or lose.",
+      insight:"Strategy is a set of five integrated choices: Winning Aspiration → Where to Play → How to Win → Must-Have Capabilities → Required Management Systems. The key insight is that all five must reinforce each other — a change in one demands a change in all. Companies fail not from bad strategy but from incoherent strategy where choices contradict each other.",
+      when:"Use when evaluating a company's competitive position, designing market entry, or diagnosing why a business is struggling despite apparent advantages.",
+      outcome:"Southwest Airlines (Where: short-haul point-to-point; How: cost leadership + culture) is the canonical live example of a coherent cascade. Intel's collapse can be explained partly through a cascade that decoupled How to Win (x86 architecture) from Where to Play (mobile/edge).",
+      tags:['strategy','market-entry','cascade','martin','framework'],
+      rating:5, created:now(), updated:now()
+    },
+    {
+      id:uid(), name:"MECE — Mutually Exclusive, Collectively Exhaustive",
+      domain:'Consulting', type:'Principle',
+      source:"McKinsey & Company — consulting core doctrine",
+      context:"Used structuring client deliverables at EY. Essential for issue trees and presentation logic.",
+      insight:"Any set of options, problems, or categories must be: (1) Mutually Exclusive — no overlap between buckets, and (2) Collectively Exhaustive — buckets cover everything. MECE eliminates double-counting and ensures completeness. The mental test: 'Does anything fall between the cracks? Does anything appear in two buckets?' If yes, the structure is broken.",
+      when:"Use when building issue trees, structuring presentations, designing frameworks for analysis, or debugging why a recommendation doesn't feel clean.",
+      outcome:"The classic McKinsey hypothesis tree where you decompose 'Why is profit falling?' into Revenue and Cost — these are MECE. Every element of a good consulting deck passes the MECE test at each level of the argument.",
+      tags:['consulting','structure','mckinsey','mece','frameworks'],
+      rating:5, created:now(), updated:now()
+    },
+    {
+      id:uid(), name:"The Power Law in Venture Capital",
+      domain:'VC', type:'Principle',
+      source:"Peter Thiel — Zero to One · Scott Kupor — Secrets of Sand Hill Road",
+      context:"Encountered studying Sequoia's portfolio construction. Critical to understanding why VC fund math works differently from any other asset class.",
+      insight:"VC returns follow a power law, not a normal distribution. The best investment in a portfolio will outperform the rest of the fund combined. This has radical implications: (1) You cannot afford to miss a potential 1000x company — the cost of missing Airbnb or Stripe is larger than the cost of 50 bad bets. (2) Every investment must have a credible path to returning the fund. (3) Diversification for its own sake destroys returns — concentration in your highest conviction bets is the optimal strategy.",
+      when:"Use when constructing a VC portfolio, evaluating individual investments (must ask: can this return the fund?), or thinking about career bets that also follow power-law dynamics.",
+      outcome:"Sequoia's investment in WhatsApp returned roughly 50x the fund. Y Combinator's portfolio: Airbnb, Stripe, DoorDash, Coinbase represent the vast majority of total portfolio value across thousands of companies.",
+      tags:['vc','power-law','sequoia','portfolio-construction','thiel'],
+      rating:5, created:now(), updated:now()
+    },
+    {
+      id:uid(), name:"The Pyramid Principle — Structured Communication",
+      domain:'Consulting', type:'Framework',
+      source:"Barbara Minto — The Pyramid Principle (1978)",
+      context:"Core skill for client communication. Every McKinsey slide, BCG deck, and EY deliverable implicitly follows this structure.",
+      insight:"Lead with the answer, not the analysis. Structure: Situation → Complication → Resolution (the SCR narrative hook), then support the resolution with exactly three to five parallel arguments, each supported by data. The pyramid: top is your single overarching idea; middle level is the logical pillars; bottom level is evidence. Readers should be able to read only the top line of every slide and reconstruct the entire argument.",
+      when:"Use whenever you are writing a recommendation, structuring a board presentation, framing an email to a senior executive, or building any persuasive document.",
+      outcome:"A 2-page memo with pyramid structure routinely outperforms a 20-slide deck without it. The discipline of forcing yourself to lead with the answer also reveals when you don't actually have one yet.",
+      tags:['consulting','communication','minto','pyramid','presentations'],
+      rating:4, created:now(), updated:now()
+    },
+    {
+      id:uid(), name:"Circle of Competence",
+      domain:'General', type:'Mental Model',
+      source:"Warren Buffett & Charlie Munger — Berkshire Letters",
+      context:"Fundamental to investment decision-making and career strategy. Know what you know — and more importantly, know what you don't.",
+      insight:"Every person has a circle of competence — a domain where their knowledge is deep and reliable. The three rules: (1) Know where your circle ends. (2) Stay inside it for high-stakes decisions. (3) Systematically expand it by learning with rigor, not familiarity. The danger is not ignorance but mistaking the boundary of your circle as further out than it is. The most dangerous investor is the one who thinks they understand something they've only read about.",
+      when:"Use before making any major decision — investment, career move, business bet. Ask: is this inside or outside my circle? If outside, either build the competence or bring in someone whose circle covers it.",
+      outcome:"Buffett famously avoided technology stocks through the dot-com bubble because he couldn't value them with confidence. He missed some upside but preserved the Berkshire franchise.",
+      tags:['mental-model','munger','buffett','decision-making','investing'],
+      rating:5, created:now(), updated:now()
     }
   ];
 }
