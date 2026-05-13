@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FOLIO — Knowledge OS v4</title>
+<title>FOLIO — Knowledge OS v5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -203,7 +203,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 
 /* ── BOARD ── */
 .board{display:flex;flex-direction:column;width:100%;height:100%}
-.board-top{display:flex;align-items:center;gap:6px;padding:8px 16px;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0}
+.board-top{display:flex;align-items:center;gap:6px;padding:8px 16px;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0;flex-wrap:wrap}
 .board-hint{font-family:var(--fm);font-size:9.5px;color:var(--dim);margin-left:auto}
 .zoom-ctrl{display:flex;border:1px solid var(--b2);border-radius:var(--r);overflow:hidden;margin-left:8px}
 .zoom-btn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);transition:all .1s;border-right:1px solid var(--b2)}
@@ -211,23 +211,41 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .zoom-label{font-family:var(--fm);font-size:9px;color:var(--dim);padding:0 6px;display:flex;align-items:center}
 .canvas-wrap{flex:1;overflow:hidden;position:relative;cursor:grab;background:var(--bg);background-image:radial-gradient(circle,rgba(255,255,255,.045) 1px,transparent 1px);background-size:24px 24px}
 .canvas-wrap.panning{cursor:grabbing}
+.canvas-wrap.connect-mode{cursor:crosshair}
 .canvas{position:absolute;top:0;left:0;width:6000px;height:5000px;transform-origin:0 0}
+
+/* Connect mode toolbar indicator */
+.connect-bar{display:none;align-items:center;gap:10px;font-family:var(--fm);font-size:9px;color:var(--gold);background:rgba(200,168,74,.08);border:1px solid rgba(200,168,74,.22);padding:4px 12px;border-radius:20px}
+.connect-bar.on{display:flex}
+.connect-bar-msg{letter-spacing:.04em}
+.connect-cancel{font-size:8px;color:var(--muted);padding:1px 6px;border:1px solid var(--b3);border-radius:3px;transition:all .1s}
+.connect-cancel:hover{color:var(--cv);border-color:rgba(232,114,114,.3)}
+
+/* Board card base */
 .bcard{position:absolute;cursor:move;user-select:none;border-radius:var(--r2);transition:box-shadow .15s}
 .bcard:hover{z-index:50}.bcard.dragging{z-index:200;box-shadow:var(--sh2);opacity:.95}
+.bcard.connect-source{box-shadow:0 0 0 2px var(--gold),0 0 20px rgba(200,168,74,.25)!important;z-index:80}
+.bcard.connect-hover:not(.connect-source){box-shadow:0 0 0 2px var(--cc)!important}
 .bcard-x{position:absolute;top:-8px;right:-8px;width:18px;height:18px;border-radius:50%;background:var(--s4);border:1px solid var(--b3);font-size:9px;color:var(--muted);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .14s;z-index:10;cursor:pointer}
 .bcard:hover .bcard-x{opacity:1}.bcard-x:hover{background:rgba(232,114,114,.15);color:var(--cv);border-color:var(--cv)}
+
+/* Sticky card */
 .bc-sticky{padding:13px 13px 10px;min-width:180px;max-width:250px;border:1px solid rgba(0,0,0,.08);box-shadow:2px 4px 16px rgba(0,0,0,.45)}
 .st-ta{font-family:var(--fb);font-size:13px;line-height:1.7;width:100%;background:transparent;resize:none;min-height:76px;color:#1A1208}
 .st-ta::placeholder{opacity:.3}
 .st-dots{display:flex;gap:5px;margin-top:9px}
 .st-dot{width:12px;height:12px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .12s}
 .st-dot:hover,.st-dot.on{transform:scale(1.35);border-color:rgba(0,0,0,.18)}
+
+/* Quote card */
 .bc-quote{background:var(--s2);border:1px solid var(--b3);padding:16px;min-width:210px;max-width:290px;box-shadow:var(--sh)}
 .bc-quote::before{content:'\201C';font-family:var(--fd);font-size:44px;line-height:.65;color:var(--gold);opacity:.38;display:block;margin-bottom:5px}
 .qt-text{font-family:var(--fd);font-style:italic;font-size:13.5px;line-height:1.75;color:var(--text2);width:100%;background:transparent;resize:none;min-height:54px;border-left:2px solid var(--gold);padding-left:12px}
 .qt-text::placeholder{opacity:.25;font-style:italic}
 .qt-auth{font-family:var(--fm);font-size:9.5px;color:var(--muted);width:100%;background:transparent;margin-top:8px}
 .qt-auth::placeholder{opacity:.25}
+
+/* Link card */
 .bc-link{background:var(--s2);border:1px solid var(--b2);border-top:2px solid var(--or);padding:13px;min-width:195px;max-width:265px;box-shadow:var(--sh)}
 .lk-url{font-family:var(--fm);font-size:9px;color:var(--muted);width:100%;background:transparent;margin-bottom:5px}
 .lk-url::placeholder{opacity:.3}
@@ -237,6 +255,14 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .lk-desc::placeholder{opacity:.25}
 .lk-open{display:inline-flex;align-items:center;gap:3px;margin-top:6px;font-family:var(--fm);font-size:9px;color:var(--or2);border:1px solid var(--or);padding:2px 7px;border-radius:3px}
 .lk-open:hover{background:var(--or-t)}
+
+/* ── NODE CARD (v5 new) ── */
+.bc-node{background:var(--s2);border:1px solid var(--b3);border-radius:10px;padding:9px 14px;min-width:80px;max-width:190px;box-shadow:var(--sh3);text-align:center;transition:border-color .12s,box-shadow .12s;position:relative}
+.bc-node::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--or));opacity:.4;border-radius:10px 10px 0 0;pointer-events:none}
+.node-text{font-family:var(--fm);font-size:11px;color:var(--text2);width:100%;background:transparent;resize:none;text-align:center;min-height:18px;overflow:hidden;line-height:1.55;letter-spacing:.02em}
+.node-text::placeholder{color:var(--dim);font-style:italic}
+.node-hint{font-family:var(--fm);font-size:7.5px;color:var(--dim);text-align:center;margin-top:4px;letter-spacing:.1em;text-transform:uppercase;opacity:0;transition:opacity .15s}
+.bc-node:hover .node-hint{opacity:1}
 
 /* ── REGISTRY ── */
 .registry{display:flex;flex-direction:column;width:100%;height:100%;overflow:hidden}
@@ -349,8 +375,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .vt-btn:last-child{border-right:none}.vt-btn:hover{background:var(--s3);color:var(--text)}.vt-btn.on{background:rgba(90,200,212,.1);color:var(--cc)}
 .prod-body{flex:1;overflow-y:auto;padding:16px}
 .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
-
-/* Product card */
 .prc{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);padding:16px;transition:all .14s;position:relative;overflow:hidden;animation:cardIn .18s ease-out}
 @keyframes cardIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 .prc:hover{border-color:var(--b3);box-shadow:var(--sh3);transform:translateY(-1px)}
@@ -373,8 +397,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .prc-foot-date{font-family:var(--fm);font-size:8.5px;color:var(--dim)}
 .prc-edit{font-size:9px;font-family:var(--fm);color:var(--dim);padding:2px 8px;border:1px solid var(--b2);border-radius:3px;transition:all .1s}
 .prc-edit:hover{border-color:var(--cc);color:var(--cc)}
-
-/* Bias group view */
 .bias-group-section{margin-bottom:24px}
 .bg-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--b1)}
 .bg-bias-name{font-family:var(--fd);font-size:15px;font-weight:500;color:var(--white)}
@@ -394,8 +416,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .prod-empty-sub{font-family:var(--fe);font-style:italic;font-size:13px;color:var(--dim);text-align:center;max-width:300px;line-height:1.8}
 .prod-empty-cta{padding:7px 18px;border:1px solid var(--b3);border-radius:var(--r2);font-family:var(--fm);font-size:10px;color:var(--cc);background:rgba(90,200,212,.06);transition:all .12s;margin-top:4px}
 .prod-empty-cta:hover{border-color:var(--cc);background:rgba(90,200,212,.12)}
-
-/* Bias picker in modal */
 .bias-picker-grid{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px}
 .bias-opt{font-family:var(--fm);font-size:8px;padding:3px 9px;border-radius:12px;border:1px solid var(--b2);color:var(--dim);cursor:pointer;transition:all .12s;letter-spacing:.04em}
 .bias-opt:hover{border-color:var(--b4);color:var(--text2)}
@@ -421,8 +441,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .bm-summary{font-family:var(--fm);font-size:9px;color:var(--dim)}
 .bm-body{flex:1;overflow-y:auto;padding:16px}
 .bm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:12px}
-
-/* Business model card */
 .bmc{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);padding:16px;transition:all .14s;position:relative;overflow:hidden}
 .bmc:hover{border-color:var(--b3);box-shadow:var(--sh3);transform:translateY(-1px)}
 .bmc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
@@ -543,6 +561,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 .btn-mgo.purple{background:var(--cm);color:#0D0813}
 .btn-mdel{padding:7px 13px;border-radius:var(--r);font-size:11px;border:1px solid transparent;color:var(--dim);transition:all .12s}
 .btn-mdel:hover{color:var(--cv);border-color:rgba(232,114,114,.3)}
+/* Connect toggle button active state */
+.btn-g.connect-active{border-color:var(--gold);color:var(--gold);background:rgba(200,168,74,.08)}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--s4);border:1px solid var(--b3);padding:7px 15px;border-radius:var(--r2);font-family:var(--fm);font-size:10.5px;z-index:9999;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;box-shadow:var(--sh);color:var(--text2)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(-3px)}
 </style>
@@ -555,7 +575,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 <nav class="nav">
   <div class="logo">
     <span class="logo-mark">FOLIO</span>
-    <span class="logo-v">v4</span>
+    <span class="logo-v">v5</span>
     <div class="logo-sep"></div>
     <span class="logo-sub">Knowledge OS</span>
   </div>
@@ -672,6 +692,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <button class="btn-g" onclick="addCard('sticky')">+ Sticky</button>
     <button class="btn-g" onclick="addCard('quote')">+ Quote</button>
     <button class="btn-g" onclick="addCard('link')">+ Link</button>
+    <button class="btn-g" onclick="addCard('node')">⬡ Node</button>
+    <div style="width:1px;height:16px;background:var(--b2);margin:0 2px;flex-shrink:0"></div>
+    <button class="btn-g" id="connectBtn" onclick="toggleConnectMode()" title="Draw connection arrows between cards">⟶ Connect</button>
+    <div class="connect-bar" id="connectBar">
+      <span class="connect-bar-msg" id="connectMsg">● Select source card</span>
+      <button class="connect-cancel" onclick="toggleConnectMode()">Cancel ✕</button>
+    </div>
     <button class="btn-d" onclick="clearBoard()">Clear</button>
     <div class="zoom-ctrl">
       <button class="zoom-btn" onclick="zoomBoard(-.1)">−</button>
@@ -679,9 +706,27 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
       <button class="zoom-btn" onclick="zoomBoard(.1)">+</button>
       <button class="zoom-btn" onclick="resetZoom()" style="font-size:9px;padding:0 6px">↺</button>
     </div>
-    <span class="board-hint">Drag cards · pan empty space</span>
+    <span class="board-hint">Drag cards · pan empty space · ⟶ to connect</span>
   </div>
-  <div class="canvas-wrap" id="canvasWrap"><div class="canvas" id="boardCanvas"></div></div>
+  <div class="canvas-wrap" id="canvasWrap">
+    <div class="canvas" id="boardCanvas">
+      <!-- SVG overlay for connection arrows -->
+      <svg id="connectionSVG" xmlns="http://www.w3.org/2000/svg"
+           style="position:absolute;top:0;left:0;width:6000px;height:5000px;pointer-events:none;z-index:5;overflow:visible">
+        <defs>
+          <marker id="arrowGold" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="rgba(200,168,74,0.65)"/>
+          </marker>
+          <marker id="arrowGoldHover" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="rgba(200,168,74,1)"/>
+          </marker>
+          <marker id="arrowPreview" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="rgba(200,168,74,0.4)"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -928,7 +973,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <div class="fg"><label>Who is it for? (customer segment)</label><textarea class="fta" id="prodWho" rows="3" placeholder="Primary customer: demographics, psychographics, Jobs To Be Done…"></textarea></div>
     <div class="fg"><label>Why do they use it? (motivation)</label><textarea class="fta" id="prodWhy" rows="3" placeholder="Core motivation, switching costs, emotional drivers…"></textarea></div>
   </div>
-
   <div class="field-accent"><span class="field-accent-lbl">Cognitive Biases Applied</span></div>
   <div class="fg">
     <label>Select all biases this product exploits or benefits from</label>
@@ -939,7 +983,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <label>How does the product apply each selected bias?</label>
     <div id="biasNotesFields"></div>
   </div>
-
   <div class="field-accent" style="margin-top:14px"><span class="field-accent-lbl">Unit Economics (optional)</span></div>
   <div class="f3">
     <div class="fg"><label>CAC</label><input class="fi-in" type="text" id="prodCAC" placeholder="₹450"></div>
@@ -952,7 +995,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <div class="fg"><label>Payback Period</label><input class="fi-in" type="text" id="prodPayback" placeholder="6 months"></div>
   </div>
   <div class="fg"><label>Overall Assessment / Notes</label><textarea class="fta" id="prodNotes" rows="2" placeholder="Summary verdict, key insight, what makes this product remarkable or broken…"></textarea></div>
-
   <div class="modal-acts">
     <div class="modal-acts-l"><button class="btn-mdel" id="prodDelBtn" onclick="deleteProduct()" style="display:none">Delete</button></div>
     <button class="btn-mg" onclick="closeModal('prodModal')">Cancel</button>
@@ -977,7 +1019,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
   </div>
   <div class="fg"><label>Description — what is the core business logic?</label><textarea class="fta" id="bmDesc" rows="3" placeholder="How does this business create, deliver, and capture value?"></textarea></div>
   <div class="fg"><label>Revenue Streams</label><textarea class="fta" id="bmRevenue" rows="2" style="min-height:54px" placeholder="Primary and secondary revenue streams, pricing model…"></textarea></div>
-
   <div class="field-accent"><span class="field-accent-lbl">Economics</span></div>
   <div class="f3">
     <div class="fg"><label>Gross Margin</label><input class="fi-in" type="text" id="bmMargin" placeholder="72%"></div>
@@ -988,13 +1029,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
     <div class="fg"><label>Payback Period</label><input class="fi-in" type="text" id="bmPayback" placeholder="8 months"></div>
     <div class="fg"><label>Burn / Growth Efficiency</label><input class="fi-in" type="text" id="bmBurn" placeholder="Burn multiple 1.4x"></div>
   </div>
-
   <div class="field-accent"><span class="field-accent-lbl">Strategic Assessment</span></div>
   <div class="fg"><label>Moat / Defensibility</label><textarea class="fta" id="bmMoat" rows="2" style="min-height:54px" placeholder="Network effects, switching costs, proprietary data, scale advantages…"></textarea></div>
   <div class="fg"><label>Vulnerabilities / Risks</label><textarea class="fta" id="bmRisks" rows="2" style="min-height:54px" placeholder="What breaks this model? What could a competitor do?"></textarea></div>
   <div class="fg"><label>Conviction Rating</label><div class="stars-ui" id="bmStarsUI"><button class="star-b on" onclick="setBMStar(1)">★</button><button class="star-b on" onclick="setBMStar(2)">★</button><button class="star-b on" onclick="setBMStar(3)">★</button><button class="star-b" onclick="setBMStar(4)">★</button><button class="star-b" onclick="setBMStar(5)">★</button></div></div>
   <div class="fg"><label>Tags</label><input class="fi-in" type="text" id="bmTags" placeholder="india, marketplace, capital-intensive…"></div>
-
   <div class="modal-acts">
     <div class="modal-acts-l"><button class="btn-mdel" id="bmDelBtn" onclick="deleteBM()" style="display:none">Delete</button></div>
     <button class="btn-mg" onclick="closeModal('bmModal')">Cancel</button>
@@ -1010,28 +1049,28 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:14px
 
 /* ══ BIAS CATALOGUE ══ */
 const BIASES = [
-  {id:'loss-aversion',   name:'Loss Aversion',       color:'#E87272', desc:'People fear losing more than they enjoy gaining. Products frame value as avoiding loss.'},
-  {id:'social-proof',    name:'Social Proof',         color:'#6B9FE4', desc:'Users follow what others do. Reviews, counts, and social signals drive adoption.'},
-  {id:'scarcity-fomo',   name:'Scarcity / FOMO',      color:'#D8702C', desc:'Limited availability and fear of missing out create urgency to act.'},
-  {id:'anchoring',       name:'Anchoring',            color:'#C8A84A', desc:'First price or number seen becomes the reference point for all subsequent judgments.'},
-  {id:'reciprocity',     name:'Reciprocity',          color:'#5BC98A', desc:'Users feel obligated to return favours — free value leads to paid conversion.'},
-  {id:'commitment',      name:'Commitment & Consistency', color:'#A87EE8', desc:'Once committed, users behave consistently with that commitment.'},
-  {id:'decoy-effect',    name:'Decoy Effect',         color:'#E8A05A', desc:'An inferior third option makes the target option look better.'},
-  {id:'default-effect',  name:'Default Effect',       color:'#5AC8D4', desc:'Users stick with the default option — defaults drive majority of outcomes.'},
-  {id:'endowment',       name:'Endowment Effect',     color:'#9870D0', desc:'People value what they own more than what they don\'t. Free trials exploit this.'},
-  {id:'sunk-cost',       name:'Sunk Cost Fallacy',    color:'#E87272', desc:'Past investment drives continued use even when it\'s no longer rational.'},
-  {id:'instant-gratification', name:'Instant Gratification', color:'#EEC86A', desc:'Immediate rewards beat delayed ones. Instant feedback loops increase engagement.'},
-  {id:'variable-reward', name:'Variable Reward',      color:'#D8702C', desc:'Unpredictable rewards create compulsive checking behaviour (slot machine effect).'},
-  {id:'habit-formation', name:'Habit Formation',      color:'#5BC98A', desc:'Products embed themselves in routines through triggers, actions, and rewards.'},
-  {id:'pain-of-paying',  name:'Pain of Paying',       color:'#6B9FE4', desc:'Separating payment from consumption reduces the psychological pain of spending.'},
-  {id:'framing',         name:'Framing Effect',       color:'#A87EE8', desc:'The same information presented differently leads to different decisions.'},
-  {id:'authority',       name:'Authority Bias',       color:'#C8A84A', desc:'Endorsement from experts or institutions drives trust and adoption.'},
-  {id:'bandwagon',       name:'Bandwagon Effect',     color:'#5AC8D4', desc:'People adopt behaviours because they believe others are doing the same.'},
-  {id:'status-quo',      name:'Status Quo Bias',      color:'#8A8A7A', desc:'Users prefer the current state. Switching costs are amplified by this bias.'},
-  {id:'zeigarnik',       name:'Zeigarnik Effect',     color:'#E8A05A', desc:'Uncompleted tasks create tension that pulls users back to finish them.'},
-  {id:'ikea-effect',     name:'IKEA Effect',          color:'#9870D0', desc:'People place higher value on things they helped create (customisation, builds).'},
-  {id:'network-effect',  name:'Network Effect',       color:'#5BC98A', desc:'Value increases with each additional user — drives winner-take-all dynamics.'},
-  {id:'choice-overload', name:'Choice Overload',      color:'#E87272', desc:'Too many options lead to paralysis. Curated choices increase conversion.'},
+  {id:'loss-aversion',   name:'Loss Aversion',       color:'#E87272', desc:'People fear losing more than they enjoy gaining.'},
+  {id:'social-proof',    name:'Social Proof',         color:'#6B9FE4', desc:'Users follow what others do.'},
+  {id:'scarcity-fomo',   name:'Scarcity / FOMO',      color:'#D8702C', desc:'Limited availability and fear of missing out create urgency.'},
+  {id:'anchoring',       name:'Anchoring',            color:'#C8A84A', desc:'First number seen sets the reference point.'},
+  {id:'reciprocity',     name:'Reciprocity',          color:'#5BC98A', desc:'Free value leads to paid conversion.'},
+  {id:'commitment',      name:'Commitment & Consistency', color:'#A87EE8', desc:'Once committed, users act consistently.'},
+  {id:'decoy-effect',    name:'Decoy Effect',         color:'#E8A05A', desc:'An inferior third option makes target look better.'},
+  {id:'default-effect',  name:'Default Effect',       color:'#5AC8D4', desc:'Users stick with defaults.'},
+  {id:'endowment',       name:'Endowment Effect',     color:'#9870D0', desc:'People value what they own more.'},
+  {id:'sunk-cost',       name:'Sunk Cost Fallacy',    color:'#E87272', desc:'Past investment drives continued use.'},
+  {id:'instant-gratification', name:'Instant Gratification', color:'#EEC86A', desc:'Immediate rewards beat delayed ones.'},
+  {id:'variable-reward', name:'Variable Reward',      color:'#D8702C', desc:'Unpredictable rewards create compulsive behaviour.'},
+  {id:'habit-formation', name:'Habit Formation',      color:'#5BC98A', desc:'Trigger → action → reward loops.'},
+  {id:'pain-of-paying',  name:'Pain of Paying',       color:'#6B9FE4', desc:'Separating payment from consumption reduces pain.'},
+  {id:'framing',         name:'Framing Effect',       color:'#A87EE8', desc:'Same info presented differently → different decisions.'},
+  {id:'authority',       name:'Authority Bias',       color:'#C8A84A', desc:'Expert endorsement drives trust.'},
+  {id:'bandwagon',       name:'Bandwagon Effect',     color:'#5AC8D4', desc:'People adopt because others are doing it.'},
+  {id:'status-quo',      name:'Status Quo Bias',      color:'#8A8A7A', desc:'Users prefer the current state.'},
+  {id:'zeigarnik',       name:'Zeigarnik Effect',     color:'#E8A05A', desc:'Uncompleted tasks pull users back.'},
+  {id:'ikea-effect',     name:'IKEA Effect',          color:'#9870D0', desc:'Higher value placed on self-built things.'},
+  {id:'network-effect',  name:'Network Effect',       color:'#5BC98A', desc:'Value increases with each additional user.'},
+  {id:'choice-overload', name:'Choice Overload',      color:'#E87272', desc:'Too many options → paralysis.'},
 ];
 const BIAS_MAP = {};
 BIASES.forEach(b => BIAS_MAP[b.id] = b);
@@ -1046,12 +1085,17 @@ const TYPE_CLS   = {'Equity':'t-eq','VC Target':'t-vc','Startup':'t-st','PE Comp
 const STATUS_CLS = {'Watching':'s-watch','Active Research':'s-active','Strong Conviction':'s-conv','Invested':'s-inv','Passed':'s-pass'};
 
 /* ══ STATE ══ */
-let STATE = { notes:[], board:[], registry:[], playbook:[], products:[], bizmodels:[], northStar:'', pins:[], streak:{count:0,lastDate:''}, recentlyViewed:[] };
+let STATE = { notes:[], board:[], connections:[], registry:[], playbook:[], products:[], bizmodels:[], northStar:'', pins:[], streak:{count:0,lastDate:''}, recentlyViewed:[] };
 let GH = { token:'', repo:'', path:'folio-data.json', sha:null };
 let UI = { tab:'vault', folder:'all', noteId:null, searchQ:'', fontSize:'M', regType:'all', regQ:'', pbFilter:'all', pbQ:'', prodView:'grid', prodFilter:'all', prodQ:'', bmFilter:'all', bmQ:'', saveTimer:null, ghTimer:null, focusMode:false, cpSel:0 };
 let boardZoom = 1;
 let _convRating=3, _pbRating=3, _bmRating=3;
 let _selectedBiases = [];
+
+/* ── v5: Connection state ── */
+let _connectMode = false;
+let _connectSource = null; // card id
+let _didDrag = false;
 
 /* ══ UTILS ══ */
 const $ = id => document.getElementById(id);
@@ -1066,6 +1110,7 @@ function fmtAgo(iso){
 }
 function toast(msg,dur=2600){ const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),dur); }
 function autoGrow(el){ el.style.height='auto';el.style.height=el.scrollHeight+'px'; }
+function autoGrowTA(ta){ ta.style.height='auto';ta.style.height=ta.scrollHeight+'px'; }
 function closeModal(id){ $(id).classList.remove('on'); }
 function b64enc(s){ return btoa(unescape(encodeURIComponent(s))); }
 function b64dec(b){ return decodeURIComponent(escape(atob(b.replace(/\n/g,'')))); }
@@ -1077,6 +1122,7 @@ function normaliseState(){
   STATE.recentlyViewed=STATE.recentlyViewed||[];
   STATE.products=STATE.products||[];
   STATE.bizmodels=STATE.bizmodels||[];
+  STATE.connections=STATE.connections||[];
 }
 
 /* ══ TABS ══ */
@@ -1122,7 +1168,7 @@ async function saveGHSettings(){
   GH.token=$('ghToken').value.trim();GH.repo=$('ghRepo').value.trim();GH.path=$('ghPath').value.trim()||'folio-data.json';
   localStorage.setItem('folio_gh',JSON.stringify({token:GH.token,repo:GH.repo,path:GH.path}));
   if(GH.token&&GH.repo){setSyncStatus('busy','Syncing…');const remote=await ghGet();
-    if(remote&&remote.content){try{const p=JSON.parse(remote.content);STATE=Object.assign({notes:[],board:[],registry:[],playbook:[],products:[],bizmodels:[],northStar:'',pins:[],streak:{count:0,lastDate:''},recentlyViewed:[]},p);normaliseState();GH.sha=remote.sha;lsSave();renderAll();setSyncStatus('ok','Synced');toast('✓ Loaded from GitHub');}catch(e){setSyncStatus('err','Parse error');}}
+    if(remote&&remote.content){try{const p=JSON.parse(remote.content);STATE=Object.assign({notes:[],board:[],connections:[],registry:[],playbook:[],products:[],bizmodels:[],northStar:'',pins:[],streak:{count:0,lastDate:''},recentlyViewed:[]},p);normaliseState();GH.sha=remote.sha;lsSave();renderAll();setSyncStatus('ok','Synced');toast('✓ Loaded from GitHub');}catch(e){setSyncStatus('err','Parse error');}}
     else if(remote&&remote.sha===null){const ok=await ghPut(JSON.stringify(STATE));setSyncStatus(ok?'ok':'err',ok?'Synced':'Error');if(ok)toast('✓ Created on GitHub');}
     else setSyncStatus('err','Offline');}
   closeModal('settingsModal');
@@ -1137,7 +1183,7 @@ function lsSave(){ try{localStorage.setItem('folio_state',JSON.stringify(STATE))
 function lsLoad(){ try{const d=localStorage.getItem('folio_state');if(d)STATE=JSON.parse(d);}catch(e){} }
 function saveAll(){ lsSave();schedGHSave(); }
 function exportData(){ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(STATE,null,2)],{type:'application/json'}));a.download='folio-'+new Date().toISOString().slice(0,10)+'.json';a.click(); }
-function importData(e){ const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const p=JSON.parse(ev.target.result);STATE=Object.assign({notes:[],board:[],registry:[],playbook:[],products:[],bizmodels:[],northStar:'',pins:[],streak:{count:0,lastDate:''},recentlyViewed:[]},p);normaliseState();saveAll();renderAll();toast('✓ Imported');}catch{toast('Invalid JSON');}};r.readAsText(f); }
+function importData(e){ const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const p=JSON.parse(ev.target.result);STATE=Object.assign({notes:[],board:[],connections:[],registry:[],playbook:[],products:[],bizmodels:[],northStar:'',pins:[],streak:{count:0,lastDate:''},recentlyViewed:[]},p);normaliseState();saveAll();renderAll();toast('✓ Imported');}catch{toast('Invalid JSON');}};r.readAsText(f); }
 
 /* ══ NORTH STAR ══ */
 function saveNorthStar(){ STATE.northStar=$('northStarText').value;saveAll(); }
@@ -1178,7 +1224,6 @@ function renderRecentlyViewed(){
 
 /* ══ HOME STATS ══ */
 function updateHomeStats(){
-  const s=n=>{ const el=document.getElementById(n); if(el)return; };
   [$('hsStat0'),$('hsStat1'),$('hsStat2'),$('hsStat3'),$('hsStat4')].forEach((el,i)=>{
     if(!el)return;
     const vals=[STATE.notes.length,(STATE.playbook||[]).length,STATE.registry.length,(STATE.products||[]).length,STATE.streak?.count||0];
@@ -1267,24 +1312,386 @@ function saveQC(){
   STATE.notes.unshift(n);saveAll();renderNoteList();updateCounts();renderCatGrid();updateHomeStats();closeModal('qcModal');toast('✓ Captured');
 }
 
-/* ══ BOARD ══ */
-let _dragCard=null,_dOff={x:0,y:0},_panning=false,_pStart={x:0,y:0},_pScroll={x:0,y:0};
-function zoomBoard(d){ boardZoom=Math.min(2.5,Math.max(.25,boardZoom+d));$('boardCanvas').style.transform=`scale(${boardZoom})`;$('zoomLabel').textContent=Math.round(boardZoom*100)+'%'; }
-function resetZoom(){ boardZoom=1;$('boardCanvas').style.transform='';$('zoomLabel').textContent='100%'; }
-function addCard(type){ const w=$('canvasWrap');const id=uid();const x=(w.scrollLeft/boardZoom+80+Math.random()*350)|0;const y=(w.scrollTop/boardZoom+60+Math.random()*220)|0;const card={id,type,x,y,content:'',author:'',url:'',linkTitle:'',desc:'',color:type==='sticky'?STICKY_COLORS[0]:null};STATE.board.push(card);saveAll();renderBoard();updateHomeStats();setTimeout(()=>{const el=document.querySelector(`.bcard[data-id="${id}"]`);if(el){const ta=el.querySelector('textarea,input');if(ta)ta.focus();}},60); }
+/* ══════════════════════════════════════════
+   BOARD — v5 with Node cards + SVG connections
+   ══════════════════════════════════════════ */
+
+let _dragCard=null, _dOff={x:0,y:0}, _panning=false, _pStart={x:0,y:0}, _pScroll={x:0,y:0};
+
+/* ── Zoom ── */
+function zoomBoard(d){ boardZoom=Math.min(2.5,Math.max(.25,boardZoom+d));$('boardCanvas').style.transform=`scale(${boardZoom})`;$('zoomLabel').textContent=Math.round(boardZoom*100)+'%';renderConnections(); }
+function resetZoom(){ boardZoom=1;$('boardCanvas').style.transform='';$('zoomLabel').textContent='100%';renderConnections(); }
+
+/* ── Add card ── */
+function addCard(type){
+  const w=$('canvasWrap');const id=uid();
+  const x=(w.scrollLeft/boardZoom+80+Math.random()*350)|0;
+  const y=(w.scrollTop/boardZoom+60+Math.random()*220)|0;
+  const card={id,type,x,y,content:'',author:'',url:'',linkTitle:'',desc:'',color:type==='sticky'?STICKY_COLORS[0]:null};
+  STATE.board.push(card);saveAll();renderBoard();updateHomeStats();
+  setTimeout(()=>{
+    const el=document.querySelector(`.bcard[data-id="${id}"]`);
+    if(el){const ta=el.querySelector('textarea,input');if(ta)ta.focus();}
+  },60);
+}
+
+/* ── Update card field ── */
 function updCard(id,field,val){ const c=STATE.board.find(x=>x.id===id);if(c){c[field]=val;saveAll();} }
-function delCard(id){ STATE.board=STATE.board.filter(c=>c.id!==id);saveAll();renderBoard();updateHomeStats(); }
-function clearBoard(){ if(!confirm('Clear all board cards?'))return;STATE.board=[];saveAll();renderBoard();updateHomeStats(); }
-function renderBoard(){ const cv=$('boardCanvas');if(!cv)return;cv.innerHTML='';cv.style.transform=`scale(${boardZoom})`;STATE.board.forEach(c=>{if(c.type==='sticky')mkSticky(c);else if(c.type==='quote')mkQuote(c);else if(c.type==='link')mkLink(c);}); }
-function mkBase(cls,c){ const d=document.createElement('div');d.className='bcard '+cls;d.dataset.id=c.id;d.style.cssText=`left:${c.x}px;top:${c.y}px`;d.addEventListener('mousedown',e=>startDrag(e,c.id));const x=document.createElement('button');x.className='bcard-x';x.textContent='✕';x.addEventListener('mousedown',e=>e.stopPropagation());x.addEventListener('click',()=>delCard(c.id));d.appendChild(x);return d; }
-function mkSticky(c){ const d=mkBase('bc-sticky',c);d.style.background=c.color||STICKY_COLORS[0];const ta=document.createElement('textarea');ta.className='st-ta';ta.placeholder='Write here…';ta.value=c.content||'';ta.addEventListener('mousedown',e=>e.stopPropagation());ta.addEventListener('input',e=>updCard(c.id,'content',e.target.value));d.appendChild(ta);const dots=document.createElement('div');dots.className='st-dots';STICKY_COLORS.forEach(col=>{const dot=document.createElement('div');dot.className='st-dot'+(c.color===col?' on':'');dot.style.background=col;dot.addEventListener('mousedown',e=>e.stopPropagation());dot.addEventListener('click',()=>{updCard(c.id,'color',col);renderBoard();});dots.appendChild(dot);});d.appendChild(dots);$('boardCanvas').appendChild(d); }
-function mkQuote(c){ const d=mkBase('bc-quote',c);const ta=document.createElement('textarea');ta.className='qt-text';ta.placeholder='The quote…';ta.value=c.content||'';ta.addEventListener('mousedown',e=>e.stopPropagation());ta.addEventListener('input',e=>updCard(c.id,'content',e.target.value));const auth=document.createElement('input');auth.className='qt-auth';auth.type='text';auth.placeholder='— Author';auth.value=c.author||'';auth.addEventListener('mousedown',e=>e.stopPropagation());auth.addEventListener('input',e=>updCard(c.id,'author',e.target.value));d.appendChild(ta);d.appendChild(auth);$('boardCanvas').appendChild(d); }
-function mkLink(c){ const d=mkBase('bc-link',c);const url=document.createElement('input');url.className='lk-url';url.type='text';url.placeholder='https://…';url.value=c.url||'';url.addEventListener('mousedown',e=>e.stopPropagation());url.addEventListener('input',e=>{updCard(c.id,'url',e.target.value);refreshOpenBtn(d,e.target.value);});const title=document.createElement('input');title.className='lk-title';title.type='text';title.placeholder='Title';title.value=c.linkTitle||'';title.addEventListener('mousedown',e=>e.stopPropagation());title.addEventListener('input',e=>updCard(c.id,'linkTitle',e.target.value));const desc=document.createElement('textarea');desc.className='lk-desc';desc.placeholder='Note…';desc.value=c.desc||'';desc.addEventListener('mousedown',e=>e.stopPropagation());desc.addEventListener('input',e=>updCard(c.id,'desc',e.target.value));d.appendChild(url);d.appendChild(title);d.appendChild(desc);if(c.url){const a=document.createElement('a');a.className='lk-open';a.href=c.url;a.target='_blank';a.rel='noopener';a.textContent='Open ↗';a.dataset.role='open';a.addEventListener('mousedown',e=>e.stopPropagation());d.appendChild(a);}$('boardCanvas').appendChild(d); }
+
+/* ── Delete card (also removes its connections) ── */
+function delCard(id){
+  STATE.board=STATE.board.filter(c=>c.id!==id);
+  STATE.connections=(STATE.connections||[]).filter(c=>c.from!==id&&c.to!==id);
+  saveAll();renderBoard();updateHomeStats();
+}
+
+/* ── Clear board ── */
+function clearBoard(){
+  if(!confirm('Clear all board cards and connections?'))return;
+  STATE.board=[];STATE.connections=[];saveAll();renderBoard();updateHomeStats();
+}
+
+/* ── Base card factory ── */
+function mkBase(cls,c){
+  const d=document.createElement('div');
+  d.className='bcard '+cls;
+  d.dataset.id=c.id;
+  d.style.cssText=`left:${c.x}px;top:${c.y}px`;
+  // Drag start
+  d.addEventListener('mousedown',e=>startDrag(e,c.id));
+  // Connect click
+  d.addEventListener('click',e=>handleCardConnectClick(e,c.id));
+  // Delete button
+  const x=document.createElement('button');
+  x.className='bcard-x';x.textContent='✕';
+  x.addEventListener('mousedown',e=>e.stopPropagation());
+  x.addEventListener('click',e=>{e.stopPropagation();delCard(c.id);});
+  d.appendChild(x);
+  return d;
+}
+
+/* ── Sticky ── */
+function mkSticky(c){
+  const d=mkBase('bc-sticky',c);d.style.background=c.color||STICKY_COLORS[0];
+  const ta=document.createElement('textarea');ta.className='st-ta';ta.placeholder='Write here…';ta.value=c.content||'';
+  ta.addEventListener('mousedown',e=>e.stopPropagation());
+  ta.addEventListener('input',e=>updCard(c.id,'content',e.target.value));
+  d.appendChild(ta);
+  const dots=document.createElement('div');dots.className='st-dots';
+  STICKY_COLORS.forEach(col=>{
+    const dot=document.createElement('div');dot.className='st-dot'+(c.color===col?' on':'');dot.style.background=col;
+    dot.addEventListener('mousedown',e=>e.stopPropagation());
+    dot.addEventListener('click',e=>{e.stopPropagation();updCard(c.id,'color',col);renderBoard();});
+    dots.appendChild(dot);
+  });
+  d.appendChild(dots);$('boardCanvas').appendChild(d);
+}
+
+/* ── Quote ── */
+function mkQuote(c){
+  const d=mkBase('bc-quote',c);
+  const ta=document.createElement('textarea');ta.className='qt-text';ta.placeholder='The quote…';ta.value=c.content||'';
+  ta.addEventListener('mousedown',e=>e.stopPropagation());
+  ta.addEventListener('input',e=>updCard(c.id,'content',e.target.value));
+  const auth=document.createElement('input');auth.className='qt-auth';auth.type='text';auth.placeholder='— Author';auth.value=c.author||'';
+  auth.addEventListener('mousedown',e=>e.stopPropagation());
+  auth.addEventListener('input',e=>updCard(c.id,'author',e.target.value));
+  d.appendChild(ta);d.appendChild(auth);$('boardCanvas').appendChild(d);
+}
+
+/* ── Link ── */
+function mkLink(c){
+  const d=mkBase('bc-link',c);
+  const url=document.createElement('input');url.className='lk-url';url.type='text';url.placeholder='https://…';url.value=c.url||'';
+  url.addEventListener('mousedown',e=>e.stopPropagation());
+  url.addEventListener('input',e=>{updCard(c.id,'url',e.target.value);refreshOpenBtn(d,e.target.value);});
+  const title=document.createElement('input');title.className='lk-title';title.type='text';title.placeholder='Title';title.value=c.linkTitle||'';
+  title.addEventListener('mousedown',e=>e.stopPropagation());
+  title.addEventListener('input',e=>updCard(c.id,'linkTitle',e.target.value));
+  const desc=document.createElement('textarea');desc.className='lk-desc';desc.placeholder='Note…';desc.value=c.desc||'';
+  desc.addEventListener('mousedown',e=>e.stopPropagation());
+  desc.addEventListener('input',e=>updCard(c.id,'desc',e.target.value));
+  d.appendChild(url);d.appendChild(title);d.appendChild(desc);
+  if(c.url){const a=document.createElement('a');a.className='lk-open';a.href=c.url;a.target='_blank';a.rel='noopener';a.textContent='Open ↗';a.dataset.role='open';a.addEventListener('mousedown',e=>e.stopPropagation());d.appendChild(a);}
+  $('boardCanvas').appendChild(d);
+}
 function refreshOpenBtn(card,url){ let ex=card.querySelector('[data-role="open"]');if(url){if(!ex){const a=document.createElement('a');a.className='lk-open';a.target='_blank';a.rel='noopener';a.textContent='Open ↗';a.dataset.role='open';a.addEventListener('mousedown',e=>e.stopPropagation());card.appendChild(a);ex=a;}ex.href=url;}else if(ex)ex.remove(); }
-function startDrag(e,id){ if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT'||e.target.tagName==='A'||e.target.tagName==='BUTTON')return;e.preventDefault();_dragCard=id;const el=document.querySelector(`.bcard[data-id="${id}"]`);if(!el)return;const w=$('canvasWrap');const r=el.getBoundingClientRect();_dOff.x=e.clientX-r.left;_dOff.y=e.clientY-r.top;el.classList.add('dragging'); }
-document.addEventListener('mousemove',e=>{ if(_dragCard){const el=document.querySelector(`.bcard[data-id="${_dragCard}"]`);const w=$('canvasWrap');if(!el||!w)return;const wr=w.getBoundingClientRect();const x=((e.clientX-wr.left+w.scrollLeft)/boardZoom-_dOff.x/boardZoom)|0;const y=((e.clientY-wr.top+w.scrollTop)/boardZoom-_dOff.y/boardZoom)|0;el.style.left=Math.max(0,x)+'px';el.style.top=Math.max(0,y)+'px';}else if(_panning){const w=$('canvasWrap');if(!w)return;w.scrollLeft=_pScroll.x-(e.clientX-_pStart.x);w.scrollTop=_pScroll.y-(e.clientY-_pStart.y);}});
-document.addEventListener('mouseup',e=>{ if(_dragCard){const el=document.querySelector(`.bcard[data-id="${_dragCard}"]`);if(el){el.classList.remove('dragging');const c=STATE.board.find(x=>x.id===_dragCard);if(c){c.x=parseInt(el.style.left)||0;c.y=parseInt(el.style.top)||0;saveAll();}}_dragCard=null;}if(_panning){_panning=false;$('canvasWrap').classList.remove('panning');}});
-const canvasWrap=$('canvasWrap');if(canvasWrap){canvasWrap.addEventListener('mousedown',e=>{if(e.target===canvasWrap||e.target===$('boardCanvas')){_panning=true;_pStart={x:e.clientX,y:e.clientY};_pScroll={x:canvasWrap.scrollLeft,y:canvasWrap.scrollTop};canvasWrap.classList.add('panning');}});}
+
+/* ── Node card (v5 NEW) ── */
+function mkNode(c){
+  const d=mkBase('bc-node',c);
+  const ta=document.createElement('textarea');
+  ta.className='node-text';ta.placeholder='Idea, concept…';ta.value=c.content||'';ta.rows=1;
+  ta.addEventListener('mousedown',e=>e.stopPropagation());
+  ta.addEventListener('input',e=>{updCard(c.id,'content',e.target.value);autoGrowTA(ta);});
+  autoGrowTA(ta);
+  d.appendChild(ta);
+  // Connect hint
+  const hint=document.createElement('div');hint.className='node-hint';hint.textContent='click to connect';
+  d.appendChild(hint);
+  $('boardCanvas').appendChild(d);
+}
+
+/* ── Drag ── */
+function startDrag(e,id){
+  if(_connectMode)return; // block drag in connect mode
+  if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT'||e.target.tagName==='A'||e.target.tagName==='BUTTON')return;
+  e.preventDefault();_dragCard=id;_didDrag=false;
+  const el=document.querySelector(`.bcard[data-id="${id}"]`);if(!el)return;
+  const w=$('canvasWrap');const r=el.getBoundingClientRect();
+  _dOff.x=e.clientX-r.left;_dOff.y=e.clientY-r.top;el.classList.add('dragging');
+}
+
+document.addEventListener('mousemove',e=>{
+  if(_dragCard){
+    const el=document.querySelector(`.bcard[data-id="${_dragCard}"]`);
+    const w=$('canvasWrap');if(!el||!w)return;
+    const wr=w.getBoundingClientRect();
+    const x=((e.clientX-wr.left+w.scrollLeft)/boardZoom-_dOff.x/boardZoom)|0;
+    const y=((e.clientY-wr.top+w.scrollTop)/boardZoom-_dOff.y/boardZoom)|0;
+    el.style.left=Math.max(0,x)+'px';el.style.top=Math.max(0,y)+'px';
+    _didDrag=true;
+    renderConnections(); // live update arrows while dragging
+  } else if(_panning){
+    const w=$('canvasWrap');if(!w)return;
+    w.scrollLeft=_pScroll.x-(e.clientX-_pStart.x);
+    w.scrollTop=_pScroll.y-(e.clientY-_pStart.y);
+  }
+});
+
+document.addEventListener('mouseup',e=>{
+  if(_dragCard){
+    const el=document.querySelector(`.bcard[data-id="${_dragCard}"]`);
+    if(el){
+      el.classList.remove('dragging');
+      const c=STATE.board.find(x=>x.id===_dragCard);
+      if(c){c.x=parseInt(el.style.left)||0;c.y=parseInt(el.style.top)||0;saveAll();}
+    }
+    _dragCard=null;
+    renderConnections();
+  }
+  if(_panning){_panning=false;$('canvasWrap').classList.remove('panning');}
+});
+
+const canvasWrap=$('canvasWrap');
+if(canvasWrap){
+  canvasWrap.addEventListener('mousedown',e=>{
+    if(e.target===canvasWrap||e.target===$('boardCanvas')||e.target===$('connectionSVG')){
+      if(_connectMode){
+        // clicking empty space in connect mode cancels pending source
+        if(_connectSource){
+          document.querySelector(`.bcard[data-id="${_connectSource}"]`)?.classList.remove('connect-source');
+          _connectSource=null;
+          updateConnectBar();
+        }
+        return;
+      }
+      _panning=true;_pStart={x:e.clientX,y:e.clientY};_pScroll={x:canvasWrap.scrollLeft,y:canvasWrap.scrollTop};
+      canvasWrap.classList.add('panning');
+    }
+  });
+  // Hover feedback in connect mode
+  canvasWrap.addEventListener('mouseover',e=>{
+    if(!_connectMode)return;
+    const card=e.target.closest('.bcard');
+    document.querySelectorAll('.bcard.connect-hover').forEach(el=>el.classList.remove('connect-hover'));
+    if(card&&card.dataset.id!==_connectSource)card.classList.add('connect-hover');
+  });
+}
+
+/* ── Render board ── */
+function renderBoard(){
+  const cv=$('boardCanvas');if(!cv)return;
+  // Remove all card elements (keep SVG)
+  Array.from(cv.children).forEach(el=>{ if(el.id!=='connectionSVG')el.remove(); });
+  cv.style.transform=`scale(${boardZoom})`;
+  STATE.board.forEach(c=>{
+    if(c.type==='sticky')mkSticky(c);
+    else if(c.type==='quote')mkQuote(c);
+    else if(c.type==='link')mkLink(c);
+    else if(c.type==='node')mkNode(c);
+  });
+  renderConnections();
+}
+
+/* ══════════════════════════════════════════
+   CONNECTION SYSTEM (v5 NEW)
+   ══════════════════════════════════════════ */
+
+/* ── Toggle connect mode ── */
+function toggleConnectMode(){
+  _connectMode=!_connectMode;
+  _connectSource=null;
+  _didDrag=false;
+  const btn=$('connectBtn');
+  const bar=$('connectBar');
+  const wrap=$('canvasWrap');
+  btn?.classList.toggle('connect-active',_connectMode);
+  bar?.classList.toggle('on',_connectMode);
+  wrap?.classList.toggle('connect-mode',_connectMode);
+  // Clear all highlights
+  document.querySelectorAll('.bcard.connect-source,.bcard.connect-hover').forEach(el=>{
+    el.classList.remove('connect-source','connect-hover');
+  });
+  updateConnectBar();
+  if(_connectMode) toast('Connect mode — click source card, then target card',2800);
+}
+
+function updateConnectBar(){
+  const msg=$('connectMsg');if(!msg)return;
+  msg.textContent=_connectSource?'● Now click the target card':'● Select source card';
+}
+
+/* ── Handle card click in connect mode ── */
+function handleCardConnectClick(e,id){
+  if(_didDrag){_didDrag=false;return;}
+  if(!_connectMode)return;
+  e.stopPropagation();
+  if(!_connectSource){
+    // Set source
+    _connectSource=id;
+    document.querySelector(`.bcard[data-id="${id}"]`)?.classList.add('connect-source');
+    updateConnectBar();
+  } else {
+    if(_connectSource===id){
+      // Clicked source again — deselect
+      document.querySelector(`.bcard[data-id="${id}"]`)?.classList.remove('connect-source');
+      _connectSource=null;updateConnectBar();return;
+    }
+    // Create connection
+    if(!STATE.connections)STATE.connections=[];
+    const already=STATE.connections.find(c=>(c.from===_connectSource&&c.to===id)||(c.from===id&&c.to===_connectSource));
+    if(!already){
+      STATE.connections.push({id:uid(),from:_connectSource,to:id});
+      saveAll();toast('✓ Connected',1400);
+    } else {
+      toast('Already connected',1400);
+    }
+    // Clear source highlight
+    document.querySelector(`.bcard[data-id="${_connectSource}"]`)?.classList.remove('connect-source');
+    document.querySelectorAll('.bcard.connect-hover').forEach(el=>el.classList.remove('connect-hover'));
+    _connectSource=null;
+    updateConnectBar();
+    renderConnections();
+  }
+}
+
+/* ── Delete a connection ── */
+function deleteConnection(connId){
+  STATE.connections=(STATE.connections||[]).filter(c=>c.id!==connId);
+  saveAll();renderConnections();toast('Connection removed',1200);
+}
+
+/* ── Render SVG connections ── */
+function renderConnections(){
+  const svg=$('connectionSVG');if(!svg)return;
+  if(!STATE.connections)STATE.connections=[];
+
+  // Clear existing paths/groups (keep defs)
+  Array.from(svg.children).forEach(el=>{if(el.tagName!=='defs')el.remove();});
+
+  STATE.connections.forEach(conn=>{
+    const fromEl=document.querySelector(`.bcard[data-id="${conn.from}"]`);
+    const toEl=document.querySelector(`.bcard[data-id="${conn.to}"]`);
+    if(!fromEl||!toEl)return;
+
+    // Card centers in canvas coordinates
+    const fx=fromEl.offsetLeft+fromEl.offsetWidth/2;
+    const fy=fromEl.offsetTop+fromEl.offsetHeight/2;
+    const tx=toEl.offsetLeft+toEl.offsetWidth/2;
+    const ty=toEl.offsetTop+toEl.offsetHeight/2;
+
+    // Find edge intersection point for cleaner arrow starts
+    const fromAnchor=getEdgePoint(fromEl,tx,ty);
+    const toAnchor=getEdgePoint(toEl,fx,fy);
+
+    // Cubic bezier control points
+    const dx=toAnchor.x-fromAnchor.x;const dy=toAnchor.y-fromAnchor.y;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const bend=Math.min(dist*0.45,180);
+    const cx1=fromAnchor.x+bend*(dx/dist)||fromAnchor.x;
+    const cy1=fromAnchor.y;
+    const cx2=toAnchor.x-bend*(dx/dist)||toAnchor.x;
+    const cy2=toAnchor.y;
+
+    const pathD=`M${fromAnchor.x},${fromAnchor.y} C${cx1},${cy1} ${cx2},${cy2} ${toAnchor.x},${toAnchor.y}`;
+    const midX=(fromAnchor.x+toAnchor.x)/2;const midY=(fromAnchor.y+toAnchor.y)/2;
+
+    // Group
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.style.pointerEvents='all';g.style.cursor='default';
+
+    // Wide invisible hit area
+    const hit=document.createElementNS('http://www.w3.org/2000/svg','path');
+    hit.setAttribute('d',pathD);
+    hit.setAttribute('stroke','transparent');
+    hit.setAttribute('stroke-width','18');
+    hit.setAttribute('fill','none');
+    hit.setAttribute('cursor','pointer');
+
+    // Visible dashed line
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',pathD);
+    path.setAttribute('stroke','rgba(200,168,74,0.42)');
+    path.setAttribute('stroke-width','1.5');
+    path.setAttribute('fill','none');
+    path.setAttribute('stroke-dasharray','7 4');
+    path.setAttribute('marker-end','url(#arrowGold)');
+    path.style.transition='stroke .15s';
+
+    // Delete button circle
+    const delCircle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    delCircle.setAttribute('cx',midX);delCircle.setAttribute('cy',midY);
+    delCircle.setAttribute('r','8');
+    delCircle.setAttribute('fill','#12100B');
+    delCircle.setAttribute('stroke','rgba(74,64,48,0.8)');
+    delCircle.setAttribute('stroke-width','1');
+    delCircle.style.opacity='0';delCircle.style.transition='opacity .15s';delCircle.style.cursor='pointer';
+
+    // Delete X text
+    const delX=document.createElementNS('http://www.w3.org/2000/svg','text');
+    delX.setAttribute('x',midX);delX.setAttribute('y',midY+4);
+    delX.setAttribute('text-anchor','middle');
+    delX.setAttribute('fill','rgba(232,114,114,0.9)');
+    delX.setAttribute('font-size','10');
+    delX.setAttribute('font-family','monospace');
+    delX.style.opacity='0';delX.style.transition='opacity .15s';delX.style.cursor='pointer';delX.style.userSelect='none';
+    delX.textContent='✕';
+
+    // Hover interactions
+    g.addEventListener('mouseenter',()=>{
+      path.setAttribute('stroke','rgba(200,168,74,0.85)');
+      path.setAttribute('marker-end','url(#arrowGoldHover)');
+      delCircle.style.opacity='1';delX.style.opacity='1';
+    });
+    g.addEventListener('mouseleave',()=>{
+      path.setAttribute('stroke','rgba(200,168,74,0.42)');
+      path.setAttribute('marker-end','url(#arrowGold)');
+      delCircle.style.opacity='0';delX.style.opacity='0';
+    });
+
+    // Delete on click of circle or X
+    const cid=conn.id;
+    [delCircle,delX].forEach(el=>{
+      el.addEventListener('click',e=>{e.stopPropagation();deleteConnection(cid);});
+    });
+
+    g.appendChild(hit);g.appendChild(path);g.appendChild(delCircle);g.appendChild(delX);
+    svg.appendChild(g);
+  });
+}
+
+/* ── Get card edge point toward a target ── */
+function getEdgePoint(el,tx,ty){
+  const cx=el.offsetLeft+el.offsetWidth/2;
+  const cy=el.offsetTop+el.offsetHeight/2;
+  const hw=el.offsetWidth/2;const hh=el.offsetHeight/2;
+  const dx=tx-cx;const dy=ty-cy;
+  if(dx===0&&dy===0)return{x:cx,y:cy};
+  const scaleX=hw/Math.abs(dx||1);const scaleY=hh/Math.abs(dy||1);
+  const scale=Math.min(scaleX,scaleY);
+  return{x:cx+dx*scale,y:cy+dy*scale};
+}
 
 /* ══ REGISTRY ══ */
 function openAddCo(){ $('coEditId').value='';$('coModalTitle').innerHTML='Add <em>Company</em>';['coName','coSector','coTicker','coTarget','coCurr','coUpside','coMetrics','coValuation','coThesis','coRisk','coTags','coNotes'].forEach(id=>{$(id).value='';});$('coType').value='Equity';$('coStage').value='';$('coStatus').value='Watching';$('coDelBtn').style.display='none';_convRating=3;setStar(3,false);toggleCoFields();$('coModal').classList.add('on');setTimeout(()=>$('coName').focus(),60); }
